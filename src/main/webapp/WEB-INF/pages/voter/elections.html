@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VoteSphere - Elections</title>
+<link rel="stylesheet" href="../styles/global.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+	rel="stylesheet" />
+<script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                200: "#bae6fd",
+                300: "#7dd3fc",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+                800: "#075985",
+                900: "#0c4a6e",
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+</head>
+<body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+	<!-- Include sidebar -->
+	<div id="sidebar-container"></div>
+
+	<!-- Main Content -->
+	<div
+		class="flex-grow flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
+		<!-- Navbar -->
+		<div id="navbar-container"></div>
+
+		<!-- Content Area -->
+		<div class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-100">
+			<div class="max-w-7xl mx-auto">
+				<!-- Page Header -->
+				<div class="mb-6">
+					<h1 class="text-2xl font-bold text-gray-800">Elections</h1>
+					<p class="text-gray-600">View all upcoming, active, and past
+						elections</p>
+				</div>
+
+				<!-- Filters and Search -->
+				<div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+					<div class="flex flex-wrap gap-4 items-center justify-between">
+						<div class="flex flex-wrap gap-2 items-center">
+							<span class="text-sm text-gray-500">Filter by:</span> <select
+								class="border border-gray-300 rounded-md text-sm px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500">
+								<option value="all" selected>All Elections</option>
+								<option value="active">Active</option>
+								<option value="upcoming">Upcoming</option>
+								<option value="past">Past</option>
+							</select>
+						</div>
+						<div class="relative">
+							<input type="text" placeholder="Search elections..."
+								class="border border-gray-300 rounded-md pl-10 pr-4 py-2 w-full md:w-64 focus:ring-primary-500 focus:border-primary-500" />
+							<svg xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5 text-gray-400 absolute left-3 top-2.5"
+								fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+									stroke-width="2"
+									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+						</div>
+					</div>
+				</div>
+
+				<!-- Active Elections Section -->
+				<section class="mb-8">
+					<h2 class="text-xl font-bold text-gray-800 mb-4">Active
+						Elections</h2>
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<!-- Election Card 1 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="Municipal Elections" class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+										Active </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">Municipal Elections
+								</h3>
+								<p class="text-gray-600 text-sm mb-3">City of Springfield</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Oct 15, 2024</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">07:00 AM - 07:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<div class="h-2 bg-gray-200 rounded-full w-32 mb-1">
+											<div class="h-2 bg-primary-500 rounded-full"
+												style="width: 60%"></div>
+										</div>
+										<p class="text-xs text-gray-500">3 days remaining</p>
+									</div>
+									<a href="cast-vote.html"
+										class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors">
+										Cast Vote </a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Election Card 2 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="School Board Election" class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+										Active </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">School Board
+									Election</h3>
+								<p class="text-gray-600 text-sm mb-3">Springfield District</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Oct 12, 2024</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">08:00 AM - 06:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<div class="h-2 bg-gray-200 rounded-full w-32 mb-1">
+											<div class="h-2 bg-primary-500 rounded-full"
+												style="width: 40%"></div>
+										</div>
+										<p class="text-xs text-gray-500">5 days remaining</p>
+									</div>
+									<a href="cast-vote.html"
+										class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors">
+										Cast Vote </a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Upcoming Elections Section -->
+				<section class="mb-8">
+					<h2 class="text-xl font-bold text-gray-800 mb-4">Upcoming
+						Elections</h2>
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<!-- Election Card 1 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="Presidential Election" class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full">
+										Upcoming </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">Presidential
+									Election 2024</h3>
+								<p class="text-gray-600 text-sm mb-3">National</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Nov 5, 2024</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">06:00 AM - 08:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<p class="text-xs text-gray-500">Starts in 30 days</p>
+									</div>
+									<a href="vote.html"
+										class="border border-primary-600 text-primary-600 px-4 py-2 rounded-md text-sm hover:bg-primary-50 transition-colors">
+										View Details </a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Election Card 2 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="State Assembly Election"
+									class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full">
+										Upcoming </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">State Assembly
+									Election</h3>
+								<p class="text-gray-600 text-sm mb-3">Illinois State</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Dec 10, 2024</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">08:00 AM - 06:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<p class="text-xs text-gray-500">Starts in 60 days</p>
+									</div>
+									<a href="vote.html"
+										class="border border-primary-600 text-primary-600 px-4 py-2 rounded-md text-sm hover:bg-primary-50 transition-colors">
+										View Details </a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Election Card 3 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="County Commissioner Election"
+									class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-full">
+										Upcoming </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">County Commissioner
+									Election</h3>
+								<p class="text-gray-600 text-sm mb-3">Sangamon County</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Jan 15, 2025</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">07:00 AM - 07:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<p class="text-xs text-gray-500">Starts in 90 days</p>
+									</div>
+									<a href="vote.html"
+										class="border border-primary-600 text-primary-600 px-4 py-2 rounded-md text-sm hover:bg-primary-50 transition-colors">
+										View Details </a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Past Elections Section -->
+				<section>
+					<h2 class="text-xl font-bold text-gray-800 mb-4">Past
+						Elections</h2>
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+						<!-- Election Card 1 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="Local Council Election" class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-gray-500 text-white text-xs font-semibold rounded-full">
+										Completed </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">Local Council
+									Election</h3>
+								<p class="text-gray-600 text-sm mb-3">City of Springfield</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Sep 5, 2024</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">07:00 AM - 07:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<p class="text-xs text-gray-500">You voted</p>
+									</div>
+									<a href="#"
+										class="border border-gray-300 text-gray-600 px-4 py-2 rounded-md text-sm hover:bg-gray-50 transition-colors">
+										See Results </a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Election Card 2 -->
+						<div
+							class="bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md">
+							<div class="h-40 bg-gray-200 relative">
+								<img src="https://placehold.co/800x400"
+									alt="State Governor Election"
+									class="w-full h-full object-cover" />
+								<div class="absolute top-3 right-3">
+									<span
+										class="px-3 py-1 bg-gray-500 text-white text-xs font-semibold rounded-full">
+										Completed </span>
+								</div>
+							</div>
+							<div class="p-4">
+								<h3 class="font-semibold text-lg mb-1">State Governor
+									Election</h3>
+								<p class="text-gray-600 text-sm mb-3">Illinois State</p>
+								<div class="grid grid-cols-2 gap-4 mb-4">
+									<div>
+										<p class="text-xs text-gray-500">Date</p>
+										<p class="text-sm font-medium">Aug 12, 2024</p>
+									</div>
+									<div>
+										<p class="text-xs text-gray-500">Time</p>
+										<p class="text-sm font-medium">06:00 AM - 08:00 PM</p>
+									</div>
+								</div>
+								<div class="flex justify-between items-center">
+									<div>
+										<p class="text-xs text-gray-500">You voted</p>
+									</div>
+									<a href="#"
+										class="border border-gray-300 text-gray-600 px-4 py-2 rounded-md text-sm hover:bg-gray-50 transition-colors">
+										See Results </a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Pagination -->
+				<div class="mt-8 flex justify-center">
+					<nav class="inline-flex rounded-md shadow">
+						<a href="#"
+							class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+							Previous </a> <a href="#"
+							class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-primary-600 hover:bg-primary-50">
+							1 </a> <a href="#"
+							class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+							2 </a> <a href="#"
+							class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+							3 </a> <a href="#"
+							class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+							Next </a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+      // Load sidebar
+      fetch("sidebar.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("sidebar-container").innerHTML = data;
+        });
+
+      // Load navbar
+      fetch("navbar.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-container").innerHTML = data;
+        });
+
+      // Filter functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterSelect = document.querySelector("select");
+
+        if (filterSelect) {
+          filterSelect.addEventListener("change", function (e) {
+            // Filter implementation would go here
+            console.log("Filtering by:", e.target.value);
+
+            // This would typically involve showing/hiding election cards
+            // or fetching new data from a backend
+          });
+        }
+
+        // Search implementation
+        const searchInput = document.querySelector('input[type="text"]');
+
+        if (searchInput) {
+          searchInput.addEventListener("input", function (e) {
+            // Search implementation would go here
+            console.log("Searching for:", e.target.value);
+          });
+        }
+      });
+    </script>
+</body>
+</html>
