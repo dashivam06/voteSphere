@@ -1,3 +1,5 @@
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,7 +97,7 @@
 					<div class="flex space-x-4">
 						<div class="relative">
 
-						<form id="searchForm" action="${pageContext.request.contextPath}/admin/candidate/search/" method="post" >
+						<form id="searchForm" action="${pageContext.request.contextPath}/admin/candidate/search" method="post" >
                         							<input type="text" name="searchInput" id="searchInput" value="${searchInput}" placeholder="Search candidates..."
                         								class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
                         							<svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
@@ -111,77 +113,97 @@
 									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
 						</div>
+						<a href="/admin/candidate/new">
 						<button
 							class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200">
 							Add Candidate</button>
+							</a>
 					</div>
 				</div>
 
-				<!-- Candidates Table -->
-				<div class="overflow-x-auto">
-					<table class="min-w-full divide-y divide-gray-200">
-						<thead class="bg-gray-50">
-							<tr>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Candidate</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Party</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Election</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Status</th>
 
-								<th
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Actions</th>
-							</tr>
-						</thead>
-						<tbody class="bg-white divide-y divide-gray-200">
-							<!-- Sample candidate row -->
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">
-									<div class="flex items-center">
-										<div class="h-10 w-10 flex-shrink-0">
-											<img class="h-10 w-10 rounded-full object-cover"
-												src="https://placehold.co/100x100" alt="" />
-										</div>
-										<div class="ml-4">
-											<div class="text-sm font-medium text-gray-900">Jane
-												Smith</div>
-											<div class="text-sm text-gray-500">ID: CAND123</div>
-										</div>
-									</div>
-								</td>
-								<td class="px-6 py-4 whitespace-nowrap">
-									<div class="text-sm text-gray-900">Democratic Party</div>
-								</td>
-								<td class="px-6 py-4 whitespace-nowrap">
-									<div class="text-sm text-gray-900">Presidential Election
-										2024</div>
-								</td>
-								<td class="px-6 py-4 whitespace-nowrap"><span
-									class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-										Approved </span></td>
 
-								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-									<div class="flex space-x-3">
-										<button class="text-primary-600 hover:text-primary-900">
-											View</button>
-										<button class="text-yellow-600 hover:text-yellow-900">
-											Edit</button>
-										<button class="text-red-600 hover:text-red-900">
-											Delete</button>
-									</div>
-								</td>
-							</tr>
-							<!-- Add more candidate rows as needed -->
-						</tbody>
-					</table>
-				</div>
+                <!-- Candidates Table -->
+              <!-- Dynamic Candidates Table -->
+              <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                          <tr>
+                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
+                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Election</th>
+                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                          </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200">
+                          <c:forEach var="candidate" items="${candidates}">
+                              <tr>
+                                  <!-- Candidate Info -->
+                                  <td class="px-6 py-4 whitespace-nowrap">
+                                      <div class="flex items-center">
+                                          <div class="h-10 w-10 flex-shrink-0">
+                                              <img class="h-10 w-10 rounded-full object-cover"
+                                                   src="/images/${candidate.profileImage != null ? candidate.profileImage : 'https://placehold.co/100x100'}"
+                                                   alt="Candidate Image" />
+                                          </div>
+                                          <div class="ml-4">
+                                              <div class="text-sm font-medium text-gray-900">
+                                                  ${candidate.fname} ${candidate.lname}
+                                              </div>
+                                              <div class="text-sm text-gray-500">
+                                                  ID: ${candidate.candidateId}
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+
+                                  <!-- Party -->
+                                  <td class="px-6 py-4 whitespace-nowrap">
+                                      <div class="text-sm text-gray-900">
+                                          <c:choose>
+                                              <c:when test="${candidate.isIndependent}">
+                                                  -
+                                              </c:when>
+                                              <c:otherwise>
+                                                  ${candidate.getPartyName()}
+                                              </c:otherwise>
+                                          </c:choose>
+                                      </div>
+                                  </td>
+
+                                  <!-- Election -->
+                                  <td class="px-6 py-4 whitespace-nowrap">
+                                      <div class="text-sm text-gray-900">${candidate.getElectionName()}</div>
+                                  </td>
+
+                                  <!-- Address -->
+                                  <td class="px-6 py-4 whitespace-nowrap">
+                                      <div class="text-sm text-gray-900">${candidate.address}</div>
+                                  </td>
+
+                                  <!-- Actions -->
+                                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                      <div class="flex space-x-3">
+                                          <button class="text-primary-600 hover:text-primary-900">View</button>
+                                          <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
+                                          <form action="${pageContext.request.contextPath}/admin/candidate/delete/${candidate.candidateId}"
+                                                                                                    method="POST"
+                                                                                                    class="inline"
+                                                                                                    onsubmit="return confirm('Are you sure you want to delete this candidate?');">
+
+                                                                                                  <button type="submit" class="text-red-600 hover:text-red-900">
+                                                                                                      Delete
+                                                                                                  </button>
+                                                                                                  </form>
+                                      </div>
+                                  </td>
+                              </tr>
+                          </c:forEach>
+                      </tbody>
+                  </table>
+              </div>
+
 			</div>
 		</div>
 	</div>
@@ -219,7 +241,7 @@
                     // Normal search delay
                     searchTimeout = setTimeout(() => {
                         searchForm.submit();
-                    }, 500); // 0.5 second delay for typing
+                    }, 800); // 0.8 second delay for typing
                 }
             });
 

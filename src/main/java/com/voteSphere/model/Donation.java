@@ -1,7 +1,10 @@
 package com.voteSphere.model;
 
+import com.voteSphere.service.UserService;
+
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 public class Donation 
 {
@@ -110,9 +113,53 @@ public class Donation
 		this.status = status;
 	}
 
-	
-    
 
-    
-    
+
+	public String getUserFullName()
+	{
+		User user = UserService.getUserById(userId);
+		return user.getFirstName() + " " + user.getLastName();
+	}
+
+	public String getUserEmail()
+	{
+		User user = UserService.getUserById(userId);
+		return user.getEmail();
+	}
+
+	public String getProfileImage() {
+		User user = UserService.getUserById(userId);
+		return user.getProfileImage();
+	}
+
+	public static List<Donation> searchDonations(List<Donation> allDonations, String keyword) {
+		if (keyword == null || keyword.trim().isEmpty()) {
+			return allDonations;
+		}
+
+		String[] words = keyword.toLowerCase().split("\\s+");
+
+		return allDonations.stream()
+				.filter(donation -> {
+					String data = (
+							(donation.getUserFullName() != null ? donation.getUserFullName() : "") + " " +
+									(donation.getUserEmail() != null ? donation.getUserEmail() : "") + " " +
+									donation.getAmount() + " " +
+									(donation.getProductCode() != null ? donation.getProductCode() : "") + " " +
+									(donation.getTransactionUuid() != null ? donation.getTransactionUuid() : "") + " " +
+									(donation.getStatus() != null ? donation.getStatus() : "") + " " +
+									(donation.getDonationTime() != null ? donation.getDonationTime().toString() : "")
+					).toLowerCase();
+
+					for (String word : words) {
+						if (!data.contains(word)) {
+							return false;
+						}
+					}
+					return true;
+				})
+				.toList();
+	}
+
+
 }

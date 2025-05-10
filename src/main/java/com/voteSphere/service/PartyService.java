@@ -139,6 +139,29 @@ public class PartyService {
 	}
 
 
+
+	public static Party getPartyById(Integer id) {
+
+		try {
+			logger.debug("Fetching party with ID: {}", id);
+
+			Party party = PartyDao.findPartyById(id);
+
+			if (party == null) {
+				logger.warn("No party found with ID: {}", id);
+			} else {
+				logger.info("Successfully retrieved party ID: {}", id);
+			}
+
+			return party;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve party by ID: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error retrieving party by ID", e);
+		}
+		return null;
+	}
+
 	public static List<Party> getAllPartys() {
 		try {
 			return PartyDao.getAllParties();

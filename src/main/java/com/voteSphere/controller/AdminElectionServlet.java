@@ -74,7 +74,6 @@ public class AdminElectionServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
             else if (pathInfo.equalsIgnoreCase("/add/")) {
-                System.out.println("Dfsafsaf");
                 handleAddElection(request, response);
             }
             else if (pathInfo.startsWith("/update/")) {
@@ -99,13 +98,12 @@ public class AdminElectionServlet extends HttpServlet {
         }
     }
 
-    private void handleListElections(HttpServletRequest request, HttpServletResponse response)
+    protected static void handleListElections(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.debug("Listing all elections");
         List<Election> elections = ElectionService.getAllElections();
         request.setAttribute("elections", elections);
         request.getRequestDispatcher("/WEB-INF/pages/admin/elections.jsp").forward(request, response);
-        System.out.println(request.getAttribute("elections"));
         logger.info("Successfully listed {} elections", elections.size());
     }
 

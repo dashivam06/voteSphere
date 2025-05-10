@@ -81,7 +81,7 @@ public class AdminPartyServlet extends HttpServlet {
         }
     }
 
-    private void handleListParties(HttpServletRequest request, HttpServletResponse response)
+    protected static void handleListParties(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.debug("Listing all parties");
         List<Party> parties = PartyService.getAllPartys();

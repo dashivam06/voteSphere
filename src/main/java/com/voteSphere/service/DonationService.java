@@ -90,6 +90,31 @@ public class DonationService {
         return null;
     }
 
+
+
+    // Retrieve donation by ID
+    public static Donation getDonationById(Integer donationId) {
+        if (donationId == null || donationId <= 0) {
+            logger.warn("Valid donation ID is required.");
+            return null;
+        }
+
+        try {
+            Donation donation = DonationDao.findDonationById(donationId);
+            if (donation == null) {
+                logger.warn("No donation found with the given ID.");
+            }
+            return donation;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve donation by ID: " + dae.getMessage(), dae);
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving donation by ID", e);
+        }
+        return null;
+    }
+
+
+
     // Retrieve all donations
     public static List<Donation> getAllDonations() {
         try {
@@ -184,4 +209,140 @@ public class DonationService {
         }
         return false;
     }
+
+    // Get total donations amount with request/response handling
+    public static double getTotalDonations(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            double total = DonationDao.getTotalDonations();
+            request.setAttribute("totalDonations", total);
+            return total;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve total donations: " + dae.getMessage(), dae);
+            request.setAttribute("total_donations_error", dae.getUserMessage());
+            return 0.0;
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving total donations", e);
+            request.setAttribute("total_donations_error", "An unexpected error occurred while calculating total donations.");
+            return 0.0;
+        }
+    }
+
+    // Get monthly donations amount with request/response handling
+    public static double getMonthlyDonations(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            double monthlyTotal = DonationDao.getMonthlyDonations();
+            request.setAttribute("monthlyDonations", monthlyTotal);
+            return monthlyTotal;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve monthly donations: " + dae.getMessage(), dae);
+            request.setAttribute("monthly_donations_error", dae.getUserMessage());
+            return 0.0;
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving monthly donations", e);
+            request.setAttribute("monthly_donations_error", "An unexpected error occurred while calculating monthly donations.");
+            return 0.0;
+        }
+    }
+
+    // Get average donation amount with request/response handling
+    public static double getAverageDonation(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            double average = DonationDao.getAverageDonation();
+            request.setAttribute("averageDonation", average);
+            return average;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve average donation: " + dae.getMessage(), dae);
+            request.setAttribute("average_donation_error", dae.getUserMessage());
+            return 0.0;
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving average donation", e);
+            request.setAttribute("average_donation_error", "An unexpected error occurred while calculating average donation.");
+            return 0.0;
+        }
+    }
+
+    // Get total number of donors with request/response handling
+    public static int getTotalDonors(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            int donorCount = DonationDao.getTotalDonors();
+            request.setAttribute("totalDonors", donorCount);
+            return donorCount;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve total donors: " + dae.getMessage(), dae);
+            request.setAttribute("total_donors_error", dae.getUserMessage());
+            return 0;
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving total donors", e);
+            request.setAttribute("total_donors_error", "An unexpected error occurred while counting total donors.");
+            return 0;
+        }
+    }
+
+    // Get all donations with request/response handling
+    public static List<Donation> getAllDonations(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            List<Donation> donations = DonationDao.getAllDonations();
+            request.setAttribute("donations", donations);
+            return donations;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve all donations: " + dae.getMessage(), dae);
+            request.setAttribute("all_donations_error", dae.getUserMessage());
+            return Collections.emptyList();
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving all donations", e);
+            request.setAttribute("all_donations_error", "An unexpected error occurred while retrieving donations.");
+            return Collections.emptyList();
+        }
+    }
+//
+//    // Search donations with request/response handling
+//    public static List<Donation> searchDonations(HttpServletRequest request, HttpServletResponse response, String query) {
+//        if (ValidationUtil.isNullOrEmpty(query)) {
+//            request.setAttribute("search_error", "Search query cannot be empty");
+//            return Collections.emptyList();
+//        }
+//
+//        try {
+//            List<Donation> results = Donation.searchDonations(query);
+//            request.setAttribute("searchResults", results);
+//            request.setAttribute("searchQuery", query);
+//            return results;
+//        } catch (DataAccessException dae) {
+//            logger.error("Failed to search donations: " + dae.getMessage(), dae);
+//            request.setAttribute("search_error", dae.getUserMessage());
+//            return Collections.emptyList();
+//        } catch (Exception e) {
+//            logger.error("Unexpected error searching donations", e);
+//            request.setAttribute("search_error", "An unexpected error occurred during search.");
+//            return Collections.emptyList();
+//        }
+//    }
+//
+//    // Process donation refund with request/response handling
+//    public static boolean refundDonation(HttpServletRequest request, HttpServletResponse response, int donationId) {
+//        if (donationId <= 0) {
+//            request.setAttribute("refund_error", "Invalid donation ID");
+//            return false;
+//        }
+//
+//        try {
+//            boolean success = DonationDao.refundDonation(donationId);
+//            if (success) {
+//                request.setAttribute("refund_success", "Donation refund processed successfully");
+//            } else {
+//                request.setAttribute("refund_error", "Failed to process refund");
+//            }
+//            return success;
+//        } catch (DataAccessException dae) {
+//            logger.error("Failed to process refund for donation ID " + donationId + ": " + dae.getMessage(), dae);
+//            request.setAttribute("refund_error", dae.getUserMessage());
+//            return false;
+//        } catch (Exception e) {
+//            logger.error("Unexpected error processing refund for donation ID " + donationId, e);
+//            request.setAttribute("refund_error", "An unexpected error occurred while processing refund.");
+//            return false;
+//        }
+//    }
+
+
 }

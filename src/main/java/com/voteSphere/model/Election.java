@@ -115,21 +115,30 @@ public class Election {
 		}
 	}
 
-
 	public static List<Election> searchElections(List<Election> allElections, String keyword) {
 		if (keyword == null || keyword.trim().isEmpty()) {
 			return allElections;
 		}
 
-		String lowerKeyword = keyword.toLowerCase();
+		String[] words = keyword.toLowerCase().trim().split("\\s+");
 
 		return allElections.stream()
-				.filter(election ->
-						(election.getName() != null && election.getName().toLowerCase().contains(lowerKeyword)) ||
-								(election.getType() != null && election.getType().toLowerCase().contains(lowerKeyword))
-				)
+				.filter(election -> {
+					String data = (
+							(election.getName() != null ? election.getName() : "") + " " +
+									(election.getType() != null ? election.getType() : "")
+					).toLowerCase();
+
+					for (String word : words) {
+						if (!data.contains(word)) {
+							return false;
+						}
+					}
+					return true;
+				})
 				.toList();
 	}
+
 
 
 

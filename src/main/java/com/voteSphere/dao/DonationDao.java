@@ -431,4 +431,192 @@ public class DonationDao {
             throw new DataAccessException("Unexpected error while updating donation status", "Please contact support.", e);
         }
     }
+
+
+    // Method to get total donations amount
+    public static double getTotalDonations() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Attempting to retrieve total donations amount");
+        }
+
+        String sql = "SELECT SUM(amount) AS total FROM donations WHERE status = 'COMPLETED'";
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                double total = rs.getDouble("total");
+                if (logger.isInfoEnabled()) {
+                    logger.info("Successfully retrieved total donations amount: " + total);
+                }
+                return total;
+            } else {
+                logger.warn("No result returned for total donations calculation");
+                return 0.0;
+            }
+
+        } catch (SQLException e) {
+            logger.error("SQL error while calculating total donations", e);
+            throw new DataAccessException("Database error while calculating total donations",
+                    "Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while calculating total donations", e);
+            throw new DataAccessException("Unexpected error while calculating total donations",
+                    "Please contact support.", e);
+        }
+    }
+
+    // Method to get monthly donations amount
+    public static double getMonthlyDonations() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Attempting to retrieve monthly donations amount");
+        }
+
+        String sql = "SELECT SUM(amount) AS monthly_total FROM donations " +
+                "WHERE status = 'COMPLETED' " +
+                "AND donation_time >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH)";
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                double monthlyTotal = rs.getDouble("monthly_total");
+                if (logger.isInfoEnabled()) {
+                    logger.info("Successfully retrieved monthly donations amount: " + monthlyTotal);
+                }
+                return monthlyTotal;
+            } else {
+                logger.warn("No result returned for monthly donations calculation");
+                return 0.0;
+            }
+
+        } catch (SQLException e) {
+            logger.error("SQL error while calculating monthly donations", e);
+            throw new DataAccessException("Database error while calculating monthly donations",
+                    "Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while calculating monthly donations", e);
+            throw new DataAccessException("Unexpected error while calculating monthly donations",
+                    "Please contact support.", e);
+        }
+    }
+
+    // Method to get average donation amount
+    public static double getAverageDonation() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Attempting to retrieve average donation amount");
+        }
+
+        String sql = "SELECT AVG(amount) AS average FROM donations WHERE status = 'COMPLETED'";
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                double average = rs.getDouble("average");
+                if (logger.isInfoEnabled()) {
+                    logger.info("Successfully retrieved average donation amount: " + average);
+                }
+                return average;
+            } else {
+                logger.warn("No result returned for average donation calculation");
+                return 0.0;
+            }
+
+        } catch (SQLException e) {
+            logger.error("SQL error while calculating average donation", e);
+            throw new DataAccessException("Database error while calculating average donation",
+                    "Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while calculating average donation", e);
+            throw new DataAccessException("Unexpected error while calculating average donation",
+                    "Please contact support.", e);
+        }
+    }
+
+    // Method to get total number of unique donors
+    public static int getTotalDonors() {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Attempting to retrieve total number of donors");
+        }
+
+        String sql = "SELECT COUNT(DISTINCT user_id) AS donor_count FROM donations WHERE status = 'COMPLETED'";
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                int donorCount = rs.getInt("donor_count");
+                if (logger.isInfoEnabled()) {
+                    logger.info("Successfully retrieved total number of donors: " + donorCount);
+                }
+                return donorCount;
+            } else {
+                logger.warn("No result returned for donor count calculation");
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            logger.error("SQL error while counting donors", e);
+            throw new DataAccessException("Database error while counting donors",
+                    "Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while counting donors", e);
+            throw new DataAccessException("Unexpected error while counting donors",
+                    "Please contact support.", e);
+        }
+    }
+
+    // Method to get donations by user ID
+    public static List<Donation> getDonationsByUserId(int userId) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Attempting to retrieve donations for user ID: " + userId);
+        }
+
+        String sql = "SELECT * FROM donations WHERE user_id = ? ORDER BY donation_time DESC";
+        List<Donation> donations = new ArrayList<>();
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Donation donation = new Donation(
+                            rs.getInt("donation_id"),
+                            rs.getInt("user_id"),
+                            rs.getDouble("amount"),
+                            rs.getString("product_code"),
+                            rs.getString("transaction_uuid"),
+                            rs.getString("status"),
+                            rs.getTimestamp("donation_time")
+                    );
+                    donations.add(donation);
+                }
+            }
+
+            if (logger.isInfoEnabled()) {
+                logger.info("Successfully retrieved " + donations.size() + " donations for user ID: " + userId);
+            }
+
+            return donations;
+
+        } catch (SQLException e) {
+            logger.error("SQL error while retrieving donations for user ID: " + userId, e);
+            throw new DataAccessException("Database error while retrieving user donations",
+                    "Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while retrieving donations for user ID: " + userId, e);
+            throw new DataAccessException("Unexpected error while retrieving user donations",
+                    "Please contact support.", e);
+        }
+    }
+
+
+
 }

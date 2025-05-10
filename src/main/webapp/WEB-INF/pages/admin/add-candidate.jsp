@@ -1,3 +1,6 @@
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,14 +41,14 @@
   </head>
   <body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
     <!-- Include sidebar -->
-    <div id="sidebar-container"></div>
+     <%@ include file="sidebar.jsp" %>
 
     <!-- Main Content -->
     <div
       class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
     >
       <!-- Include navbar -->
-      <div id="navbar-container"></div>
+     <%@ include file="navbar.jsp" %>
 
       <!-- Content Area -->
       <div class="p-8 overflow-y-auto">
@@ -61,7 +64,7 @@
           </div>
 
           <!-- Add Candidate Form -->
-          <form id="addCandidateForm" class="space-y-6">
+          <form action="/admin/candidate/new" method="post" enctype="multipart/form-data" id="addCandidateForm" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Basic Information -->
 
@@ -139,7 +142,7 @@
                 <input
                   type="file"
                   accept="image/*"
-                  name="profile_image"
+                  name="candidate_profile_image"
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
               </div>
@@ -183,37 +186,37 @@
                 ></textarea>
               </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Party</label
-                  >
-                  <select
-                    name="party_id"
-                    required
-                    placeholder="Select Party"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
-                  >
-                    <option value="">Select Party</option>
-                    <!-- Will be populated dynamically -->
-                  </select>
-                </div>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <!-- Party Dropdown -->
+                 <div>
+                     <label class="block text-sm font-medium text-gray-700">Party</label>
+                     <select
+                         name="party_id"
+                         required
+                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                     >
+                         <option value="">Select Party</option>
+                         <c:forEach items="${parties}" var="party">
+                             <option value="${party.partyId}">${party.name}</option>
+                         </c:forEach>
+                     </select>
+                 </div>
 
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Election</label
-                  >
-                  <select
-                    name="election_id"
-                    required
-                    placeholder="Select Election"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
-                  >
-                    <option value="">Select Election</option>
-                    <!-- Will be populated dynamically -->
-                  </select>
-                </div>
-              </div>
+                 <!-- Election Dropdown -->
+                 <div>
+                     <label class="block text-sm font-medium text-gray-700">Election</label>
+                     <select
+                         name="election_id"
+                         required
+                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                     >
+                         <option value="">Select Election</option>
+                         <c:forEach items="${elections}" var="election">
+                             <option value="${election.electionId}">${election.name}</option>
+                         </c:forEach>
+                     </select>
+                 </div>
+             </div>
 
               <div class="flex items-center space-x-2 mb-4">
                 <label class="flex items-center space-x-2">
@@ -252,30 +255,6 @@
     </div>
 
     <!-- Scripts -->
-    <script>
-      // Load sidebar and navbar
-      document.addEventListener("DOMContentLoaded", function () {
-        fetch("sidebar.html")
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("sidebar-container").innerHTML = data;
-          });
 
-        fetch("navbar.html")
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("navbar-container").innerHTML = data;
-          });
-      });
-
-      // Form submission handler
-      document
-        .getElementById("addCandidateForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
-          // Add your form submission logic here
-          // This should include validation and API calls to save the candidate
-        });
-    </script>
   </body>
 </html>

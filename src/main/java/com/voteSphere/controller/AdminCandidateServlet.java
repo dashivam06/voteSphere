@@ -2,7 +2,8 @@ package com.voteSphere.controller;
 
 import java.io.IOException;
 import java.util.List;
-
+import com.voteSphere.service.ElectionService;
+import com.voteSphere.service.PartyService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +34,9 @@ public class AdminCandidateServlet extends HttpServlet {
             if (pathInfo == null || pathInfo.equals("/") || pathInfo.equalsIgnoreCase("/list")) {
                 handleListCandidates(request, response);
             }
+            else if (pathInfo.startsWith("/new")) {
+                handleAddCandidateForm(request, response);
+            }
             else if (pathInfo.startsWith("/view/")) {
                 String candidateId = pathInfo.substring(6);
                 handleViewCandidate(request, response, candidateId);
@@ -44,9 +48,6 @@ public class AdminCandidateServlet extends HttpServlet {
             else if (pathInfo.startsWith("/election/")) {
                 String electionId = pathInfo.substring(10);
                 handleCandidatesByElection(request, response, electionId);
-            }
-            else if (pathInfo.equalsIgnoreCase("/search")) {
-                handleSearch(request, response);
             }
             else {
                 logger.warn("Unknown path requested: {}", pathInfo);
@@ -68,7 +69,7 @@ public class AdminCandidateServlet extends HttpServlet {
             if (pathInfo == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
-            else if (pathInfo.equalsIgnoreCase("/add")) {
+            else if (pathInfo.equalsIgnoreCase("/new")) {
                 handleAddCandidate(request, response);
             }
             else if (pathInfo.startsWith("/update/")) {
@@ -77,6 +78,7 @@ public class AdminCandidateServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/delete/")) {
                 String candidateId = pathInfo.substring(8);
+                System.out.println("Candidate Id: "+candidateId);
                 handleDeleteCandidate(request, response, candidateId);
             }
             else if (pathInfo.equalsIgnoreCase("/search")) {
@@ -93,6 +95,19 @@ public class AdminCandidateServlet extends HttpServlet {
         }
     }
 
+
+    private void handleAddCandidateForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        logger.debug("Displaying candidate add form");
+
+        // Attach the list of election and parties in the drop-down
+        request.setAttribute("elections", ElectionService.getAllElections());
+        request.setAttribute("parties", PartyService.getAllPartys());
+
+        request.getRequestDispatcher("/WEB-INF/pages/admin/add-candidate.jsp").forward(request, response);
+        logger.info("Successfully displayed candidate add form");
+    }
+
     private void handleListCandidates(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.debug("Listing all candidates");
@@ -106,7 +121,7 @@ public class AdminCandidateServlet extends HttpServlet {
             throws ServletException, IOException {
         logger.debug("Listing filtered candidates for search query: {}", searchQuery);
         List<Candidate> candidates = CandidateService.getAllCandidates();
-//        candidates = Candidate.searchCandidates(candidates, searchQuery);
+        candidates = Candidate.searchCandidates(candidates, searchQuery);
         request.setAttribute("candidates", candidates);
         request.setAttribute("searchInput", searchQuery);
         request.getRequestDispatcher("/WEB-INF/pages/admin/candidates.jsp").forward(request, response);

@@ -31,6 +31,18 @@ public class CandidateDao {
 			logger.debug("Attempting to create candidate: " + candidate.getFname() + " " + candidate.getLname());
 		}
 
+
+		// Check if a candidate already exists for the party and election
+		if (candidate.getPartyId() != null && candidate.getElectionId() != null &&
+				isCandidateExistsForPartyAndElection(candidate.getPartyId(), candidate.getElectionId())) {
+
+			logger.warn("Candidate already exists for party_id " + candidate.getPartyId() +
+					" and election_id " + candidate.getElectionId());
+
+			throw new DataAccessException("Candidate already exists for this party and election",
+					"Only one candidate per party is allowed in each election.", null);
+		}
+
 		String sql = "INSERT INTO candidates (first_name, last_name, address, gender, dob, is_independent, highest_education, bio, profile_image, party_id, election_id, manifesto) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -269,6 +281,40 @@ public class CandidateDao {
 					"An unexpected error occurred. Please contact support.", e);
 		}
 	}
+
+
+
+	private static boolean isCandidateExistsForPartyAndElection(int partyId, int electionId) {
+		String sql = "SELECT COUNT(*) FROM candidates WHERE party_id = ? AND election_id = ?";
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Checking if a candidate exists for party_id: " + partyId + " and election_id: " + electionId);
+		}
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			stmt.setInt(1, partyId);
+			stmt.setInt(2, electionId);
+
+			try (ResultSet rs = stmt.executeQuery()) {
+				boolean exists = rs.next() && rs.getInt(1) > 0;
+
+				if (exists) {
+					logger.info("Candidate already exists for party_id " + partyId + " and election_id " + electionId);
+				} else {
+					logger.debug("No existing candidate found for party_id " + partyId + " and election_id " + electionId);
+				}
+
+				return exists;
+			}
+
+		} catch (SQLException e) {
+			logger.error("Error checking existing candidate for party_id " + partyId + " and election_id " + electionId, e);
+			throw new DataAccessException("Error checking for existing candidate",
+					"System error occurred while checking for existing candidate.", e);
+		}
+	}
+
 
 	public static List<Candidate> getCandidateByParty(int partyId) {
 		if (logger.isDebugEnabled()) {

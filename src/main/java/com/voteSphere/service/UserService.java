@@ -172,6 +172,25 @@ public class UserService {
 		return null;
 	}
 
+
+	public static User getUserById( Integer id) {
+		if (id == null || id <= 0) {
+			return null;
+		}
+		try {
+			User user = UserDao.getUserById(id);
+			if (user == null) {
+			}
+			return user;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve user by ID: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error retrieving user by ID", e);
+		}
+		return null;
+	}
+
+
 	public static User getUserByEmail(HttpServletRequest request, HttpServletResponse response, String email) {
 		if (ValidationUtil.isNullOrEmpty(email)) {
 			request.setAttribute("email_error", "Email is required.");

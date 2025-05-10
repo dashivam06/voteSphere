@@ -107,18 +107,27 @@ public class Party
 	public static Comparator<Party> byFounderNameAsc = Comparator.comparing(Party::getFounderName, String.CASE_INSENSITIVE_ORDER);
 
 
-	public static List<Party> searchParties(List<Party> allParties,  String keyword) {
+	public static List<Party> searchParties(List<Party> allParties, String keyword) {
 		if (keyword == null || keyword.isBlank()) return allParties;
 
-		String finalKeyword =  keyword.toLowerCase();
-		System.out.println("Final : " + finalKeyword);
+		String[] words = keyword.toLowerCase().trim().split("\\s+");
 
 		return allParties.stream()
-				.filter(p ->
-						(p.getName() != null && p.getName().toLowerCase().contains(finalKeyword)) ||
-								(p.getLeaderName() != null && p.getLeaderName().toLowerCase().contains(finalKeyword)) ||
-								(p.getFounderName() != null && p.getFounderName().toLowerCase().contains(finalKeyword))
-				)
+				.filter(p -> {
+					String data = (
+							(p.getName() != null ? p.getName() : "") + " " +
+									(p.getLeaderName() != null ? p.getLeaderName() : "") + " " +
+									(p.getFounderName() != null ? p.getFounderName() : "")
+					).toLowerCase();
+
+					System.out.println(data);
+					for (String word : words) {
+						if (!data.contains(word)) {
+							return false;
+						}
+					}
+					return true;
+				})
 				.toList();
 	}
 

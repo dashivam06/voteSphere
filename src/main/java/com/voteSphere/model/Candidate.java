@@ -1,5 +1,9 @@
 package com.voteSphere.model;
 
+import com.voteSphere.service.ElectionService;
+import com.voteSphere.service.PartyService;
+import jakarta.servlet.http.Part;
+
 import java.sql.Date;
 import  java.util.*;
 
@@ -163,7 +167,63 @@ public class Candidate {
 		this.manifesto = manifesto;
 	}
 
+	public String getPartyName()
+	{
+		Party party =  PartyService.getPartyById(partyId);
+		return (party != null) ? party.getName() : "";
+
+	}
+
+	public String  getElectionName()
+	{
+		Election election = ElectionService.getElectionById(electionId);
+		return (election != null) ? election.getName() : "";
+	}
+
+	public static List<Candidate> searchCandidates(List<Candidate> allCandidates, String keyword) {
+		if (keyword == null || keyword.trim().isEmpty()) {
+			return allCandidates;
+		}
+
+		String[] words = keyword.toLowerCase().trim().split("\\s+");
+
+		return allCandidates.stream()
+				.filter(candidate -> {
+					String data = (
+							(candidate.getFname() + " ") +
+									(candidate.getLname() + " ") +
+									(candidate.getAddress() + " ") +
+									(candidate.getPartyName()+ " " ) +
+									(candidate.getElectionName())
+					).toLowerCase();
+
+					for (String word : words) {
+						if (!data.contains(word)) {
+							return false;
+						}
+					}
+					return true;
+				})
+				.toList();
+	}
 
 
-
+	@Override
+	public String toString() {
+		return "Candidate{" +
+				"candidateId=" + candidateId +
+				", fname='" + fname + '\'' +
+				", lname='" + lname + '\'' +
+				", address='" + address + '\'' +
+				", gender='" + gender + '\'' +
+				", dob=" + dob +
+				", isIndependent=" + isIndependent +
+				", highestEducation='" + highestEducation + '\'' +
+				", bio='" + bio + '\'' +
+				", profileImage='" + profileImage + '\'' +
+				", partyId=" + partyId +
+				", electionId=" + electionId +
+				", manifesto='" + manifesto + '\'' +
+				'}';
+	}
 }
