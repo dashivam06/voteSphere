@@ -1,7 +1,10 @@
 package com.voteSphere.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UnverifiedUser {
 
@@ -277,8 +280,42 @@ public class UnverifiedUser {
 	public UnverifiedUser() {
 		super();
 	}
-	
-	
+
+
+
+
+	public static List<UnverifiedUser> searchUnverifiedUsers(List<UnverifiedUser> allUsers, String keyword) {
+		if (keyword == null || keyword.trim().isEmpty()) {
+			return allUsers;
+		}
+
+		String[] words = keyword.toLowerCase().trim().split("\\s+");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+		return allUsers.stream()
+				.filter(user -> {
+					String data = (
+							(user.getFirstName() != null ? user.getFirstName() : "") + " " +
+									(user.getLastName() != null ? user.getLastName() : "") + " " +
+									(user.getVoterId() != null ? user.getVoterId() : "") + " " +
+									(user.getNotificationEmail() != null ? user.getNotificationEmail() : "") + " " +
+									(user.getDob() != null ? formatter.format(user.getDob()) : "") + " " +
+									(user.getGender() != null ? user.getGender() : "") + " " +
+									(user.getPermanentAddress() != null ? user.getPermanentAddress() : "") + " " +
+									(user.getTemporaryAddress() != null ? user.getTemporaryAddress() : "") + " " +
+									(user.getCreatedAt() != null ? formatter.format(user.getCreatedAt()) : "")
+					).toLowerCase();
+
+					for (String word : words) {
+						if (!data.contains(word)) {
+							return false;
+						}
+					}
+					return true;
+				})
+				.collect(Collectors.toList());
+	}
+
 	
 
 	@Override

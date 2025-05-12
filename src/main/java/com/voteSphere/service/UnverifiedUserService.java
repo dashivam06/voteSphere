@@ -194,6 +194,25 @@ public class UnverifiedUserService {
 		return null;
 	}
 
+
+	public static UnverifiedUser getUnverifiedUserById(
+													   Integer id) {
+		if (id == null || id <= 0) {
+			return null;
+		}
+
+		try {
+			UnverifiedUser user = UnverifiedUserDao.findUnverifiedUserById(id);
+
+			return user;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve unverified user by ID: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error retrieving unverified user by ID", e);
+		}
+		return null;
+	}
+
 	public static UnverifiedUser getUnverifiedUserByEmail(HttpServletRequest request, HttpServletResponse response,
 			String email) {
 		if (ValidationUtil.isNullOrEmpty(email)) {
@@ -382,6 +401,8 @@ public class UnverifiedUserService {
 		return false;
 	}
 
+
+
 	public static boolean deleteUnverifiedUser(HttpServletRequest request, HttpServletResponse response, int userId) {
 		if (userId <= 0) {
 			request.setAttribute("user_id_error", "Invalid unverified user ID.");
@@ -400,6 +421,25 @@ public class UnverifiedUserService {
 		} catch (Exception e) {
 			logger.error("Unexpected error while deleting unverified user", e);
 			request.setAttribute("user_delete_error", "An unexpected error occurred. Please try again.");
+		}
+		return false;
+	}
+
+
+
+	public static boolean deleteUnverifiedUser( int userId) {
+		if (userId <= 0) {
+			return false;
+		}
+
+		try {
+			boolean deleted = UnverifiedUserDao.deleteUnverifiedUser(userId);
+
+			return deleted;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to delete unverified user: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error while deleting unverified user", e);
 		}
 		return false;
 	}
@@ -560,10 +600,41 @@ public class UnverifiedUserService {
 	        return false;
 	    }
 	}
-	
-	
-	
-	
+
+
+
+	public static boolean setIsVerifiedTrue(int userId) {
+		if (userId <= 0) {
+			logger.warn("Invalid user ID provided for verification: {}", userId);
+			return false;
+		}
+
+		try {
+			logger.debug("Initiating admin verification for user ID: {}", userId);
+
+			boolean verificationSuccess = UnverifiedUserDao.setIsVerifiedTrue(userId);
+
+			if (verificationSuccess) {
+				logger.info("Admin successfully verified user ID: {}", userId);
+				return true;
+			} else {
+				logger.warn("Verification failed - no user found with ID: {}", userId);
+				return false;
+			}
+
+		} catch (DataAccessException dae) {
+			logger.error("Database error during verification of user ID {}: {}", userId, dae.getMessage(), dae);
+			return false;
+		} catch (Exception e) {
+			logger.error("Unexpected error verifying user ID {}: {}", userId, e.getMessage(), e);
+			return false;
+		}
+	}
+
+
+
+
+
 	public static String getEmailOfUnverifiedUser(HttpServletRequest request, HttpServletResponse response,
 			int userId) {
 		if (userId <= 0) {

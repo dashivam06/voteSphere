@@ -53,7 +53,7 @@
             </svg> Account requests
 				</a></li>
 
-				<li class="mb-1"><a href="voters.html"
+				<li class="mb-1"><a href="/admin/voter/"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">

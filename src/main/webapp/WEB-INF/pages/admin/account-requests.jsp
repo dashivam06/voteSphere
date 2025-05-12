@@ -8,6 +8,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>VoteSphere - Account Requests</title>
+<link rel="icon" type="image/x-icon" href="/pages/resources/icons/logo.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
@@ -140,14 +141,14 @@ if (user != null) {
 				</div>
 				<div class="flex justify-end space-x-3">
 					<form
-						action="/voteSphere/admin/account-requests?action=approve&id=<%=user.getUnverifiedUserId()%>"
+						action="/admin/account-requests/accept/<%=user.getUnverifiedUserId()%>"
 						method="post">
 						<button type="submit"
 							class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200">
 							Accept</button>
 					</form>
 					<form
-						action="/voteSphere/admin/account-requests?action=reject&id=<%=user.getUnverifiedUserId()%>"
+						action="/admin/account-requests/reject/<%=user.getUnverifiedUserId()%>"
 						method="post">
 						<button type="submit"
 							class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
@@ -231,7 +232,7 @@ List<UnverifiedUser> unverifiedUsers = (List<UnverifiedUser>) request.getAttribu
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
 									<a
-									href="/voteSphere/admin/account-requests?action=view&id=<%=unverifiedUser.getUnverifiedUserId()%>"
+									href="/admin/user-approval/view/<%=unverifiedUser.getUnverifiedUserId()%>"
 									class="text-primary-600 hover:text-primary-900 mr-3">View</a>
 								</td>
 							</tr>

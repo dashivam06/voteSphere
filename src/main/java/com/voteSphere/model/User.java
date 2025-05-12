@@ -2,6 +2,11 @@ package com.voteSphere.model;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
+import java.util.Calendar;
+import java.text.DateFormatSymbols;
+
+import java.util.stream.Collectors;
 
 public class User 
 {
@@ -246,5 +251,84 @@ public class User
 		this.isEmailVerified = isEmailVerified;
 	}
 
-    
+	@Override
+	public String toString() {
+		return "User{" +
+				"userId=" + userId +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", voterId='" + voterId + '\'' +
+				", email='" + email + '\'' +
+				", profileImage='" + profileImage + '\'' +
+				", phoneNumber='" + phoneNumber + '\'' +
+				", imageHoldingCitizenship='" + imageHoldingCitizenship + '\'' +
+				", voterCardFront='" + voterCardFront + '\'' +
+				", voterCardBack='" + voterCardBack + '\'' +
+				", citizenshipFront='" + citizenshipFront + '\'' +
+				", citizenshipBack='" + citizenshipBack + '\'' +
+				", thumbPrint='" + thumbPrint + '\'' +
+				", password='" + password + '\'' +
+				", dob=" + dob +
+				", gender='" + gender + '\'' +
+				", permanentAddress='" + permanentAddress + '\'' +
+				", temporaryAddress='" + temporaryAddress + '\'' +
+				", role='" + role + '\'' +
+				", isVerified=" + isVerified +
+				", isEmailVerified=" + isEmailVerified +
+				", createdAt=" + createdAt +
+				'}';
+	}
+
+	public static List<User> searchUsers(List<User> allUsers, String keyword) {
+		if (keyword == null || keyword.trim().isEmpty()) {
+			return allUsers;
+		}
+
+		String[] words = keyword.toLowerCase().trim().split("\\s+");
+
+		return allUsers.stream()
+				.filter(user -> {
+					// 1) Build the base searchable string
+					String data = (
+							user.getFirstName()        + " " +
+									user.getLastName()         + " " +
+									user.getVoterId()          + " " +
+									user.getEmail()            + " " +
+									user.getPhoneNumber()      + " " +
+									user.getPermanentAddress() + " " +
+									user.getTemporaryAddress() + " " +
+									user.getGender()
+					).toLowerCase();
+
+					// 2) If createdAt exists, extract month variants
+					Timestamp ts = user.getCreatedAt();
+					if (ts != null) {
+						Calendar cal = Calendar.getInstance();
+						cal.setTimeInMillis(ts.getTime());
+						int m = cal.get(Calendar.MONTH);    // 0–11
+						int monthNum = m + 1;               // 1–12
+						String monthNumStr       = String.valueOf(monthNum);
+						String monthNumPadded    = String.format("%02d", monthNum);
+						DateFormatSymbols dfs    = new DateFormatSymbols();
+						String monthFullName     = dfs.getMonths()[m].toLowerCase();      // e.g. "may"
+						String monthShortName    = dfs.getShortMonths()[m].toLowerCase(); // e.g. "may" or "jan"
+
+						data += " "
+								+ monthNumStr       + " "
+								+ monthNumPadded    + " "
+								+ monthFullName     + " "
+								+ monthShortName;
+					}
+
+					// 3) Ensure every search word is present
+					for (String w : words) {
+						if (!data.contains(w)) {
+							return false;
+						}
+					}
+					return true;
+				})
+				.collect(Collectors.toList());
+	}
+
 }
