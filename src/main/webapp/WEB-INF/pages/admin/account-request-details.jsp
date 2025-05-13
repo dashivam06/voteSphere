@@ -1,403 +1,780 @@
+
+<%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VoteSphere | User Verification</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/flowbite@1.5.2/dist/flowbite.js"></script>
-    <style>
-        :root {
-            --primary-50: 240 249 255;
-            --primary-600: 2 132 199;
-            --primary-700: 3 105 161;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteSphere - Account Request Details</title>
+  <link rel="stylesheet" href="../styles/global.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: "#f0f9ff",
+              100: "#e0f2fe",
+              200: "#bae6fd",
+              300: "#7dd3fc",
+              400: "#38bdf8",
+              500: "#0ea5e9",
+              600: "#0284c7",
+              700: "#0369a1",
+              800: "#075985",
+              900: "#0c4a6e",
+            },
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Document preview styles */
+    .document-preview {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .document-preview:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
+    /* Modal styles */
+    .modal {
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal-content {
+      transition: transform 0.3s ease;
+    }
+    .modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
 
-        .document-card {
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
-        }
+    /* Tooltip styles */
+    .tooltip {
+      position: relative;
+    }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    .tooltip-text {
+      visibility: hidden;
+      opacity: 0;
+      width: max-content;
+      max-width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: opacity 0.3s;
+    }
+    .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
 
-        .document-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-        }
+    /* Progress bar styles */
+    .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      background-color: #e5e7eb;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background-color: #0ea5e9;
+      transition: width 0.5s ease;
+    }
 
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-        }
+    /* Document card styles */
+    .document-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    .document-card:hover {
+      border-color: #0ea5e9;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .document-card.active {
+      border-color: #0ea5e9;
+      background-color: #f0f9ff;
+    }
 
-        .image-preview {
-            max-height: 70vh;
-            max-width: 90vw;
-            object-fit: contain;
-        }
-
-        .zoom-controls {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            z-index: 50;
-        }
-    </style>
+    /* Zoom controls */
+    .zoom-controls {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .zoom-btn {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .zoom-btn:hover {
+      background-color: rgba(255, 255, 255, 1);
+      transform: scale(1.05);
+    }
+  </style>
 </head>
-<body class="antialiased">
-    <!-- Main Container -->
-    <div class="min-h-screen flex flex-col">
-        <!-- Header -->
-        <jsp:include page="navbar.jsp" />
+<body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+  <!-- Include sidebar -->
+  <jsp:include page="sidebar.jsp" />
 
-        <!-- Main Content -->
-        <div class="flex flex-1">
-            <!-- Sidebar -->
-            <jsp:include page="sidebar.jsp" />
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
+    <!-- Include navbar -->
+    <jsp:include page="navbar.jsp" />
 
-            <!-- Content Area -->
-            <main class="flex-1 p-6 lg:p-8 bg-gray-50">
-                <div class="max-w-7xl mx-auto">
-                    <!-- Page Header -->
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-900">User Verification</h1>
-                            <p class="text-gray-600 mt-1">Review and verify account registration</p>
-                        </div>
-                        <a href="${pageContext.request.contextPath}/admin/user-approval/list"
-                           class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 mt-4 md:mt-0">
-                            <i class="fas fa-arrow-left mr-2"></i> Back to list
-                        </a>
-                    </div>
-
-                    <!-- User Profile Card -->
-                    <div class="bg-white shadow rounded-lg overflow-hidden mb-8">
-                        <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-primary-600 to-primary-700">
-                            <div class="flex flex-col md:flex-row items-start md:items-center">
-                                <div class="flex items-center">
-                                    <div class="relative group mr-4">
-                                        <img class="h-16 w-16 rounded-full object-cover border-4 border-white"
-                                             src="${pageContext.request.contextPath}/uploads/${user.profileImage}"
-                                             alt="Profile image"
-                                             onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.profileImage}')">
-                                        <div class="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <i class="fas fa-search text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h2 class="text-xl font-semibold text-white">${user.firstName} ${user.lastName}</h2>
-                                        <p class="text-primary-100">${user.email}</p>
-                                    </div>
-                                </div>
-                                <div class="mt-4 md:mt-0 md:ml-auto">
-                                    <span class="status-badge ${user.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-                                        ${user.verified ? 'Verified' : 'Pending Verification'}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- User Details -->
-                        <div class="px-6 py-5">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <!-- Personal Info -->
-                                <div>
-                                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Personal Information</h3>
-                                    <dl class="space-y-3">
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Voter ID</dt>
-                                            <dd class="text-sm text-gray-900">${user.voterId}</dd>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Date of Birth</dt>
-                                            <dd class="text-sm text-gray-900"><fmt:formatDate value="${user.dateOfBirth}" pattern="MMMM d, yyyy" /></dd>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Gender</dt>
-                                            <dd class="text-sm text-gray-900">${user.gender}</dd>
-                                        </div>
-                                    </dl>
-                                </div>
-
-                                <!-- Contact Info -->
-                                <div>
-                                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Contact Information</h3>
-                                    <dl class="space-y-3">
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Email</dt>
-                                            <dd class="text-sm text-gray-900">${user.email}</dd>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Phone</dt>
-                                            <dd class="text-sm text-gray-900">${not empty user.phone ? user.phone : 'N/A'}</dd>
-                                        </div>
-                                    </dl>
-                                </div>
-
-                                <!-- Address Info -->
-                                <h1> Address Information</h1>
-                                <div>
-
-                                    <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">Address Information</h3>
-                                    <dl class="space-y-3">
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Temporary</dt>
-                                            <dd class="text-sm text-gray-900">${user.temporaryAddress}</dd>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <dt class="text-sm font-medium text-gray-500 w-32 flex-shrink-0">Permanent</dt>
-                                            <dd class="text-sm text-gray-900">${user.permanentAddress}</dd>
-                                        </div>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Verification Documents -->
-                    <div class="bg-white shadow rounded-lg overflow-hidden mb-8">
-                        <div class="px-6 py-5 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Verification Documents</h3>
-                            <p class="mt-1 text-sm text-gray-500">Review all submitted documents for verification</p>
-                        </div>
-                        <div class="px-6 py-5">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <!-- Citizenship Card -->
-                                <div class="document-card bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                    <div class="p-4">
-                                        <div class="flex items-center mb-3">
-                                            <div class="p-2 rounded-full bg-primary-50 text-primary-600 mr-3">
-                                                <i class="fas fa-id-card"></i>
-                                            </div>
-                                            <h4 class="font-medium text-gray-900">Citizenship Document</h4>
-                                        </div>
-                                        <div class="flex flex-wrap gap-2">
-                                            <button onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.citizenshipFront}')"
-                                                    class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                                <i class="fas fa-image mr-1"></i> Front
-                                            </button>
-                                            <button onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.citizenshipBack}')"
-                                                    class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                                <i class="fas fa-image mr-1"></i> Back
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Voter ID Card -->
-                                <div class="document-card bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                    <div class="p-4">
-                                        <div class="flex items-center mb-3">
-                                            <div class="p-2 rounded-full bg-primary-50 text-primary-600 mr-3">
-                                                <i class="fas fa-vote-yea"></i>
-                                            </div>
-                                            <h4 class="font-medium text-gray-900">Voter ID Card</h4>
-                                        </div>
-                                        <div class="flex flex-wrap gap-2">
-                                            <button onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.voterCardFront}')"
-                                                    class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                                <i class="fas fa-image mr-1"></i> Front
-                                            </button>
-                                            <button onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.voterCardBack}')"
-                                                    class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                                <i class="fas fa-image mr-1"></i> Back
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Additional Documents -->
-                                <div class="document-card bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                    <div class="p-4">
-                                        <div class="flex items-center mb-3">
-                                            <div class="p-2 rounded-full bg-primary-50 text-primary-600 mr-3">
-                                                <i class="fas fa-file-alt"></i>
-                                            </div>
-                                            <h4 class="font-medium text-gray-900">Additional Documents</h4>
-                                        </div>
-                                        <div class="flex flex-wrap gap-2">
-                                            <button onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}')"
-                                                    class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                                <i class="fas fa-portrait mr-1"></i> Holding ID
-                                            </button>
-                                            <button onclick="openImageModal('${pageContext.request.contextPath}/uploads/${user.thumbPrint}')"
-                                                    class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                                <i class="fas fa-fingerprint mr-1"></i> Thumbprint
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Verification Actions -->
-                    <div class="bg-white shadow rounded-lg overflow-hidden">
-                        <div class="px-6 py-5 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">Verification Decision</h3>
-                            <p class="mt-1 text-sm text-gray-500">Approve or reject this user's verification request</p>
-                        </div>
-                        <div class="px-6 py-5">
-                            <div class="flex flex-col sm:flex-row justify-end gap-3">
-                                <button type="button" onclick="openRejectModal()"
-                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    <i class="fas fa-times mr-2"></i> Reject Application
-                                </button>
-                                <form action="${pageContext.request.contextPath}/admin/user-approval/approve/${user.id}" method="post">
-                                    <button type="submit"
-                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                        <i class="fas fa-check mr-2"></i> Approve Application
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Image Preview Modal -->
-    <div id="imageModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Document Preview</h3>
-                                <button type="button" onclick="closeImageModal()" class="text-gray-400 hover:text-gray-500">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="mt-2 flex justify-center">
-                                <img id="modalImageContent" src="" alt="Document preview" class="image-preview rounded-md">
-                            </div>
-                            <div class="zoom-controls hidden">
-                                <button onclick="zoomIn()" class="p-2 bg-white rounded-full shadow-md mr-2">
-                                    <i class="fas fa-search-plus"></i>
-                                </button>
-                                <button onclick="zoomOut()" class="p-2 bg-white rounded-full shadow-md">
-                                    <i class="fas fa-search-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" onclick="closeImageModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Close
-                    </button>
-                </div>
+    <!-- Content Area -->
+    <div class="p-4 md:p-8 overflow-y-auto">
+      <!-- Header with breadcrumbs and status -->
+      <div class="mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+          <div>
+            <div class="flex items-center text-sm text-gray-500 mb-2">
+              <a href="dashboard.jsp" class="hover:text-primary-600">Dashboard</a>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              <a href="account-requests.jsp" class="hover:text-primary-600">Account Requests</a>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+              <span class="font-medium text-gray-700">Request Details</span>
             </div>
+            <h1 class="text-2xl font-bold text-gray-800">Account Request Details</h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Pending Verification
+            </span>
+            <a href="account-requests.jsp" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to List
+            </a>
+          </div>
         </div>
-    </div>
 
-    <!-- Reject Modal -->
-    <div id="rejectModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="reject-modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <form action="${pageContext.request.contextPath}/admin/user-approval/reject/${user.id}" method="post">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <i class="fas fa-exclamation text-red-600"></i>
-                            </div>
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="reject-modal-title">Reject Application</h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-500">Please provide a reason for rejecting this application. This will be sent to the user.</p>
-                                    <textarea id="rejectReason" name="reason" rows="4" class="mt-3 shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border border-gray-300 rounded-md p-2" placeholder="Enter rejection reason..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Confirm Rejection
-                        </button>
-                        <button type="button" onclick="closeRejectModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
+               </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Personal Information -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">Personal Information</h2>
+                <span class="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded">Voter</span>
+              </div>
+
+              <div class="flex flex-col items-center mb-6">
+                <div class="relative w-24 h-24 rounded-full overflow-hidden mb-3 border-4 border-primary-100">
+                  <img src="/images/${user.profileImage}" alt="Profile" class="w-full h-full object-cover" />
+                  <button class="absolute bottom-0 right-0 bg-primary-500 text-white p-1 rounded-full w-6 h-6 flex items-center justify-center" onclick="openDocumentPreview('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-k8QLAvWE5XYRv8cM02f2QJivHcM8pA.png', 'Profile Image')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">John Doe</h3>
+                <p class="text-gray-500 text-sm">Registered on Jun 01, 2024</p>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                  <span class="text-gray-500">Voter ID</span>
+                  <span class="font-medium text-gray-800">${user.voterId}</span>
+                </div>
+                <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                  <span class="text-gray-500">Email</span>
+                  <span class="font-medium text-gray-800">${user.notificationEmail}</span>
+                </div>
+                <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                  <span class="text-gray-500">Date of Birth</span>
+                  <span class="font-medium text-gray-800">                                                                                                           <fmt:formatDate value="${user.dob}" pattern="dd MMM yyyy" />
+</span>
+                </div>
+                <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                  <span class="text-gray-500">Gender</span>
+                  <span class="font-medium text-gray-800">${user.gender}</span>
+                </div>
+                <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                  <span class="text-gray-500">Phone</span>
+                  <span class="font-medium text-gray-800">${user.phoneNumber}</span>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <!-- Address Information -->
+          <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+            <div class="p-6">
+              <h2 class="text-lg font-semibold text-gray-800 mb-4">Address Information</h2>
+
+              <div class="space-y-4">
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500 mb-1">Temporary Address</h3>
+                  <p class="text-gray-800">${user.temporaryAddress}</p>
+                </div>
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500 mb-1">Permanent Address</h3>
+                  <p class="text-gray-800">${user.permanentAddress}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
         </div>
+
+        <!-- Right Column: Document Verification -->
+        <div class="lg:col-span-2">
+          <!-- Document Verification Section -->
+          <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+            <div class="p-6">
+              <h2 class="text-lg font-semibold text-gray-800 mb-4">Verification Documents</h2>
+              <p class="text-gray-500 mb-6">Review all submitted documents for verification</p>
+
+              <!-- Document Tabs -->
+              <div class="border-b border-gray-200 mb-6">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                  <li class="mr-2">
+                    <a href="#" class="inline-block p-4 border-b-2 border-primary-500 text-primary-600 rounded-t-lg active" onclick="switchTab('citizenship'); return false;">
+                      <svg xmlns="/images/${user.profileImage}" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                      </svg>
+                      Citizenship Document
+                    </a>
+                  </li>
+                  <li class="mr-2">
+                    <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" onclick="switchTab('voter'); return false;">
+                      <svg xmlns="temporaryAddress" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      Voter ID Card
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="inline-block p-4 border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 rounded-t-lg" onclick="switchTab('additional'); return false;">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      Additional Documents
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Citizenship Documents Tab -->
+              <div id="citizenship-tab" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="document-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-medium text-gray-700">Citizenship Front</h3>
+                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                    </div>
+                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                      <img src="/images/${user.citizenshipFront}" alt="Citizenship Front" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Citizenship Front')">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Size
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
+                      <div class="flex items-center">
+                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <div class="tooltip">
+                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                          <span class="tooltip-text">Document verified by system on 2024-06-02</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="document-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-medium text-gray-700">Citizenship Back</h3>
+                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                    </div>
+                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                      <img src="/images/${user.citizenshipBack}" alt="Citizenship Back" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Citizenship Back')">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Size
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
+                      <div class="flex items-center">
+                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <div class="tooltip">
+                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                          <span class="tooltip-text">Document verified by system on 2024-06-02</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Voter ID Card Tab -->
+              <div id="voter-tab" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="document-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-medium text-gray-700">Voter Card Front</h3>
+                      <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Pending</span>
+                    </div>
+                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                      <img src="/images/${user.voterCardFront}" alt="Voter Card Front" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Voter Card Front')">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Size
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
+                      <div class="flex items-center">
+                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <div class="tooltip">
+                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                          <span class="tooltip-text">Awaiting manual verification</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="document-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-medium text-gray-700">Voter Card Back</h3>
+                      <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Pending</span>
+                    </div>
+                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                      <img src="/images/${user.voterCardBack}" alt="Voter Card Back" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Voter Card Back')">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Size
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
+                      <div class="flex items-center">
+                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <div class="tooltip">
+                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                          <span class="tooltip-text">Awaiting manual verification</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional Documents Tab -->
+              <div id="additional-tab" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="document-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-medium text-gray-700">Holding ID</h3>
+                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                    </div>
+                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                      <img src="/images/${user.imageHoldingCitizenship}" alt="Holding ID" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Holding ID')">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Size
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
+                      <div class="flex items-center">
+                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <div class="tooltip">
+                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                          <span class="tooltip-text">Document verified by admin on 2024-06-02</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="document-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                      <h3 class="font-medium text-gray-700">Thumbprint</h3>
+                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                    </div>
+                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                      <img src="/images/${user.thumbPrint}" alt="Thumbprint" class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Thumbprint')">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Full Size
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
+                      <div class="flex items-center">
+                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </button>
+                        <div class="tooltip">
+                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                          </button>
+                          <span class="tooltip-text">Document verified by admin on 2024-06-02</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+                </div>
+</div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // Image Modal Functions
-        function openImageModal(imageSrc) {
-            document.getElementById('modalImageContent').src = imageSrc;
-            document.getElementById('imageModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+  <!-- Reject with Reason Modal -->
+  <div id="rejectReasonModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 opacity-0 invisible">
+    <div class="modal-content bg-white rounded-xl shadow-xl max-w-lg w-full transform translate-y-8">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">Rejection Reason</h3>
+          <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <p class="text-gray-600 mb-4">Please provide a reason for rejecting this account request. This will be sent to the applicant.</p>
+        <div class="mb-4">
+          <textarea id="rejectionReason" rows="5" class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Enter rejection reason..."></textarea>
+        </div>
+        <div class="flex justify-end space-x-3">
+          <button id="cancelReject" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+            Cancel
+          </button>
+          <button id="submitReject" class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
+            Send Rejection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        function closeImageModal() {
-            document.getElementById('imageModal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
 
-        // Reject Modal Functions
-        function openRejectModal() {
-            document.getElementById('rejectModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+  <!-- Document Preview Modal -->
+  <div id="documentPreviewModal" class="modal fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4 opacity-0 invisible">
+    <div class="modal-content bg-white rounded-xl shadow-xl max-w-4xl w-full transform translate-y-8">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 id="previewTitle" class="text-xl font-bold text-gray-800">Document Preview</h3>
+          <button id="closeDocumentModal" class="text-gray-400 hover:text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-        function closeRejectModal() {
-            document.getElementById('rejectModal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
+          <!-- Zoom Controls -->
+          <div class="zoom-controls">
+            <button class="zoom-btn" id="zoomIn">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+              </svg>
+            </button>
+            <button class="zoom-btn" id="zoomOut">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+              </svg>
+            </button>
+            <button class="zoom-btn" id="resetZoom">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button id="closePreviewBtn" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+            Close
+          </button>
+        </div>
 
-        // Zoom functionality for images
-        let currentScale = 1;
-        const imageElement = document.getElementById('modalImageContent');
-        const zoomControls = document.querySelector('.zoom-controls');
 
-        function zoomIn() {
-            currentScale += 0.1;
-            imageElement.style.transform = `scale(${currentScale})`;
-        }
 
-        function zoomOut() {
-            if (currentScale > 0.5) {
-                currentScale -= 0.1;
-                imageElement.style.transform = `scale(${currentScale})`;
-            }
-        }
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+                        <form action="${pageContext.request.contextPath}/admin/user-approval/reject/${user.unverifiedUserId}" method="post" class="w-full sm:w-auto">
+                            <button type="button" onclick="showRejectReasonModal()"
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </form>
+                        <form action="${pageContext.request.contextPath}/admin/user-approval/approve/${user.unverifiedUserId}" method="post" class="w-full sm:w-auto">
+                            <button type="submit"
+                                    class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                        </form>
+                    </div>
+      </div>
+    </div>
+  </div>
 
-        // Show zoom controls when image is hovered
-        if (imageElement) {
-            imageElement.addEventListener('mouseenter', () => {
-                zoomControls.classList.remove('hidden');
-            });
+  <script>
+    // Modal functionality
+    const rejectReasonModal = document.getElementById('rejectReasonModal');
+    const documentPreviewModal = document.getElementById('documentPreviewModal');
+    const rejectWithReasonBtn = document.getElementById('rejectWithReasonBtn');
+    const closeModal = document.getElementById('closeModal');
+    const cancelReject = document.getElementById('cancelReject');
+    const submitReject = document.getElementById('submitReject');
+    const closeDocumentModal = document.getElementById('closeDocumentModal');
+    const closePreviewBtn = document.getElementById('closePreviewBtn');
+    const previewImage = document.getElementById('previewImage');
+    const previewTitle = document.getElementById('previewTitle');
 
-            imageElement.addEventListener('mouseleave', () => {
-                zoomControls.classList.add('hidden');
-            });
-        }
+    // Tab switching functionality
+    function switchTab(tabName) {
+      // Hide all tab contents
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => {
+        content.classList.add('hidden');
+      });
 
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target === document.getElementById('imageModal')) {
-                closeImageModal();
-            }
-            if (event.target === document.getElementById('rejectModal')) {
-                closeRejectModal();
-            }
-        }
-    </script>
+      // Show the selected tab content
+      document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+
+      // Update active tab styling
+      const tabLinks = document.querySelectorAll('.border-b-2');
+      tabLinks.forEach(link => {
+        link.classList.remove('border-primary-500', 'text-primary-600');
+        link.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+      });
+
+      // Set active tab
+      event.currentTarget.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+      event.currentTarget.classList.add('border-primary-500', 'text-primary-600');
+    }
+
+    // Open reject reason modal
+    rejectWithReasonBtn.addEventListener('click', () => {
+      rejectReasonModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Close reject reason modal
+    const closeRejectModal = () => {
+      rejectReasonModal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    closeModal.addEventListener('click', closeRejectModal);
+    cancelReject.addEventListener('click', closeRejectModal);
+
+    // Submit rejection with reason
+    submitReject.addEventListener('click', () => {
+      const reason = document.getElementById('rejectionReason').value;
+      if (reason.trim() === '') {
+        alert('Please provide a rejection reason');
+        return;
+      }
+
+      // Here you would typically send the rejection reason to the server
+      alert('Rejection submitted with reason: ' + reason);
+      closeRejectModal();
+    });
+
+    // Document preview functionality
+    function openDocumentPreview(imageUrl, title) {
+      previewImage.src = imageUrl;
+      previewTitle.textContent = title || 'Document Preview';
+
+      documentPreviewModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Reset zoom
+      currentZoom = 1;
+      previewImage.style.transform = `scale(${currentZoom})`;
+    }
+
+    // Close document preview modal
+    const closeDocumentPreviewModal = () => {
+      documentPreviewModal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    closeDocumentModal.addEventListener('click', closeDocumentPreviewModal);
+    closePreviewBtn.addEventListener('click', closeDocumentPreviewModal);
+
+    // Zoom functionality
+    let currentZoom = 1;
+    const zoomIn = document.getElementById('zoomIn');
+    const zoomOut = document.getElementById('zoomOut');
+    const resetZoom = document.getElementById('resetZoom');
+
+    zoomIn.addEventListener('click', () => {
+      currentZoom += 0.1;
+      if (currentZoom > 3) currentZoom = 3;
+      previewImage.style.transform = `scale(${currentZoom})`;
+    });
+
+    zoomOut.addEventListener('click', () => {
+      currentZoom -= 0.1;
+      if (currentZoom < 0.5) currentZoom = 0.5;
+      previewImage.style.transform = `scale(${currentZoom})`;
+    });
+
+    resetZoom.addEventListener('click', () => {
+      currentZoom = 1;
+      previewImage.style.transform = `scale(${currentZoom})`;
+    });
+
+    // Approve and reject functionality
+    const approveBtn = document.getElementById('approveBtn');
+    const rejectBtn = document.getElementById('rejectBtn');
+
+    approveBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to approve this account request?')) {
+        // Here you would typically send the approval to the server
+        alert('Account request approved successfully!');
+      }
+    });
+
+    rejectBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to reject this account request without providing a reason?')) {
+        // Here you would typically send the rejection to the server
+        alert('Account request rejected!');
+      }
+    });
+  </script>
 </body>
 </html>

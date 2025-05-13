@@ -115,7 +115,7 @@ public class AdminUserApprovalServlet extends HttpServlet {
 		}
 
 		request.setAttribute("user", user);
-		request.getRequestDispatcher("/WEB-INF/pages/admin/account-requests.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/pages/admin/account-request-details.jsp").forward(request, response);
 		logger.info("Successfully viewed user ID: {}", userId);
 	}
 
