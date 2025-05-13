@@ -17,12 +17,13 @@ public class DBConnectionManager {
 
 		logger.trace("Attempting to establish database connection");
 
-		final String URL = "jdbc:mysql://localhost:3306/voteSphere";
-		final String USER = "root";
-		final String PASSWORD = "root";
+		final String DRIVER = AppConfig.get("JDBC_DRIVER");
+		final String URL = AppConfig.get("JDBC_URL");
+		final String USER = AppConfig.get("JDBC_USER");
+		final String PASSWORD = AppConfig.get("JDBC_PASSWORD");
 
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName(DRIVER);
 
 			Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 
