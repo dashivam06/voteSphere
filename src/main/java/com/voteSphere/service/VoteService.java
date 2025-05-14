@@ -192,6 +192,41 @@ public class VoteService {
 		}
 	}
 
+
+	/**
+	 * Gets all party names and their respective vote counts for a specific election
+	 * @param electionId The ID of the election
+	 * @return Map of party names to vote counts
+	 */
+	public static Map<String, Integer> getAllPartyNamesAndRespectiveVoteCountInElection(int electionId) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Getting party names and vote counts for electionId: {}", electionId);
+		}
+
+		try {
+			Map<String, Integer> result = VoteDao.getAllPartyNamesAndRespectiveVoteCountInElection(electionId);
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Successfully retrieved vote counts for {} parties in election {}",
+						result.size(), electionId);
+			}
+
+			return result;
+
+		} catch (DataAccessException dae) {
+			logger.error("Data access error while getting party vote counts for election {}: {}",
+					electionId, dae.getMessage(), dae);
+			throw new DataAccessException(dae.getMessage(),
+					"Failed to retrieve vote distribution. Please try again later.", dae);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while getting party vote counts for election {}: {}",
+					electionId, e.getMessage(), e);
+			throw new DataAccessException("Unexpected error retrieving vote distribution",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
 	public static Vote getVoteById(HttpServletRequest request, HttpServletResponse response, Integer voteId) {
 		if (voteId == null || voteId <= 0) {
 			request.setAttribute("voteId_error", "Valid vote ID is required.");
@@ -336,6 +371,22 @@ public class VoteService {
 			request.setAttribute("vote_delete_error", "An unexpected error occurred. Please try again.");
 		}
 		return false;
+	}
+
+
+	public static Integer getTotalVotesInElection(int electionId) {
+		if (electionId <= 0) {
+			return 0;
+		}
+
+		try {
+			return VoteDao.getTotalVotesInElection(electionId);
+		} catch (DataAccessException dae) {
+			logger.error("Failed to delete vote: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error while deleting vote", e);
+		}
+		return 0;
 	}
 
 }

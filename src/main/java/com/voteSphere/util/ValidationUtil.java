@@ -188,4 +188,21 @@ public class ValidationUtil {
         
 	}
 
+	public static String capitalize(String input) {
+		if (input == null || input.isEmpty()) return input;
+		input = input.trim().toLowerCase(); // make all lowercase
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
+	public static String sanitizeName(String name) {
+		return name.trim().replaceAll("[^a-zA-Z0-9]", "_");
+	}
+
+	public static String getTimestamp() {
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm"));
+	}
+
+
+
+
 }

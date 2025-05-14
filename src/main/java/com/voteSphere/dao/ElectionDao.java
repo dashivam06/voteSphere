@@ -662,6 +662,212 @@ public class ElectionDao {
 	    candidate.setProfileImage(rs.getString("profile_image"));
 	    return candidate;
 	}
-	
+
+	/**
+	 * Gets all upcoming elections (elections that haven't started yet)
+	 * @return List of upcoming elections
+	 */
+	public static List<Election> getUpcomingElections() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Fetching all upcoming elections");
+		}
+
+		String sql = "SELECT * FROM elections WHERE date > CURDATE() OR " +
+				"(date = CURDATE() AND start_time > CURTIME()) " +
+				"ORDER BY date ASC, start_time ASC";
+
+		List<Election> upcomingElections = new ArrayList<>();
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+
+			while (rs.next()) {
+				Election election = mapResultSetToElection(rs);
+				upcomingElections.add(election);
+
+				if (logger.isTraceEnabled()) {
+					logger.trace("Added upcoming election: {} (ID: {})",
+							election.getName(), election.getElectionId());
+				}
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Successfully retrieved {} upcoming elections", upcomingElections.size());
+			}
+
+			return upcomingElections;
+
+		} catch (DatabaseException e) {
+			logger.error("Database connection error while fetching upcoming elections", e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while fetching upcoming elections. Error code: {}, SQL state: {}",
+					e.getErrorCode(), e.getSQLState(), e);
+			throw new DataAccessException("Database error while fetching upcoming elections",
+					"Failed to fetch upcoming elections. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching upcoming elections", e);
+			throw new DataAccessException("Unexpected error while fetching upcoming elections",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
+	/**
+	 * Gets all past elections (elections that have already ended)
+	 * @return List of past elections
+	 */
+	public static List<Election> getPastElections() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Fetching all past elections");
+		}
+
+		String sql = "SELECT * FROM elections WHERE date < CURDATE() OR " +
+				"(date = CURDATE() AND end_time < CURTIME()) " +
+				"ORDER BY date DESC, end_time DESC";
+
+		List<Election> pastElections = new ArrayList<>();
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+
+			while (rs.next()) {
+				Election election = mapResultSetToElection(rs);
+				pastElections.add(election);
+
+				if (logger.isTraceEnabled()) {
+					logger.trace("Added past election: {} (ID: {})",
+							election.getName(), election.getElectionId());
+				}
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Successfully retrieved {} past elections", pastElections.size());
+			}
+
+			return pastElections;
+
+		} catch (DatabaseException e) {
+			logger.error("Database connection error while fetching past elections", e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while fetching past elections. Error code: {}, SQL state: {}",
+					e.getErrorCode(), e.getSQLState(), e);
+			throw new DataAccessException("Database error while fetching past elections",
+					"Failed to fetch past elections. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching past elections", e);
+			throw new DataAccessException("Unexpected error while fetching past elections",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
+	/**
+	 * Gets elections scheduled for today that haven't started yet
+	 * @return List of elections starting later today
+	 */
+	public static List<Election> getTodayUpcomingElections() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Fetching elections starting later today");
+		}
+
+		String sql = "SELECT * FROM elections WHERE date = CURDATE() AND start_time > CURTIME() " +
+				"ORDER BY start_time ASC";
+
+		List<Election> todayUpcoming = new ArrayList<>();
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+
+			while (rs.next()) {
+				Election election = mapResultSetToElection(rs);
+				todayUpcoming.add(election);
+
+				if (logger.isTraceEnabled()) {
+					logger.trace("Added today's upcoming election: {} (Starts at {})",
+							election.getName(), election.getStartTime());
+				}
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Found {} elections starting later today", todayUpcoming.size());
+			}
+
+			return todayUpcoming;
+
+		} catch (DatabaseException e) {
+			logger.error("Database connection error while fetching today's upcoming elections", e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while fetching today's upcoming elections. Error code: {}, SQL state: {}",
+					e.getErrorCode(), e.getSQLState(), e);
+			throw new DataAccessException("Database error while fetching today's upcoming elections",
+					"Failed to fetch today's upcoming elections. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching today's upcoming elections", e);
+			throw new DataAccessException("Unexpected error while fetching today's upcoming elections",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
+	/**
+	 * Gets elections that ended earlier today
+	 * @return List of elections that ended earlier today
+	 */
+	public static List<Election> getTodayPastElections() {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Fetching elections that ended earlier today");
+		}
+
+		String sql = "SELECT * FROM elections WHERE date = CURDATE() AND end_time < CURTIME() " +
+				"ORDER BY end_time DESC";
+
+		List<Election> todayPast = new ArrayList<>();
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql);
+			 ResultSet rs = stmt.executeQuery()) {
+
+			while (rs.next()) {
+				Election election = mapResultSetToElection(rs);
+				todayPast.add(election);
+
+				if (logger.isTraceEnabled()) {
+					logger.trace("Added today's past election: {} (Ended at {})",
+							election.getName(), election.getEndTime());
+				}
+			}
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Found {} elections that ended earlier today", todayPast.size());
+			}
+
+			return todayPast;
+
+		} catch (DatabaseException e) {
+			logger.error("Database connection error while fetching today's past elections", e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while fetching today's past elections. Error code: {}, SQL state: {}",
+					e.getErrorCode(), e.getSQLState(), e);
+			throw new DataAccessException("Database error while fetching today's past elections",
+					"Failed to fetch today's past elections. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching today's past elections", e);
+			throw new DataAccessException("Unexpected error while fetching today's past elections",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
 
 }
