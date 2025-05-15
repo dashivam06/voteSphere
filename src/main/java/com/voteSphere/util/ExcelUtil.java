@@ -37,7 +37,6 @@ public class ExcelUtil {
             "    u.citizenship_front,\n" +
             "    u.citizenship_back,\n" +
             "    u.thumb_print,\n" +
-            "    u.password,\n" +
             "    u.dob,\n" +
             "    u.gender,\n" +
             "    u.temporary_address,\n" +

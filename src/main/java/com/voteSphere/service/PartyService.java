@@ -1,16 +1,15 @@
 package com.voteSphere.service;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import com.voteSphere.util.ImgUploadUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.voteSphere.dao.PartyDao;
 import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.Party;
-import com.voteSphere.util.ImageUploadHandler;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,14 +33,14 @@ public class PartyService {
 		long maxImageSize = 2 * 1024 * 1024;
 
 		// Process symbol image
-		String symbolImageName = ImageUploadHandler.processImageUpload(request, "symbol_image", "symbol_image_error",
+		String symbolImageName = ImgUploadUtil.processImageUpload(request, "symbol_image", "symbol_image_error",
 				"party-symbol-image", appRealPath, maxImageSize);
 		if (symbolImageName == null) {
 			hasErrors = true;
 		}
 
 		// Process cover image
-		String coverImageName = ImageUploadHandler.processImageUpload(request, "cover_image", "cover_image_error",
+		String coverImageName = ImgUploadUtil.processImageUpload(request, "cover_image", "cover_image_error",
 				"party-cover-image", appRealPath, maxImageSize);
 
 		if (coverImageName == null) {
@@ -223,10 +222,10 @@ public class PartyService {
 		long maxImageSize = 2 * 1024 * 1024; // 2MB
 		
 		// Process party-related images
-		String symbolImage = ImageUploadHandler.processImageUpload(
+		String symbolImage = ImgUploadUtil.processImageUpload(
 		    request, "symbol_image", "symbol_image_error", "party-symbols", appRealPath, maxImageSize);
 
-		String coverImage = ImageUploadHandler.processImageUpload(
+		String coverImage = ImgUploadUtil.processImageUpload(
 		    request, "cover_image", "cover_image_error", "party-covers", appRealPath, maxImageSize);
 
 		if (symbolImage == null) {

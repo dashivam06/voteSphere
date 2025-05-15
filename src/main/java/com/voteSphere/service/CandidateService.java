@@ -4,13 +4,13 @@ import java.sql.Date;
 import java.util.Collections;
 import java.util.List;
 
+import com.voteSphere.util.ImgUploadUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.voteSphere.dao.CandidateDao;
 import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.Candidate;
-import com.voteSphere.util.ImageUploadHandler;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class CandidateService {
         String appRealPath = request.getServletContext().getRealPath("");
         long maxImageSize = 2 * 1024 * 1024;
 
-        String profileImageName = ImageUploadHandler.processImageUpload(request, "candidate_profile_image", "candidate_profile_image_error",
+        String profileImageName = ImgUploadUtil.processImageUpload(request, "candidate_profile_image", "candidate_profile_image_error",
                 "candidate-profile-image", appRealPath, maxImageSize);
         if (profileImageName == null) {
             hasErrors = true;
@@ -238,7 +238,7 @@ public class CandidateService {
         String appRealPath = request.getServletContext().getRealPath("");
         long maxImageSize = 2 * 1024 * 1024; // 2MB
 
-        String profileImage = ImageUploadHandler.processImageUpload(
+        String profileImage = ImgUploadUtil.processImageUpload(
             request,
             "candidate_profile_image",
             "candidate_profile_image_error",

@@ -2,12 +2,10 @@ package com.voteSphere.service;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.voteSphere.util.ImgUploadUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +14,6 @@ import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.Candidate;
 import com.voteSphere.model.Election;
 import com.voteSphere.model.ElectionResult;
-import com.voteSphere.util.ImageUploadHandler;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +37,7 @@ public class ElectionService {
 		long maxImageSize = 2 * 1024 * 1024;
 
 		// Process cover image
-		String coverImageName = ImageUploadHandler.processImageUpload(request, "cover_image", "cover_image_error",
+		String coverImageName = ImgUploadUtil.processImageUpload(request, "cover_image", "cover_image_error",
 				"election-cover-image", appRealPath, maxImageSize);
 		if (coverImageName == null) {
 			hasErrors = true;
@@ -244,7 +241,7 @@ public class ElectionService {
 	    long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 	    // Process profile image upload (if present)
-	    String coverImage = ImageUploadHandler.processImageUpload(request, "cover_image", "election_cover_image_error",
+	    String coverImage = ImgUploadUtil.processImageUpload(request, "cover_image", "election_cover_image_error",
 	            "election_cover_image", appRealPath, maxImageSize);
 
 

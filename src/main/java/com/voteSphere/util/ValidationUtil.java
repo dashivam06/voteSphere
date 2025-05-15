@@ -138,6 +138,16 @@ public class ValidationUtil {
 		return false;
 	}
 
+
+	public static LocalDate convertTimestampToDateOnly(Timestamp timestamp) {
+		if (timestamp == null) {
+			throw new IllegalArgumentException("Timestamp cannot be null");
+		}
+		return timestamp.toLocalDateTime().toLocalDate();
+	}
+
+
+
 	// 8. Validate if a Part's file extension matches with image extensions (jpg,
 	// jpeg, png, gif)
 	public static boolean isValidImageExtension(Part imagePart) {

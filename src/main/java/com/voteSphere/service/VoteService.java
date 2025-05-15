@@ -15,7 +15,7 @@ import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.User;
 import com.voteSphere.model.Vote;
 import com.voteSphere.util.ClientInfoUtil;
-import com.voteSphere.util.EmailService;
+import com.voteSphere.util.MailUtil;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -129,8 +129,8 @@ public class VoteService {
 				String time = ValidationUtil.convertTimeStampToHrAndMinsOnly(newVote.getVotedAt());
 		        
 				if (votePushed) {
-					 String baseUrl = EmailService.getBaseUrl(request);
-			         EmailService.sendVoteSubmissionResponseAsync(request.getServletContext(),
+					 String baseUrl = MailUtil.getBaseUrl(request);
+			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
 			        		 		baseUrl, 
 			        		 		user.getVoterId(), 
 			        		 		user.getFirstName(),
