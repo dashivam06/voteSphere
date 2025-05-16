@@ -88,8 +88,8 @@ jobs:
             echo "Tomcat bin directory exists"
             sudo ls -la /opt/tomcat/bin/
             echo "Verifying script permissions"
-            [ -x "/opt/tomcat/bin/startup.sh" ] && echo "startup.sh is executable" || echo "startup.sh is NOT executable"
-            [ -x "/opt/tomcat/bin/shutdown.sh" ] && echo "shutdown.sh is executable" || echo "shutdown.sh is NOT executable"
+            ls -la /opt/tomcat/bin/startup.sh || echo "startup.sh not visible to normal ls"
+            sudo ls -la /opt/tomcat/bin/startup.sh || echo "startup.sh not visible to sudo ls"
           else
             echo "ERROR: Tomcat bin directory not found!"
             sudo ls -la /opt/
@@ -122,8 +122,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "Step 6: Stop Tomcat if running"
-          if [ -f "/opt/tomcat/bin/shutdown.sh" ]; then
-            sudo /opt/tomcat/bin/shutdown.sh || true
+          sudo ls -la /opt/tomcat/bin/shutdown.sh
+          if sudo test -f /opt/tomcat/bin/shutdown.sh; then
+            echo "Found shutdown.sh, stopping Tomcat"
+            cd /opt/tomcat/bin
+            sudo ./shutdown.sh || true
             echo "Waiting for Tomcat to shut down..."
             sleep 5
           else
@@ -149,8 +152,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "Step 9: Start Tomcat"
-          if [ -f "/opt/tomcat/bin/startup.sh" ]; then
-            sudo /opt/tomcat/bin/startup.sh
+          sudo ls -la /opt/tomcat/bin/startup.sh
+          
+          if sudo test -f /opt/tomcat/bin/startup.sh; then
+            echo "Found startup.sh, starting Tomcat"
+            cd /opt/tomcat/bin
+            sudo ./startup.sh
             echo "Waiting for Tomcat to start and deploy the application..."
             sleep 15
           else
@@ -160,14 +167,14 @@ jobs:
           fi
           
           echo "Step 10: Check if the application deployed successfully"
-          if [ -d "/opt/tomcat/webapps/ROOT" ]; then
+          if sudo test -d /opt/tomcat/webapps/ROOT; then
             echo "Application deployed successfully!"
             echo "Listing ROOT directory content:"
             sudo ls -la /opt/tomcat/webapps/ROOT/
           else
             echo "Deployment may have failed. Check Tomcat logs."
             echo "Last 50 lines of catalina.out:"
-            if [ -f "/opt/tomcat/logs/catalina.out" ]; then
+            if sudo test -f /opt/tomcat/logs/catalina.out; then
               sudo cat /opt/tomcat/logs/catalina.out | tail -50
             else
               echo "catalina.out not found"
