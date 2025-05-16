@@ -51,40 +51,53 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "Step 3: Download and Set Up Apache Tomcat 10.1"
-          cd /opt
+          # First, clean up any existing setup that might be problematic
+          sudo rm -rf /opt/tomcat
+          sudo rm -f /opt/apache-tomcat-10.1.41.tar.gz
           
-          # Check for existing Tomcat and remove it if necessary
-          if [ -d "tomcat" ]; then
-            echo "Removing existing Tomcat directory"
-            sudo rm -rf tomcat
-          fi
-          
-          # Remove old archive if it exists
-          if [ -f "apache-tomcat-10.1.41.tar.gz" ]; then
-            echo "Removing old Tomcat archive"
-            sudo rm -f apache-tomcat-10.1.41.tar.gz
-          fi
+          # Create a temporary directory for downloads
+          mkdir -p ~/tomcat_temp
+          cd ~/tomcat_temp
           
           # Download fresh Tomcat archive
           echo "Downloading Tomcat 10.1.41"
-          sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
+          wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
           
-          # Extract Tomcat
+          # Extract Tomcat to temporary location first
           echo "Extracting Tomcat archive"
-          sudo tar -xzf apache-tomcat-10.1.41.tar.gz
-          sudo mv apache-tomcat-10.1.41 tomcat
+          tar -xzf apache-tomcat-10.1.41.tar.gz
           
-          # Verify Tomcat structure and set permissions
-          echo "Setting permissions and verifying structure"
+          # Set execute permissions before moving
+          echo "Setting execute permissions on shell scripts"
+          chmod +x apache-tomcat-10.1.41/bin/*.sh
+          
+          # Verify permissions were set
+          ls -la apache-tomcat-10.1.41/bin/*.sh
+          
+          # Now move to final location with sudo
+          echo "Moving to final location"
+          sudo mkdir -p /opt
+          sudo mv apache-tomcat-10.1.41 /opt/tomcat
+          
+          # Set ownership
+          sudo chown -R root:root /opt/tomcat
+          
+          # Verify the installation
+          echo "Verifying Tomcat installation"
           if [ -d "/opt/tomcat/bin" ]; then
-            sudo chmod +x /opt/tomcat/bin/*.sh
-            echo "Tomcat bin directory exists and permissions set"
-            ls -la /opt/tomcat/bin/
+            echo "Tomcat bin directory exists"
+            sudo ls -la /opt/tomcat/bin/
+            echo "Verifying script permissions"
+            [ -x "/opt/tomcat/bin/startup.sh" ] && echo "startup.sh is executable" || echo "startup.sh is NOT executable"
+            [ -x "/opt/tomcat/bin/shutdown.sh" ] && echo "shutdown.sh is executable" || echo "shutdown.sh is NOT executable"
           else
             echo "ERROR: Tomcat bin directory not found!"
-            ls -la /opt/tomcat/
+            sudo ls -la /opt/
             exit 1
           fi
+          
+          # Clean up temporary files
+          rm -rf ~/tomcat_temp
           EOF
 
       - name: Build Application
@@ -142,7 +155,7 @@ jobs:
             sleep 15
           else
             echo "ERROR: Tomcat startup script not found!"
-            ls -la /opt/tomcat/
+            sudo ls -la /opt/tomcat/bin/
             exit 1
           fi
           
@@ -150,15 +163,15 @@ jobs:
           if [ -d "/opt/tomcat/webapps/ROOT" ]; then
             echo "Application deployed successfully!"
             echo "Listing ROOT directory content:"
-            ls -la /opt/tomcat/webapps/ROOT/
+            sudo ls -la /opt/tomcat/webapps/ROOT/
           else
             echo "Deployment may have failed. Check Tomcat logs."
             echo "Last 50 lines of catalina.out:"
             if [ -f "/opt/tomcat/logs/catalina.out" ]; then
-              cat /opt/tomcat/logs/catalina.out | tail -50
+              sudo cat /opt/tomcat/logs/catalina.out | tail -50
             else
               echo "catalina.out not found"
-              ls -la /opt/tomcat/logs/
+              sudo ls -la /opt/tomcat/logs/
             fi
           fi
           
@@ -166,5 +179,5 @@ jobs:
           ps aux | grep tomcat
           
           echo "Step 12: Check application port"
-          netstat -tulpn | grep 8080 || echo "Port 8080 not in use"
+          sudo netstat -tulpn | grep 8080 || echo "Port 8080 not in use"
           EOF
