@@ -20,21 +20,29 @@ jobs:
 
       - name: Create properties files with secrets
         run: |
+          mkdir -p src/main/resources
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
           echo "${{ secrets.LOG4J2_PROPERTIES }}" > src/main/resources/log4j2.properties
 
-      - name: Copy project files to VM
+      - name: Compress project files
         run: |
-          scp -o StrictHostKeyChecking=no -r . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere
-      
-      - name: Prepare resources directory
+          echo "Compressing project files..."
+          tar -czf voteSphere.tar.gz --exclude=".git" .
+          ls -lh voteSphere.tar.gz
+
+      - name: Upload and extract project files
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p voteSphere/src/main/resources"
-      
-      - name: Copy properties files to VM
-        run: |
-          scp -o StrictHostKeyChecking=no src/main/resources/application.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
-          scp -o StrictHostKeyChecking=no src/main/resources/log4j2.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
+          echo "Uploading compressed project archive..."
+          scp -o StrictHostKeyChecking=no voteSphere.tar.gz ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/voteSphere.tar.gz
+          
+          echo "Extracting project files on VM..."
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          rm -rf ~/voteSphere
+          mkdir -p ~/voteSphere
+          tar -xzf ~/voteSphere.tar.gz -C ~/voteSphere
+          echo "Project files extracted successfully"
+          ls -la ~/voteSphere
+          EOF
 
       - name: Install Java and Maven
         run: |
