@@ -52,20 +52,39 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "Step 3: Download and Set Up Apache Tomcat 10.1"
           cd /opt
-          if [ ! -f apache-tomcat-10.1.41.tar.gz ]; then
-            sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
-          else
-            echo "Tomcat archive already exists, skipping download"
+          
+          # Check for existing Tomcat and remove it if necessary
+          if [ -d "tomcat" ]; then
+            echo "Removing existing Tomcat directory"
+            sudo rm -rf tomcat
           fi
           
-          if [ ! -d tomcat ]; then
-            sudo tar -xzf apache-tomcat-10.1.41.tar.gz
-            sudo mv apache-tomcat-10.1.41 tomcat
-          else
-            echo "Tomcat directory already exists, skipping extraction"
+          # Remove old archive if it exists
+          if [ -f "apache-tomcat-10.1.41.tar.gz" ]; then
+            echo "Removing old Tomcat archive"
+            sudo rm -f apache-tomcat-10.1.41.tar.gz
           fi
           
-          sudo chmod +x /opt/tomcat/bin/*.sh
+          # Download fresh Tomcat archive
+          echo "Downloading Tomcat 10.1.41"
+          sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
+          
+          # Extract Tomcat
+          echo "Extracting Tomcat archive"
+          sudo tar -xzf apache-tomcat-10.1.41.tar.gz
+          sudo mv apache-tomcat-10.1.41 tomcat
+          
+          # Verify Tomcat structure and set permissions
+          echo "Setting permissions and verifying structure"
+          if [ -d "/opt/tomcat/bin" ]; then
+            sudo chmod +x /opt/tomcat/bin/*.sh
+            echo "Tomcat bin directory exists and permissions set"
+            ls -la /opt/tomcat/bin/
+          else
+            echo "ERROR: Tomcat bin directory not found!"
+            ls -la /opt/tomcat/
+            exit 1
+          fi
           EOF
 
       - name: Build Application
@@ -90,9 +109,13 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "Step 6: Stop Tomcat if running"
-          sudo /opt/tomcat/bin/shutdown.sh || true
-          echo "Waiting for Tomcat to shut down..."
-          sleep 5
+          if [ -f "/opt/tomcat/bin/shutdown.sh" ]; then
+            sudo /opt/tomcat/bin/shutdown.sh || true
+            echo "Waiting for Tomcat to shut down..."
+            sleep 5
+          else
+            echo "Tomcat shutdown script not found, skipping shutdown"
+          fi
           
           echo "Step 7: Remove existing ROOT webapp"
           sudo rm -rf /opt/tomcat/webapps/ROOT
@@ -113,9 +136,15 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "Step 9: Start Tomcat"
-          sudo /opt/tomcat/bin/startup.sh
-          echo "Waiting for Tomcat to start and deploy the application..."
-          sleep 15
+          if [ -f "/opt/tomcat/bin/startup.sh" ]; then
+            sudo /opt/tomcat/bin/startup.sh
+            echo "Waiting for Tomcat to start and deploy the application..."
+            sleep 15
+          else
+            echo "ERROR: Tomcat startup script not found!"
+            ls -la /opt/tomcat/
+            exit 1
+          fi
           
           echo "Step 10: Check if the application deployed successfully"
           if [ -d "/opt/tomcat/webapps/ROOT" ]; then
@@ -125,7 +154,12 @@ jobs:
           else
             echo "Deployment may have failed. Check Tomcat logs."
             echo "Last 50 lines of catalina.out:"
-            cat /opt/tomcat/logs/catalina.out | tail -50
+            if [ -f "/opt/tomcat/logs/catalina.out" ]; then
+              cat /opt/tomcat/logs/catalina.out | tail -50
+            else
+              echo "catalina.out not found"
+              ls -la /opt/tomcat/logs/
+            fi
           fi
           
           echo "Step 11: Check Tomcat process"
