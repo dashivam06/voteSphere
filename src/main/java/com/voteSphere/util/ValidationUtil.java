@@ -138,6 +138,16 @@ public class ValidationUtil {
 		return false;
 	}
 
+
+	public static LocalDate convertTimestampToDateOnly(Timestamp timestamp) {
+		if (timestamp == null) {
+			throw new IllegalArgumentException("Timestamp cannot be null");
+		}
+		return timestamp.toLocalDateTime().toLocalDate();
+	}
+
+
+
 	// 8. Validate if a Part's file extension matches with image extensions (jpg,
 	// jpeg, png, gif)
 	public static boolean isValidImageExtension(Part imagePart) {
@@ -187,5 +197,22 @@ public class ValidationUtil {
         return formattedTime;
         
 	}
+
+	public static String capitalize(String input) {
+		if (input == null || input.isEmpty()) return input;
+		input = input.trim().toLowerCase(); // make all lowercase
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
+	public static String sanitizeName(String name) {
+		return name.trim().replaceAll("[^a-zA-Z0-9]", "_");
+	}
+
+	public static String getTimestamp() {
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm"));
+	}
+
+
+
 
 }

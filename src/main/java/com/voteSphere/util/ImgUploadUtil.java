@@ -8,26 +8,34 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+import com.voteSphere.config.AppConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 
-public class ImageUploadHandler {
+public class ImgUploadUtil {
 
-	private static final Logger logger = LogManager.getLogger(ImageUploadHandler.class);
-	private static final String BASE_UPLOAD_DIR = "WEB-INF/images/";
+	private static final Logger logger = LogManager.getLogger(ImgUploadUtil.class);
+	private static final String IMAGE_BASE_UPLOAD_DIR = getAbsoluteUploadPath(AppConfig.get("IMAGE_BASE_UPLOAD_DIR"));
 
-	public static String saveUploadedImage(Part filePart, String applicationRealPath, String subfolder)
-			throws IOException {
+	// Helper method to convert ~/ path to absolute path
+	private static String getAbsoluteUploadPath(String configPath) {
+		if (configPath.startsWith("~/")) {
+			String homeDir = System.getProperty("user.home");
+			return configPath.replace("~", homeDir);
+		}
+		return configPath;
+	}
 
+	public static String saveUploadedImage(Part filePart, String subfolder) throws IOException {
 		if (filePart == null || filePart.getSize() == 0) {
 			logger.warn("No file uploaded or empty file for subfolder: {}", subfolder);
 			throw new IOException("No file uploaded or empty file");
 		}
 
-		Path uploadPath = Paths.get(applicationRealPath, BASE_UPLOAD_DIR, subfolder).normalize().toAbsolutePath();
+		Path uploadPath = Paths.get(IMAGE_BASE_UPLOAD_DIR, subfolder.toUpperCase()).normalize().toAbsolutePath();
 		Files.createDirectories(uploadPath);
 
 		String fileName = generateUniqueFilename(filePart.getSubmittedFileName());
@@ -44,10 +52,6 @@ public class ImageUploadHandler {
 		return subfolder.isEmpty() ? fileName : subfolder + "/" + fileName;
 	}
 
-	public static String saveUploadedImage(Part filePart, String applicationRealPath) throws IOException {
-		return saveUploadedImage(filePart, applicationRealPath, "");
-	}
-
 	private static String generateUniqueFilename(String originalFileName) {
 		String extension = "";
 		int dotIndex = originalFileName.lastIndexOf('.');
@@ -60,7 +64,7 @@ public class ImageUploadHandler {
 	}
 
 	public static String processImageUpload(HttpServletRequest request, String formFieldName, String errorAttributeName,
-			String uploadDirectory, String appRealPath, long maxFileSizeInBytes) {
+											String uploadDirectory, String appRealPath, long maxFileSizeInBytes) {
 		try {
 			Part imagePart = request.getPart(formFieldName);
 
@@ -83,7 +87,7 @@ public class ImageUploadHandler {
 				return null;
 			}
 
-			String savedPath = ImageUploadHandler.saveUploadedImage(imagePart, appRealPath, uploadDirectory);
+			String savedPath = ImgUploadUtil.saveUploadedImage(imagePart, uploadDirectory);
 			logger.info("Image uploaded successfully for field: {}. Saved at: {}", formFieldName, savedPath);
 			return savedPath;
 

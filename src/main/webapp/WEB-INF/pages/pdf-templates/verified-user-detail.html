@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>VoteSphere - User Details</title>
+    <style type="text/css">
+        /* Base Styles */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 30px;
+            background-color: #ffffff;
+            -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            display: block;
+            overflow: hidden;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .logo-container {
+            float: left;
+            width: 180px;
+        }
+
+        .logo {
+            width: 70px;
+            height: auto;
+            max-width: 100%;
+        }
+
+        .header-text {
+            float: right;
+            text-align: right;
+            width: 200px;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .document-title {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin: 5px 0 0;
+            padding: 0;
+        }
+
+        /* User Section */
+        .user-section {
+            display: block;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .profile-image-container {
+            float: left;
+            width: 150px;
+            height: 150px;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e1e1e1;
+            margin-right: 25px;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            float: left;
+            width: 750px;
+        }
+
+        .user-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0 0 5px 0;
+            padding: 0;
+            word-wrap: break-word;
+        }
+
+        .user-id {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin: 0 0 15px 0;
+            padding: 0;
+            word-wrap: break-word;
+        }
+
+        .user-meta {
+            display: block;
+            overflow: hidden;
+        }
+
+        .meta-item {
+            float: left;
+            width: 200px;
+            margin-bottom: 8px;
+            word-wrap: break-word;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            color: #34495e;
+            display: block;
+            font-size: 14px;
+        }
+
+        .meta-value {
+            color: #2c3e50;
+            word-wrap: break-word;
+        }
+
+        /* Sections */
+        .section {
+            display: block;
+            overflow: hidden;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+            margin-bottom: 15px;
+        }
+
+        /* Two-column layout */
+        .two-column {
+            display: block;
+            overflow: hidden;
+        }
+
+        .column {
+            float: left;
+            width: 48%;
+            margin-right: 2%;
+            word-wrap: break-word;
+        }
+
+        .column:last-child {
+            margin-right: 0;
+        }
+
+        /* Document Grid */
+        .document-grid {
+            display: block;
+            overflow: hidden;
+        }
+
+        .document-row {
+            display: block;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .document-item {
+            float: left;
+            width: 48%;
+            margin-right: 2%;
+            border: 1px solid #e1e1e1;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        .document-item:last-child {
+            margin-right: 0;
+        }
+
+        .document-image-container {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            text-align: center;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .document-image {
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .document-label {
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            background-color: #f8f9fa;
+            word-wrap: break-word;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e1e1;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+            word-wrap: break-word;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            word-wrap: break-word;
+        }
+
+        .verified {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .unverified {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-container">
+            <img width="70px" height="70px" src="{{LOGO}}" alt="VoteSphere Logo" class="logo"/>
+        </div>
+        <div class="header-text">
+            <h1 class="company-name">VoteSphere</h1>
+            <p class="document-title">{{REPORT_NAME}} Report</p>
+        </div>
+    </div>
+
+    <!-- User Profile Section -->
+    <div class="user-section">
+        <div class="profile-image-container">
+            <img src="{{PROFILE_IMAGE_URL}}" alt="Profile Image" class="profile-image"/>
+        </div>
+        <div class="user-info">
+            <h2 class="user-name">{{FIRST_NAME}} {{LAST_NAME}}</h2>
+            <p class="user-id">Voter ID: {{VOTER_ID}}</p>
+
+            <div class="user-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Date of Birth</span>
+                    <span class="meta-value">{{DOB}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Gender</span>
+                    <span class="meta-value">{{GENDER}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Email</span>
+                    <span class="meta-value">{{NOTIFICATION_EMAIL}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Phone</span>
+                    <span class="meta-value">{{PHONE_NUMBER}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Status</span>
+                    <span class="meta-value">
+                            {{IS_VERIFIED}}
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Section -->
+    <div class="section">
+        <h3 class="section-title">Address Information</h3>
+        <div class="two-column">
+            <div class="column">
+                <div class="meta-item">
+                    <span class="meta-label">Temporary Address</span>
+                    <span class="meta-value">{{TEMPORARY_ADDRESS}}</span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="meta-item">
+                    <span class="meta-label">Permanent Address</span>
+                    <span class="meta-value">{{PERMANENT_ADDRESS}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+    <!-- Document Section -->
+    <div class="section">
+        <h3 class="section-title">Identity Documents</h3>
+        <br/>
+        <div class="document-grid">
+            <div class="document-row">
+                <div class="document-item">
+                    <div class="document-image-container">
+                        <img src="{{IMAGE_HOLDING_CITIZENSHIP_URL}}" alt="Holding Citizenship" class="document-image"/>
+                    </div>
+                    <div class="document-label">Image Holding Citizenship</div>
+                </div>
+                <div class="document-item">
+                    <div class="document-image-container">
+                        <img src="{{THUMB_PRINT_URL}}" alt="Thumb Print" class="document-image"/>
+                    </div>
+                    <div class="document-label">Thumb Print</div>
+                </div>
+            </div>
+            <div class="document-row">
+                <div class="document-item">
+                    <div class="document-image-container">
+                        <img src="{{VOTER_CARD_FRONT_URL}}" alt="Voter Card Front" class="document-image"/>
+                    </div>
+                    <div class="document-label">Voter Card</div>
+                </div>
+                <div class="document-item">
+                    <div class="document-image-container">
+                        <img src="{{CITIZENSHIP_FRONT_URL}}" alt="Citizenship Front" class="document-image"/>
+                    </div>
+                    <div class="document-label">Citizenship (Front)</div>
+                </div>
+            </div>
+            <div class="document-row">
+                <div class="document-item">
+                    <div class="document-image-container">
+                        <img src="{{CITIZENSHIP_BACK_URL}}" alt="Citizenship Back" class="document-image"/>
+                    </div>
+                    <div class="document-label">Citizenship (Back)</div>
+                </div>
+                <!-- Empty item to maintain grid -->
+                <div class="document-item" style="visibility: hidden;"></div>
+            </div>
+        </div>
+    </div>
+    <br/><br/>
+    <!-- Footer -->
+    <div class="footer">
+        <p>Generated by VoteSphere on {{CURRENT_DATE}} | This document is confidential and intended for official use only.</p>
+    </div>
+</div>
+</body>
+</html>

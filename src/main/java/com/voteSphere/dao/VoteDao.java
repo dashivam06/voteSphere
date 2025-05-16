@@ -331,6 +331,8 @@ public class VoteDao {
 		}
 	}
 
+
+
 	public static Map<Integer, Integer> getAllPartyVotesInElection(int electionId) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Counting votes by party for electionId: " + electionId);
@@ -365,6 +367,50 @@ public class VoteDao {
 					"An unexpected error occurred. Please contact support.", e);
 		}
 	}
+
+
+	public static Map<String, Integer> getAllPartyNamesAndRespectiveVoteCountInElection(int electionId) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Counting votes by party for electionId: " + electionId);
+		}
+		String sql = "SELECT p.name AS party_name, COUNT(v.vote_id) AS vote_count " +
+				"FROM votes v " +
+				"JOIN parties p ON v.party_id = p.party_id " +
+				"WHERE v.election_id = ? " +
+				"GROUP BY p.name";
+
+		Map<String, Integer> result = new HashMap<>();
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, electionId);
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					String partyName = rs.getString("party_name");
+					int voteCount = rs.getInt("vote_count");
+					result.put(partyName, voteCount);
+				}
+			}
+			return result;
+
+		} catch (DatabaseException e) {
+			logger.error("Connection error while grouping votes", e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while grouping votes. Error code: " + e.getErrorCode() + ", SQL state: "
+					+ e.getSQLState(), e);
+			throw new DataAccessException("Database error while counting votes by party",
+					"Failed to count votes due to system error. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while counting votes", e);
+			throw new DataAccessException("Unexpected error while counting votes",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
 
 	public static int getVoteCountForPartyInElection(int electionId, int partyId) {
 		if (logger.isDebugEnabled()) {
@@ -648,6 +694,8 @@ public class VoteDao {
 		return new Vote(rs.getInt("vote_id"), rs.getInt("user_id"), rs.getInt("election_id"), rs.getInt("party_id"),
 				rs.getTimestamp("voted_at"), rs.getString("ip"));
 	}
+
+
 
 
 
