@@ -33,7 +33,8 @@ jobs:
           
           echo "Compressing project files..."
           # Exclude temporary files, git, and other non-essential directories that might change
-          tar --exclude=".git" \
+          tar --warning=no-file-changed \
+              --exclude=".git" \
               --exclude="node_modules" \
               --exclude=".github" \
               --exclude="target" \
