@@ -26,30 +26,19 @@ jobs:
 
       - name: Compress project files
         run: |
-          echo "Creating a clean directory for compression..."
-          sudo rm -rf /tmp/voteSphereTemp
-          sudo mkdir -p /tmp/voteSphereTemp
-          sudo cp -R . /tmp/voteSphereTemp/
-          cd /tmp/voteSphereTemp
+          echo "Creating project archive directly..."
+          # Create a list of files to include (excluding unwanted directories)
+          find . -type f -not -path "*/\.git/*" \
+                       -not -path "*/node_modules/*" \
+                       -not -path "*/\.github/*" \
+                       -not -path "*/target/*" \
+                       -not -name "*.log" \
+                       -not -name "*.tmp" > /tmp/files_to_include.txt
           
-          echo "Compressing project files..."
-          # Exclude temporary files, git, and other non-essential directories that might change
-          sudo tar --warning=no-file-changed \
-              --exclude=".git" \
-              --exclude="node_modules" \
-              --exclude=".github" \
-              --exclude="target" \
-              --exclude="*.log" \
-              --exclude="*.tmp" \
-              -czf voteSphere.tar.gz .
+          # Create archive with only the listed files
+          tar -czf voteSphere.tar.gz -T /tmp/files_to_include.txt
           
           echo "Checking archive size..."
-          sudo ls -lh voteSphere.tar.gz
-          
-          echo "Moving archive back to workspace..."
-          sudo cp voteSphere.tar.gz $GITHUB_WORKSPACE/
-          cd $GITHUB_WORKSPACE
-          sudo chown $(id -u):$(id -g) voteSphere.tar.gz
           ls -lh voteSphere.tar.gz
 
       - name: Upload and extract project files
