@@ -18,47 +18,119 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Copy files to VM
+      - name: Create properties files with secrets
         run: |
-          # Create properties files with secrets
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
           echo "${{ secrets.LOG4J2_PROPERTIES }}" > log4j2.properties
-          
-          # Copy project files
+
+      - name: Copy project files to VM
+        run: |
           scp -o StrictHostKeyChecking=no -r . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere
-          
-          # Copy properties files to correct location
+      
+      - name: Prepare resources directory
+        run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p voteSphere/src/main/resources"
+      
+      - name: Copy properties files to VM
+        run: |
           scp -o StrictHostKeyChecking=no application.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
           scp -o StrictHostKeyChecking=no log4j2.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
 
-      - name: Execute deployment commands on VM
+      - name: Install Java and Maven
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          # Step 1: Install Java (OpenJDK 21)
+          echo "Step 1: Install Java (OpenJDK 21)"
           sudo apt update
           sudo apt install openjdk-21-jdk -y
           
-          # Step 2: Install Maven
+          echo "Step 2: Install Maven"
           sudo apt install maven -y
-          
-          # Step 3: Download and Set Up Apache Tomcat 10.1
+          EOF
+
+      - name: Download and Setup Tomcat
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 3: Download and Set Up Apache Tomcat 10.1"
           cd /opt
-          sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
-          sudo tar -xzf apache-tomcat-10.1.41.tar.gz
-          sudo mv apache-tomcat-10.1.41 tomcat
-          sudo chmod +x /opt/tomcat/bin/*.sh
+          if [ ! -f apache-tomcat-10.1.41.tar.gz ]; then
+            sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
+          else
+            echo "Tomcat archive already exists, skipping download"
+          fi
           
-          # Step 4: Change to project directory
+          if [ ! -d tomcat ]; then
+            sudo tar -xzf apache-tomcat-10.1.41.tar.gz
+            sudo mv apache-tomcat-10.1.41 tomcat
+          else
+            echo "Tomcat directory already exists, skipping extraction"
+          fi
+          
+          sudo chmod +x /opt/tomcat/bin/*.sh
+          EOF
+
+      - name: Build Application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 4: Change to project directory"
           cd ~/voteSphere
           
-          # Step 5: Build the Project Using Maven
+          echo "Step 5: Build the Project Using Maven"
           mvn clean package
-          
-          # Step 6: Deploy the WAR File to Tomcat Root Context
-          sudo cp target/voteSphere.war /opt/tomcat/webapps/ROOT.war
-          
-          # Step 7: Restart Tomcat
+          # Check if build was successful
+          if [ ! -f target/voteSphere.war ]; then
+            echo "Build failed: WAR file not created"
+            exit 1
+          else
+            echo "Build successful: WAR file created at target/voteSphere.war"
+            ls -la target/
+          fi
+          EOF
+
+      - name: Deploy Application to Tomcat
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 6: Stop Tomcat if running"
           sudo /opt/tomcat/bin/shutdown.sh || true
+          echo "Waiting for Tomcat to shut down..."
+          sleep 5
+          
+          echo "Step 7: Remove existing ROOT webapp"
+          sudo rm -rf /opt/tomcat/webapps/ROOT
+          sudo rm -f /opt/tomcat/webapps/ROOT.war
+          
+          echo "Step 8: Copy the WAR file as ROOT.war"
+          cd ~/voteSphere
+          if [ -f target/voteSphere.war ]; then
+            sudo cp target/voteSphere.war /opt/tomcat/webapps/ROOT.war
+            echo "WAR file copied to Tomcat webapps directory"
+          else
+            echo "ERROR: voteSphere.war not found!"
+            exit 1
+          fi
+          EOF
+
+      - name: Start Tomcat and Verify Deployment
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 9: Start Tomcat"
           sudo /opt/tomcat/bin/startup.sh
+          echo "Waiting for Tomcat to start and deploy the application..."
+          sleep 15
+          
+          echo "Step 10: Check if the application deployed successfully"
+          if [ -d "/opt/tomcat/webapps/ROOT" ]; then
+            echo "Application deployed successfully!"
+            echo "Listing ROOT directory content:"
+            ls -la /opt/tomcat/webapps/ROOT/
+          else
+            echo "Deployment may have failed. Check Tomcat logs."
+            echo "Last 50 lines of catalina.out:"
+            cat /opt/tomcat/logs/catalina.out | tail -50
+          fi
+          
+          echo "Step 11: Check Tomcat process"
+          ps aux | grep tomcat
+          
+          echo "Step 12: Check application port"
+          netstat -tulpn | grep 8080 || echo "Port 8080 not in use"
           EOF
