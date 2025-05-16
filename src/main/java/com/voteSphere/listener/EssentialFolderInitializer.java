@@ -24,14 +24,21 @@ public class EssentialFolderInitializer implements ServletContextListener {
     String[] REQUIRED_DIRECTORIES = REQUIRED_DIRECTORIES_IN_COMMA_SEPERATED_STRING.split(",");
 
 
-    @Override
+@Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("Checking required directories...");
 
         for (String dirPath : REQUIRED_DIRECTORIES) {
             if (dirPath == null || dirPath.isEmpty()) continue;
 
-            Path path = Paths.get(dirPath.replace("~", System.getProperty("user.home")));
+            Path path;
+            if (dirPath.startsWith("~/")) {
+                path = Paths.get(System.getProperty("user.home"), dirPath.substring(2));
+            } else if (!Paths.get(dirPath).isAbsolute()) {
+                path = Paths.get(System.getProperty("user.home"), dirPath);
+            } else {
+                path = Paths.get(dirPath);
+            }
 
             if (!Files.exists(path)) {
                 try {
@@ -51,9 +58,6 @@ public class EssentialFolderInitializer implements ServletContextListener {
 
         }
     }
-
-
-
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
