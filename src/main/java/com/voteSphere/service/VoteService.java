@@ -15,7 +15,7 @@ import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.User;
 import com.voteSphere.model.Vote;
 import com.voteSphere.util.ClientInfoUtil;
-import com.voteSphere.util.EmailService;
+import com.voteSphere.util.MailUtil;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -129,8 +129,8 @@ public class VoteService {
 				String time = ValidationUtil.convertTimeStampToHrAndMinsOnly(newVote.getVotedAt());
 		        
 				if (votePushed) {
-					 String baseUrl = EmailService.getBaseUrl(request);
-			         EmailService.sendVoteSubmissionResponseAsync(request.getServletContext(),
+					 String baseUrl = MailUtil.getBaseUrl(request);
+			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
 			        		 		baseUrl, 
 			        		 		user.getVoterId(), 
 			        		 		user.getFirstName(),
@@ -189,6 +189,41 @@ public class VoteService {
 			logger.error("Unexpected error while retrieving party vote counts", e);
 			request.setAttribute("party_vote_count_error", "An unexpected error occurred. Please try again later.");
 			return Collections.emptyMap();
+		}
+	}
+
+
+	/**
+	 * Gets all party names and their respective vote counts for a specific election
+	 * @param electionId The ID of the election
+	 * @return Map of party names to vote counts
+	 */
+	public static Map<String, Integer> getAllPartyNamesAndRespectiveVoteCountInElection(int electionId) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Getting party names and vote counts for electionId: {}", electionId);
+		}
+
+		try {
+			Map<String, Integer> result = VoteDao.getAllPartyNamesAndRespectiveVoteCountInElection(electionId);
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Successfully retrieved vote counts for {} parties in election {}",
+						result.size(), electionId);
+			}
+
+			return result;
+
+		} catch (DataAccessException dae) {
+			logger.error("Data access error while getting party vote counts for election {}: {}",
+					electionId, dae.getMessage(), dae);
+			throw new DataAccessException(dae.getMessage(),
+					"Failed to retrieve vote distribution. Please try again later.", dae);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while getting party vote counts for election {}: {}",
+					electionId, e.getMessage(), e);
+			throw new DataAccessException("Unexpected error retrieving vote distribution",
+					"An unexpected error occurred. Please contact support.", e);
 		}
 	}
 
@@ -336,6 +371,22 @@ public class VoteService {
 			request.setAttribute("vote_delete_error", "An unexpected error occurred. Please try again.");
 		}
 		return false;
+	}
+
+
+	public static Integer getTotalVotesInElection(int electionId) {
+		if (electionId <= 0) {
+			return 0;
+		}
+
+		try {
+			return VoteDao.getTotalVotesInElection(electionId);
+		} catch (DataAccessException dae) {
+			logger.error("Failed to delete vote: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error while deleting vote", e);
+		}
+		return 0;
 	}
 
 }

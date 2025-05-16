@@ -1,5 +1,7 @@
 package com.voteSphere.model;
 
+import com.voteSphere.service.UserService;
+
 import java.sql.Timestamp;
 import java.time.Instant;
 
@@ -59,6 +61,10 @@ public class Vote {
 		this.ip = ip;
 	}
 
+	public User getVoter()
+	{
+		return UserService.getUserById(userId);
+	}
 
 	public Integer getVoteId() {
 		return voteId;

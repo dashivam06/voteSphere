@@ -10,7 +10,7 @@ import com.voteSphere.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-public class SessionHandler {
+public class SessionUtil {
 
 	// Configuration constants
 	private static final long INITIAL_SESSION_TIMEOUT_MINUTES = 5;

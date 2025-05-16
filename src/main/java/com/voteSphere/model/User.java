@@ -2,10 +2,14 @@ package com.voteSphere.model;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Calendar;
 import java.text.DateFormatSymbols;
 
+import java.util.Random;
+import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
 public class User 
@@ -103,11 +107,6 @@ public class User
 	public String getPermanentAddress() {
 		return permanentAddress;
 	}
-
-
-
-
-
 	public void setPermanentAddress(String permanentAddress) {
 		this.permanentAddress = permanentAddress;
 	}
@@ -250,6 +249,16 @@ public class User
 	public void setEmailVerified(boolean isEmailVerified) {
 		this.isEmailVerified = isEmailVerified;
 	}
+
+	public Integer getAge() {
+		if (dob == null) return null;
+
+		LocalDate birthDate = dob.toLocalDateTime().toLocalDate();
+		LocalDate today = LocalDate.now();
+
+		return Period.between(birthDate, today).getYears();
+	}
+
 
 	@Override
 	public String toString() {

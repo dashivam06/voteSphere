@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.Collections;
 import java.util.List;
 
+import com.voteSphere.util.ImgUploadUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +14,6 @@ import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.Candidate;
 import com.voteSphere.model.Election;
 import com.voteSphere.model.ElectionResult;
-import com.voteSphere.util.ImageUploadHandler;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class ElectionService {
 		long maxImageSize = 2 * 1024 * 1024;
 
 		// Process cover image
-		String coverImageName = ImageUploadHandler.processImageUpload(request, "cover_image", "cover_image_error",
+		String coverImageName = ImgUploadUtil.processImageUpload(request, "cover_image", "cover_image_error",
 				"election-cover-image", appRealPath, maxImageSize);
 		if (coverImageName == null) {
 			hasErrors = true;
@@ -241,7 +241,7 @@ public class ElectionService {
 	    long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 	    // Process profile image upload (if present)
-	    String coverImage = ImageUploadHandler.processImageUpload(request, "cover_image", "election_cover_image_error",
+	    String coverImage = ImgUploadUtil.processImageUpload(request, "cover_image", "election_cover_image_error",
 	            "election_cover_image", appRealPath, maxImageSize);
 
 
@@ -411,21 +411,142 @@ public class ElectionService {
 	 * Gets election by ID with request/response handling
 	 */
 	public static Election getElectionById(int electionId) {
-	    try {
-	        logger.debug("Fetching election with ID: {}", electionId);
-	        Election election = ElectionDao.findElectionById(electionId);
-	        if (election == null) {
-	            logger.warn("No election found with ID: {}", electionId);
-	        } else {
-	            logger.info("Successfully retrieved election ID: {}", electionId);
-	        }
-	        return election;
-	    } catch (DataAccessException dae) {
-	        logger.error("Database error fetching election {}: {}", electionId, dae.getMessage(), dae);
-	        return null;
-	    } catch (Exception e) {
-	        logger.error("Unexpected error fetching election {}", electionId, e);
-	        return null;
-	    }
+		try {
+			logger.debug("Fetching election with ID: {}", electionId);
+			Election election = ElectionDao.findElectionById(electionId);
+			if (election == null) {
+				logger.warn("No election found with ID: {}", electionId);
+			} else {
+				logger.info("Successfully retrieved election ID: {}", electionId);
+			}
+			return election;
+		} catch (DataAccessException dae) {
+			logger.error("Database error fetching election {}: {}", electionId, dae.getMessage(), dae);
+			return null;
+		} catch (Exception e) {
+			logger.error("Unexpected error fetching election {}", electionId, e);
+			return null;
+		}
 	}
-}
+
+	/**
+	 * Gets all upcoming elections (elections that haven't started yet)
+	 * @return List of upcoming elections
+	 */
+	public static List<Election> getUpcomingElections() {
+		try {
+			logger.debug("Fetching all upcoming elections from DAO");
+			List<Election> upcomingElections = ElectionDao.getUpcomingElections();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Successfully retrieved {} upcoming elections", upcomingElections.size());
+			}
+
+			return upcomingElections;
+
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve upcoming elections: {}", dae.getMessage(), dae);
+			return Collections.emptyList();
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching upcoming elections", e);
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * Gets all past elections (elections that have already ended)
+	 * @return List of past elections
+	 */
+	public static List<Election> getPastElections() {
+		try {
+			logger.debug("Fetching all past elections from DAO");
+			List<Election> pastElections = ElectionDao.getPastElections();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Successfully retrieved {} past elections", pastElections.size());
+			}
+
+			return pastElections;
+
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve past elections: {}", dae.getMessage(), dae);
+			return Collections.emptyList();
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching past elections", e);
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * Gets elections scheduled for today that haven't started yet
+	 * @return List of elections starting later today
+	 */
+	public static List<Election> getTodayUpcomingElections() {
+		try {
+			logger.debug("Fetching elections starting later today from DAO");
+			List<Election> todayUpcoming = ElectionDao.getTodayUpcomingElections();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Found {} elections starting later today", todayUpcoming.size());
+			}
+
+			return todayUpcoming;
+
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve today's upcoming elections: {}", dae.getMessage(), dae);
+			return Collections.emptyList();
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching today's upcoming elections", e);
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * Gets elections that ended earlier today
+	 * @return List of elections that ended earlier today
+	 */
+	public static List<Election> getTodayPastElections() {
+		try {
+			logger.debug("Fetching elections that ended earlier today from DAO");
+			List<Election> todayPast = ElectionDao.getTodayPastElections();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Found {} elections that ended earlier today", todayPast.size());
+			}
+
+			return todayPast;
+
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve today's past elections: {}", dae.getMessage(), dae);
+			return Collections.emptyList();
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching today's past elections", e);
+			return Collections.emptyList();
+		}
+	}
+//
+//	/**
+//	 * Gets all currently running elections (where current date/time is within election period)
+//	 * @return List of running elections
+//	 */
+//	public static List<Election> getRunningElections() {
+//		try {
+//			logger.debug("Fetching currently running elections from DAO");
+//			List<Election> runningElections = ElectionDao.getRunningElections();
+//
+//			if (logger.isInfoEnabled()) {
+//				logger.info("Found {} currently running elections", runningElections.size());
+//			}
+//
+//			return runningElections;
+//
+//		} catch (DataAccessException dae) {
+//			logger.error("Failed to retrieve running elections: {}", dae.getMessage(), dae);
+//			return Collections.emptyList();
+//		} catch (Exception e) {
+//			logger.error("Unexpected error while fetching running elections", e);
+//			return Collections.emptyList();
+//		}
+//	}
+	}
+
