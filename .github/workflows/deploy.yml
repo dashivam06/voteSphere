@@ -1,4 +1,4 @@
-name: Deploy to AWS VM
+name: Deploy to VM
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Copy files to AWS VM
+      - name: Copy files to VM
         run: |
           # Create properties files with secrets
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
@@ -32,7 +32,7 @@ jobs:
           scp -o StrictHostKeyChecking=no application.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
           scp -o StrictHostKeyChecking=no log4j2.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
 
-      - name: Execute deployment commands on AWS VM
+      - name: Execute deployment commands on VM
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           # Step 1: Install Java (OpenJDK 21)
@@ -42,15 +42,15 @@ jobs:
           # Step 2: Install Maven
           sudo apt install maven -y
           
-          # Step 3: Download and Set Up Apache Tomcat 11
+          # Step 3: Download and Set Up Apache Tomcat 10.1
           cd /opt
-          sudo wget https://dlcdn.apache.org/tomcat/tomcat-11/v11.0.0-M20/bin/apache-tomcat-11.0.0-M20.tar.gz
-          sudo tar -xzf apache-tomcat-11.0.0-M20.tar.gz
-          sudo mv apache-tomcat-11.0.0-M20 tomcat
+          sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
+          sudo tar -xzf apache-tomcat-10.1.41.tar.gz
+          sudo mv apache-tomcat-10.1.41 tomcat
           sudo chmod +x /opt/tomcat/bin/*.sh
           
-          # Step 4: Project already copied by previous step
-          cd voteSphere
+          # Step 4: Change to project directory
+          cd ~/voteSphere
           
           # Step 5: Build the Project Using Maven
           mvn clean package
@@ -59,6 +59,6 @@ jobs:
           sudo cp target/voteSphere.war /opt/tomcat/webapps/ROOT.war
           
           # Step 7: Restart Tomcat
-          /opt/tomcat/bin/shutdown.sh || true
-          /opt/tomcat/bin/startup.sh
+          sudo /opt/tomcat/bin/shutdown.sh || true
+          sudo /opt/tomcat/bin/startup.sh
           EOF
