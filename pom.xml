@@ -97,7 +97,6 @@
       <version>3.0.2</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.glassfish.web/jakarta.servlet.jsp.jstl -->
     <dependency>
       <groupId>org.glassfish.web</groupId>
       <artifactId>jakarta.servlet.jsp.jstl</artifactId>
@@ -125,7 +124,6 @@
     </dependency>
 
 
-    <!-- https://mvnrepository.com/artifact/org.knowm.xchart/xchart -->
     <dependency>
       <groupId>org.knowm.xchart</groupId>
       <artifactId>xchart</artifactId>
@@ -153,7 +151,6 @@
     </dependency>
 
 
-    <!-- https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-pdfbox -->
     <dependency>
       <groupId>com.openhtmltopdf</groupId>
       <artifactId>openhtmltopdf-pdfbox</artifactId>
