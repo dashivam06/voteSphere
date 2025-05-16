@@ -15,8 +15,6 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import com.voteSphere.config.AppConfig;
 import org.apache.logging.log4j.LogManager;
@@ -28,9 +26,9 @@ import com.voteSphere.exception.EmailException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class EmailService {
+public class MailUtil {
 
-	private static final Logger logger = LogManager.getLogger(EmailService.class);
+	private static final Logger logger = LogManager.getLogger(MailUtil.class);
 	
 	 // Template names
     private static final String KYC_FAILED_TEMPLATE = "kyc-failed.html";

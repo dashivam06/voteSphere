@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.voteSphere.model.UnverifiedUser;
 import com.voteSphere.service.UnverifiedUserService;
-import com.voteSphere.util.EmailService;
+import com.voteSphere.util.MailUtil;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.ServletContext;
@@ -150,8 +150,8 @@ public class AdminUserApprovalServlet extends HttpServlet {
 		// Send approval email asynchronously
 		try {
 			ServletContext context = request.getServletContext();
-			String baseUrl = EmailService.getBaseUrl(request);
-			EmailService.sendEmailVerificationAsync(
+			String baseUrl = MailUtil.getBaseUrl(request);
+			MailUtil.sendEmailVerificationAsync(
 					context,
 					baseUrl,
 					user.getFirstName(),
@@ -198,8 +198,8 @@ public class AdminUserApprovalServlet extends HttpServlet {
 		// Send rejection email asynchronously
 		try {
 			ServletContext context = request.getServletContext();
-			String baseUrl = EmailService.getBaseUrl(request);
-			EmailService.sendKycFailedEmailAsync(
+			String baseUrl = MailUtil.getBaseUrl(request);
+			MailUtil.sendKycFailedEmailAsync(
 					context,
 					baseUrl,
 					user.getFirstName(),

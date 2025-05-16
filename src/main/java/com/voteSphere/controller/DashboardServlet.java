@@ -3,7 +3,7 @@ package com.voteSphere.controller;
 import java.io.IOException;
 
 import com.voteSphere.model.AuthUser;
-import com.voteSphere.util.SessionHandler;
+import com.voteSphere.util.SessionUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,7 +25,7 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        String userRole = SessionHandler.getUserValueFromSession(request, AuthUser::getRole);
+        String userRole = SessionUtil.getUserValueFromSession(request, AuthUser::getRole);
 
         // If no authenticated user or role is found
         if (userRole == null) {

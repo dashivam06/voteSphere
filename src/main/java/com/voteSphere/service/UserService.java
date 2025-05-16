@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.voteSphere.dao.UserDao;
 import com.voteSphere.exception.DataAccessException;
 import com.voteSphere.model.User;
-import com.voteSphere.util.ImageUploadHandler;
+import com.voteSphere.util.ImgUploadUtil;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,21 +39,21 @@ public class UserService {
 		long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 		// Process profile image upload
-		String profileImage = ImageUploadHandler.processImageUpload(request, "profile_image", "profile_image_error",
+		String profileImage = ImgUploadUtil.processImageUpload(request, "profile_image", "profile_image_error",
 				"user-profile", appRealPath, maxImageSize);
 
 		// Process document images
-		String imageHoldingCitizenship = ImageUploadHandler.processImageUpload(request, "image_holding_citizenship",
+		String imageHoldingCitizenship = ImgUploadUtil.processImageUpload(request, "image_holding_citizenship",
 				"image_holding_citizenship_error", "user-docs", appRealPath, maxImageSize);
-		String voterCardFront = ImageUploadHandler.processImageUpload(request, "voter_card_front",
+		String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front",
 				"voter_card_front_error", "user-docs", appRealPath, maxImageSize);
-		String voterCardBack = ImageUploadHandler.processImageUpload(request, "voter_card_back",
+		String voterCardBack = ImgUploadUtil.processImageUpload(request, "voter_card_back",
 				"voter_card_back_error", "user-docs", appRealPath, maxImageSize);
-		String citizenshipFront = ImageUploadHandler.processImageUpload(request, "citizenship_front",
+		String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front",
 				"citizenship_front_error", "user-docs", appRealPath, maxImageSize);
-		String citizenshipBack = ImageUploadHandler.processImageUpload(request, "citizenship_back",
+		String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back",
 				"citizenship_back_error", "user-docs", appRealPath, maxImageSize);
-		String thumbPrint = ImageUploadHandler.processImageUpload(request, "thumb_print", "thumb_print_error",
+		String thumbPrint = ImgUploadUtil.processImageUpload(request, "thumb_print", "thumb_print_error",
 				"user-docs", appRealPath, maxImageSize);
 
 		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null || voterCardBack == null

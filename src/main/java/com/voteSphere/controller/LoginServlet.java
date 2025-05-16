@@ -11,7 +11,7 @@ import com.voteSphere.model.AuthUser;
 import com.voteSphere.model.User;
 import com.voteSphere.service.UserService;
 import com.voteSphere.util.CookieUtil;
-import com.voteSphere.util.SessionHandler;
+import com.voteSphere.util.SessionUtil;
 import com.voteSphere.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
 			}
 
 			// Generate Session
-			SessionHandler.createAndUpdateUserObjectSession(request, authUser);
+			SessionUtil.createAndUpdateUserObjectSession(request, authUser);
 			
 			// Set cookies
 			CookieUtil.addUserRoleCookie(response, authUser.getRole());

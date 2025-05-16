@@ -3,7 +3,7 @@ package com.voteSphere.controller;
 import java.io.IOException;
 
 import com.voteSphere.util.CookieUtil;
-import com.voteSphere.util.SessionHandler;
+import com.voteSphere.util.SessionUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,7 +25,7 @@ public class LogoutServlet extends HttpServlet {
 
 		try {
 			
-			SessionHandler.invalidateSession(request);
+			SessionUtil.invalidateSession(request);
 			
 		} catch (IllegalStateException ignored) {
 			// Eat Five Star - Do Nothing
