@@ -27,13 +27,14 @@ jobs:
       - name: Compress project files
         run: |
           echo "Creating a clean directory for compression..."
-          mkdir -p /tmp/voteSphereTemp
-          cp -R . /tmp/voteSphereTemp/
+          sudo rm -rf /tmp/voteSphereTemp
+          sudo mkdir -p /tmp/voteSphereTemp
+          sudo cp -R . /tmp/voteSphereTemp/
           cd /tmp/voteSphereTemp
           
           echo "Compressing project files..."
           # Exclude temporary files, git, and other non-essential directories that might change
-          tar --warning=no-file-changed \
+          sudo tar --warning=no-file-changed \
               --exclude=".git" \
               --exclude="node_modules" \
               --exclude=".github" \
@@ -43,11 +44,12 @@ jobs:
               -czf voteSphere.tar.gz .
           
           echo "Checking archive size..."
-          ls -lh voteSphere.tar.gz
+          sudo ls -lh voteSphere.tar.gz
           
           echo "Moving archive back to workspace..."
-          cp voteSphere.tar.gz $GITHUB_WORKSPACE/
+          sudo cp voteSphere.tar.gz $GITHUB_WORKSPACE/
           cd $GITHUB_WORKSPACE
+          sudo chown $(id -u):$(id -g) voteSphere.tar.gz
           ls -lh voteSphere.tar.gz
 
       - name: Upload and extract project files
@@ -57,9 +59,10 @@ jobs:
           
           echo "Extracting project files on VM..."
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          rm -rf ~/voteSphere
-          mkdir -p ~/voteSphere
-          tar -xzf ~/voteSphere.tar.gz -C ~/voteSphere
+          sudo rm -rf ~/voteSphere
+          sudo mkdir -p ~/voteSphere
+          sudo tar -xzf ~/voteSphere.tar.gz -C ~/voteSphere
+          sudo chown -R $(id -u):$(id -g) ~/voteSphere
           echo "Project files extracted successfully"
           ls -la ~/voteSphere
           # Clean up the archive
@@ -137,7 +140,7 @@ jobs:
           cd ~/voteSphere
           
           echo "Step 5: Build the Project Using Maven"
-          mvn clean package
+          sudo mvn clean package
           # Check if build was successful
           if [ ! -f target/voteSphere.war ]; then
             echo "Build failed: WAR file not created"
@@ -145,6 +148,7 @@ jobs:
           else
             echo "Build successful: WAR file created at target/voteSphere.war"
             ls -la target/
+            sudo chown -R $(id -u):$(id -g) target/
           fi
           EOF
 
