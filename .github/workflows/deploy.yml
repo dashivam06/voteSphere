@@ -20,8 +20,8 @@ jobs:
 
       - name: Create properties files with secrets
         run: |
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
-          echo "${{ secrets.LOG4J2_PROPERTIES }}" > log4j2.properties
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+          echo "${{ secrets.LOG4J2_PROPERTIES }}" > src/main/resources/log4j2.properties
 
       - name: Copy project files to VM
         run: |
@@ -33,8 +33,8 @@ jobs:
       
       - name: Copy properties files to VM
         run: |
-          scp -o StrictHostKeyChecking=no application.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
-          scp -o StrictHostKeyChecking=no log4j2.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
+          scp -o StrictHostKeyChecking=no src/main/resources/application.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
+          scp -o StrictHostKeyChecking=no src/main/resources/log4j2.properties ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:voteSphere/src/main/resources/
 
       - name: Install Java and Maven
         run: |
