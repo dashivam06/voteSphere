@@ -26,8 +26,27 @@ jobs:
 
       - name: Compress project files
         run: |
+          echo "Creating a clean directory for compression..."
+          mkdir -p /tmp/voteSphereTemp
+          cp -R . /tmp/voteSphereTemp/
+          cd /tmp/voteSphereTemp
+          
           echo "Compressing project files..."
-          tar -czf voteSphere.tar.gz --exclude=".git" .
+          # Exclude temporary files, git, and other non-essential directories that might change
+          tar --exclude=".git" \
+              --exclude="node_modules" \
+              --exclude=".github" \
+              --exclude="target" \
+              --exclude="*.log" \
+              --exclude="*.tmp" \
+              -czf voteSphere.tar.gz .
+          
+          echo "Checking archive size..."
+          ls -lh voteSphere.tar.gz
+          
+          echo "Moving archive back to workspace..."
+          cp voteSphere.tar.gz $GITHUB_WORKSPACE/
+          cd $GITHUB_WORKSPACE
           ls -lh voteSphere.tar.gz
 
       - name: Upload and extract project files
@@ -42,6 +61,8 @@ jobs:
           tar -xzf ~/voteSphere.tar.gz -C ~/voteSphere
           echo "Project files extracted successfully"
           ls -la ~/voteSphere
+          # Clean up the archive
+          rm ~/voteSphere.tar.gz
           EOF
 
       - name: Install Java and Maven
