@@ -34,7 +34,7 @@
 		</div>
 		<nav>
 			<ul>
-				<li class="mb-1"><a href="/voteSphere/dashboard"
+				<li class="mb-1"><a href="/dashboard"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,7 +43,7 @@
 								d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg> Dashboard
 				</a></li>
-				<li class="mb-1"><a href="/voteSphere/admin/account-requests"
+				<li class="mb-1"><a href="/admin/user-approval"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">

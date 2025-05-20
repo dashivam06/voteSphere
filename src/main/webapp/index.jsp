@@ -198,7 +198,7 @@ keyframes count-up {to { counter-increment:countattr(data-target);
 
 @
 keyframes countUp {to { content:attr(data-value);
-	
+
 }
 
 }

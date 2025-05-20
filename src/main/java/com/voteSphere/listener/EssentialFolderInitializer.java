@@ -31,7 +31,14 @@ public class EssentialFolderInitializer implements ServletContextListener {
         for (String dirPath : REQUIRED_DIRECTORIES) {
             if (dirPath == null || dirPath.isEmpty()) continue;
 
-            Path path = Paths.get(dirPath.replace("~", System.getProperty("user.home")));
+            Path path;
+            if (dirPath.startsWith("~/")) {
+                path = Paths.get(System.getProperty("user.home"), dirPath.substring(2));
+            } else if (!Paths.get(dirPath).isAbsolute()) {
+                path = Paths.get(System.getProperty("user.home"), dirPath);
+            } else {
+                path = Paths.get(dirPath);
+            }
 
             if (!Files.exists(path)) {
                 try {

@@ -113,7 +113,26 @@ public class PartyService {
 		}
 		return null;
 	}
-	
+
+	public static Party getPartyByName( String name) {
+		if (ValidationUtil.isNullOrEmpty(name)) {
+			logger.warn( "Party name is required.");
+			return null;
+		}
+
+		try {
+			Party party = PartyDao.findPartyByName(name);
+			if (party == null) {
+				logger.error("No party found with the given name.");
+			}
+			return party;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve party by name: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error retrieving party by name", e);
+		}
+		return null;
+	}
 	
 	public static Party getPartyById(HttpServletRequest request, HttpServletResponse response, Integer id) {
 	    if (id == null || id <= 0) {
@@ -217,25 +236,33 @@ public class PartyService {
 		    request.setAttribute("description_error", "Party description is required.");
 		    hasErrors = true;
 		}
-		
+
+		Party existingParty = PartyService.getPartyById(partyId);
+		if (existingParty == null) {
+			request.setAttribute("party_update_error", "Party not found with the given ID.");
+			return false;
+		}
+
+
 		String appRealPath = request.getServletContext().getRealPath("");
 		long maxImageSize = 2 * 1024 * 1024; // 2MB
-		
-		// Process party-related images
+
+		// 2. Upload new images if present
 		String symbolImage = ImgUploadUtil.processImageUpload(
-		    request, "symbol_image", "symbol_image_error", "party-symbols", appRealPath, maxImageSize);
+				request, "symbol_image", "symbol_image_error", "party-symbols", appRealPath, maxImageSize);
 
 		String coverImage = ImgUploadUtil.processImageUpload(
-		    request, "cover_image", "cover_image_error", "party-covers", appRealPath, maxImageSize);
+				request, "cover_image", "cover_image_error", "party-covers", appRealPath, maxImageSize);
 
+		// 3. Fallback to old images if not re-uploaded
 		if (symbolImage == null) {
-		    hasErrors = true;
-		    logger.warn("Validation failed: Party symbol image is missing or failed to upload.");
+			symbolImage = existingParty.getSymbolImage();
+			logger.info("Symbol image not updated. Retaining existing image.");
 		}
 
 		if (coverImage == null) {
-		    hasErrors = true;
-		    logger.warn("Validation failed: Party cover image is missing or failed to upload.");
+			coverImage = existingParty.getCoverImage();
+			logger.info("Cover image not updated. Retaining existing image.");
 		}
 
 

@@ -106,7 +106,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ">Status</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
         </thead>
@@ -146,15 +146,15 @@
                                     ${donation.status}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">
                                 <div class="flex space-x-3">
-                                    <a href="${pageContext.request.contextPath}/admin/donation/view/${donation.donationId}"
-                                       class="text-primary-600 hover:text-primary-900">View</a>
+
                                     <c:if test="${donation.status eq 'COMPLETED'}">
-                                        <form action="${pageContext.request.contextPath}/admin/donation/refund/${donation.donationId}"
-                                              method="POST"
-                                              class="inline"
-                                              onsubmit="return confirm('Are you sure you want to refund this donation?');">
+                                       <form action="${pageContext.request.contextPath}/admin/donation/refund/${donation.donationId}"
+                                             method="post"
+                                             class="inline"
+                                             onsubmit="return confirm('Are you sure you want to refund this donation?');">
+
                                             <button type="submit" class="text-red-600 hover:text-red-900">Refund</button>
                                         </form>
                                     </c:if>

@@ -3,6 +3,8 @@ package com.voteSphere.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.voteSphere.model.Candidate;
+import com.voteSphere.service.CandidateService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,8 +40,8 @@ public class AdminPartyServlet extends HttpServlet {
                 handleViewParty(request, response, partyId);
             } else if (pathInfo.equalsIgnoreCase("/add")) {
                 handleAddForm(request, response);
-            } else if (pathInfo.startsWith("/edit/")) {
-                String partyId = pathInfo.substring(6); // Extract ID after "/edit/"
+            } else if (pathInfo.startsWith("/update/")) {
+                String partyId = pathInfo.substring(8); // Extract ID after "/edit/"
                 handleEditForm(request, response, partyId);
             } else {
                 logger.warn("Unknown path requested: {}", pathInfo);
@@ -115,6 +117,9 @@ public class AdminPartyServlet extends HttpServlet {
         }
 
         Party party = PartyService.getPartyById(request, response, Integer.parseInt(partyId));
+        List<Candidate> partyCandidates = CandidateService.getCandidatesByParty(request,response,party.getPartyId());
+        System.out.println("ajhsjhagsjhgahgjsghjaghjshgjjghasjhga"+request.getAttribute("partyCandidates"));
+        request.setAttribute("partyCandidates", partyCandidates);
         if (party == null) {
             logger.warn("Party not found with ID: {}", partyId);
             request.setAttribute("error", "Party not found");
@@ -123,7 +128,7 @@ public class AdminPartyServlet extends HttpServlet {
         }
 
         request.setAttribute("party", party);
-        request.getRequestDispatcher("/WEB-INF/pages/admin/view-party.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/pages/admin/party-details.jsp").forward(request, response);
         logger.info("Successfully viewed party ID: {}", partyId);
     }
 
@@ -169,11 +174,11 @@ public class AdminPartyServlet extends HttpServlet {
         boolean success = PartyService.updateParty(request, response, Integer.parseInt(partyId));
         if (success) {
             logger.info("Successfully updated party ID: {}", partyId);
-            response.sendRedirect(request.getContextPath() + "/admin/party/view/" + partyId);
+            response.sendRedirect(request.getContextPath() + "/admin/party/" );
         } else {
             logger.warn("Failed to update party ID: {}", partyId);
             request.setAttribute("error", "Failed to update party");
-            request.getRequestDispatcher("/WEB-INF/pages/admin/edit-party.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/admin/update-party.jsp").forward(request, response);
         }
     }
 
@@ -191,7 +196,7 @@ public class AdminPartyServlet extends HttpServlet {
         boolean success = PartyService.deleteParty(request, response, Integer.parseInt(partyId));
         if (success) {
             logger.info("Successfully deleted party ID: {}", partyId);
-            response.sendRedirect(request.getContextPath() + "/admin/party/list");
+            response.sendRedirect(request.getContextPath() + "/admin/party/");
         } else {
             logger.warn("Failed to delete party ID: {}", partyId);
             request.setAttribute("error", "Failed to delete party");
@@ -226,7 +231,7 @@ public class AdminPartyServlet extends HttpServlet {
         }
 
         request.setAttribute("party", party);
-        request.getRequestDispatcher("/WEB-INF/pages/admin/edit-party.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/pages/admin/update-party.jsp").forward(request, response);
         logger.info("Successfully displayed edit form for party ID: {}", partyId);
     }
 }

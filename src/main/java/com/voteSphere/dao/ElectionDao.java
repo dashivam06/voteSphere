@@ -634,6 +634,56 @@ public class ElectionDao {
 	}
 
 	/**
+	 * Retrieves an Election object by its name.
+	 */
+	public static Election getElectionByName(String name) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Attempting to retrieve Election with name: " + name);
+		}
+
+		String sql = "SELECT election_id, name, type, cover_image, date, start_time, end_time FROM elections WHERE name = ?";
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setString(1, name);
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("Executing SQL query to retrieve election with name: " + name);
+			}
+
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					Election election = mapResultSetToElection(rs);
+					if (logger.isInfoEnabled()) {
+						logger.info("Successfully retrieved election with name: " + name);
+					}
+					return election;
+				} else {
+					logger.warn("No election found with name: " + name);
+					return null;
+				}
+			}
+
+		} catch (DatabaseException e) {
+			logger.error("Database connection error while retrieving election with name: " + name, e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while retrieving election with name: " + name +
+					". Error code: " + e.getErrorCode() + ", SQL state: " + e.getSQLState(), e);
+			throw new DataAccessException("Database error while retrieving election by name",
+					"Failed to retrieve election due to system error. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while retrieving election with name: " + name, e);
+			throw new DataAccessException("Unexpected error while retrieving election",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
+
+	/**
 	 * Helper method to map ResultSet to Election object
 	 */
 	private static Election mapResultSetToElection(ResultSet rs) throws SQLException {
@@ -647,6 +697,9 @@ public class ElectionDao {
 	    election.setEndTime(rs.getTime("end_time"));
 	    return election;
 	}
+
+
+
 
 	/**
 	 * Helper method to map ResultSet to Candidate object

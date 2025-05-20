@@ -170,6 +170,27 @@ public class CandidateService {
         }
         return null;
     }
+
+
+    public static Candidate getCandidateById(Integer id) {
+        if (id == null || id <= 0) {
+            logger.error( "Valid candidate ID is required.");
+            return null;
+        }
+
+        try {
+            Candidate candidate = CandidateDao.findCandidateById(id);
+            if (candidate == null) {
+                logger.warn("No candidate found with the given ID.");
+            }
+            return candidate;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve candidate by ID: " + dae.getMessage(), dae);
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving candidate by ID", e);
+        }
+        return null;
+    }
     
     
     public static boolean deleteCandidate(HttpServletRequest request, HttpServletResponse response, Integer id) {
@@ -231,21 +252,42 @@ public class CandidateService {
         String bio = request.getParameter("bio");
         String manifesto = request.getParameter("manifesto");
         String isIndependentStr = request.getParameter("is_independent");
+
+
         String partyIdStr = request.getParameter("party_id");
         String electionIdStr = request.getParameter("election_id");
+        String profileImage  = null;
 
-        // Set up paths and max file size for image uploads
-        String appRealPath = request.getServletContext().getRealPath("");
-        long maxImageSize = 2 * 1024 * 1024; // 2MB
+        Candidate existingCandidate = CandidateDao.findCandidateById(candidateId);
+        if (existingCandidate == null) {
+            logger.error("No existing candidate found with ID: {}", candidateId);
+            request.setAttribute("candidate_update_error", "Candidate not found.");
+            return false;
+        }
 
-        String profileImage = ImgUploadUtil.processImageUpload(
-            request,
-            "candidate_profile_image",
-            "candidate_profile_image_error",
-            "candidate-profile-image",
-            appRealPath,
-            maxImageSize
-        );
+        try {
+            // Set up paths and max file size for image uploads
+            String appRealPath = request.getServletContext().getRealPath("");
+            long maxImageSize = 2 * 1024 * 1024; // 2MB
+
+            profileImage = ImgUploadUtil.processImageUpload(
+                    request,
+                    "candidate_profile_image",
+                    "candidate_profile_image_error",
+                    "candidate-profile-image",
+                    appRealPath,
+                    maxImageSize
+            );
+
+            if (profileImage == null || profileImage.isEmpty()) {
+                // Use previous image if no new one was uploaded
+                profileImage = existingCandidate.getProfileImage();
+            }
+
+        } catch (Exception e) {
+            logger.error("Image upload failed. Retaining previous image. Reason: {}", e.getMessage());
+            profileImage = existingCandidate.getProfileImage();
+        }
 
         // Validations
         if (ValidationUtil.isNullOrEmpty(fname)) {
@@ -305,14 +347,9 @@ public class CandidateService {
             hasErrors = true;
         }
 
-        Boolean isIndependent = null;
-        if (ValidationUtil.isNullOrEmpty(isIndependentStr)) {
-            logger.warn("Validation failed: Independence status is empty.");
-            request.setAttribute("isIndependent_error", "Independence status is required.");
-            hasErrors = true;
-        } else {
-            isIndependent = Boolean.valueOf(isIndependentStr);
-        }
+        // Checkbox unchecked = parameter missing = false
+        Boolean isIndependent = Boolean.valueOf(isIndependentStr != null && isIndependentStr.equals("on"));
+
 
         Integer partyId = null;
         if (!ValidationUtil.isNullOrEmpty(partyIdStr)) {
@@ -346,6 +383,7 @@ public class CandidateService {
         }
 
         try {
+
             Candidate updatedCandidate = new Candidate(candidateId, fname, lname, address, gender, dob,
                     isIndependent, highestEducation, bio, profileImage, partyId, electionId, manifesto);
             return CandidateDao.updateCandidate(updatedCandidate);

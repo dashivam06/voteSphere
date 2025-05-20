@@ -83,7 +83,7 @@
 </head>
 <body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
 	<!-- Include sidebar -->
-    <%@ include file="sidebar.jsp" %>
+   <%@ include file="sidebar.jsp" %>
 
 	<!-- Main Content -->
 	<div

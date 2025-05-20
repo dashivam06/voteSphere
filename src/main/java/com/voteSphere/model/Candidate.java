@@ -2,6 +2,7 @@ package com.voteSphere.model;
 
 import com.voteSphere.service.ElectionService;
 import com.voteSphere.service.PartyService;
+import com.voteSphere.util.ValidationUtil;
 import jakarta.servlet.http.Part;
 
 import java.sql.Date;
@@ -88,7 +89,7 @@ public class Candidate {
 	}
 
 	public String getGender() {
-		return gender;
+		return ValidationUtil.capitalize(gender);
 	}
 
 	public void setGender(String gender) {

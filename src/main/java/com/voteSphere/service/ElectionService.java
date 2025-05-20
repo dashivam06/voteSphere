@@ -430,6 +430,29 @@ public class ElectionService {
 	}
 
 	/**
+	 * Gets election by name with request/response handling
+	 */
+	public static Election getElectionByName(String electionName) {
+		try {
+			logger.debug("Fetching election with name: {}", electionName);
+			Election election = ElectionDao.getElectionByName(electionName);
+			if (election == null) {
+				logger.warn("No election found with name: {}", electionName);
+			} else {
+				logger.info("Successfully retrieved election with name: {}", electionName);
+			}
+			return election;
+		} catch (DataAccessException dae) {
+			logger.error("Database error fetching election '{}': {}", electionName, dae.getMessage(), dae);
+			return null;
+		} catch (Exception e) {
+			logger.error("Unexpected error fetching election '{}'", electionName, e);
+			return null;
+		}
+	}
+
+
+	/**
 	 * Gets all upcoming elections (elections that haven't started yet)
 	 * @return List of upcoming elections
 	 */

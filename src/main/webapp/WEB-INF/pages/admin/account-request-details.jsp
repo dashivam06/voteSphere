@@ -38,6 +38,12 @@
     };
   </script>
   <style>
+
+  *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      }
     /* Document preview styles */
     .document-preview {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -306,268 +312,185 @@
               </div>
 
               <!-- Citizenship Documents Tab -->
+              <!-- Citizenship Documents Tab -->
               <div id="citizenship-tab" class="tab-content">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="document-card p-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h3 class="font-medium text-gray-700">Citizenship Front</h3>
-                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
-                    </div>
-                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                      <img src="/images/${user.citizenshipFront}" alt="Citizenship Front" class="w-full h-full object-cover" />
-                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Citizenship Front')">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          View Full Size
-                        </button>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div class="document-card p-4">
+                          <div class="flex items-center justify-between mb-3">
+                              <h3 class="font-medium text-gray-700">Citizenship Front</h3>
+                              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                          </div>
+                          <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                              <img src="${pageContext.request.contextPath}/uploads/${user.citizenshipFront}"
+                                   alt="Citizenship Front" class="w-full h-full object-cover" />
+                              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                                  <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
+                                          onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.citizenshipFront}', 'Citizenship Front')">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                      </svg>
+                                      View Full Size
+                                  </button>
+                              </div>
+                          </div>
+                          <div class="flex items-center justify-between text-sm">
+                              <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.citizenshipFrontUploadDate}" pattern="yyyy-MM-dd" /></span>
+                              <div class="flex items-center">
+                                  <a href="${pageContext.request.contextPath}/uploads/${user.citizenshipFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                      </svg>
+                                  </a>
+                                  <div class="tooltip">
+                                      <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                          </svg>
+                                      </button>
+                                      <span class="tooltip-text">Document verified by system on <fmt:formatDate value="${user.citizenshipFrontVerifiedDate}" pattern="yyyy-MM-dd" /></span>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
-                      <div class="flex items-center">
-                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
-                        <div class="tooltip">
-                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </button>
-                          <span class="tooltip-text">Document verified by system on 2024-06-02</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="document-card p-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h3 class="font-medium text-gray-700">Citizenship Back</h3>
-                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
-                    </div>
-                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                      <img src="/images/${user.citizenshipBack}" alt="Citizenship Back" class="w-full h-full object-cover" />
-                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Citizenship Back')">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          View Full Size
-                        </button>
+                      <div class="document-card p-4">
+                          <div class="flex items-center justify-between mb-3">
+                              <h3 class="font-medium text-gray-700">Citizenship Back</h3>
+                              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                          </div>
+                          <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                              <img src="${pageContext.request.contextPath}/uploads/${user.citizenshipBack}"
+                                   alt="Citizenship Back" class="w-full h-full object-cover" />
+                              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                                  <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
+                                          onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.citizenshipBack}', 'Citizenship Back')">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                      </svg>
+                                      View Full Size
+                                  </button>
+                              </div>
+                          </div>
+                          <div class="flex items-center justify-between text-sm">
+                              <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.citizenshipBackUploadDate}" pattern="yyyy-MM-dd" /></span>
+                              <div class="flex items-center">
+                                  <a href="${pageContext.request.contextPath}/uploads/${user.citizenshipBack}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                      </svg>
+                                  </a>
+                                  <div class="tooltip">
+                                      <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                          </svg>
+                                      </button>
+                                      <span class="tooltip-text">Document verified by system on <fmt:formatDate value="${user.citizenshipBackVerifiedDate}" pattern="yyyy-MM-dd" /></span>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
-                      <div class="flex items-center">
-                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
-                        <div class="tooltip">
-                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </button>
-                          <span class="tooltip-text">Document verified by system on 2024-06-02</span>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                </div>
-              </div>
-
-              <!-- Voter ID Card Tab -->
-              <div id="voter-tab" class="tab-content hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="document-card p-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h3 class="font-medium text-gray-700">Voter Card Front</h3>
-                      <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Pending</span>
-                    </div>
-                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                      <img src="/images/${user.voterCardFront}" alt="Voter Card Front" class="w-full h-full object-cover" />
-                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Voter Card Front')">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          View Full Size
-                        </button>
-                      </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
-                      <div class="flex items-center">
-                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
-                        <div class="tooltip">
-                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </button>
-                          <span class="tooltip-text">Awaiting manual verification</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="document-card p-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h3 class="font-medium text-gray-700">Voter Card Back</h3>
-                      <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Pending</span>
-                    </div>
-                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                      <img src="/images/${user.voterCardBack}" alt="Voter Card Back" class="w-full h-full object-cover" />
-                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Voter Card Back')">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          View Full Size
-                        </button>
-                      </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
-                      <div class="flex items-center">
-                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
-                        <div class="tooltip">
-                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </button>
-                          <span class="tooltip-text">Awaiting manual verification</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <!-- Additional Documents Tab -->
               <div id="additional-tab" class="tab-content hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="document-card p-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h3 class="font-medium text-gray-700">Holding ID</h3>
-                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
-                    </div>
-                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                      <img src="/images/${user.imageHoldingCitizenship}" alt="Holding ID" class="w-full h-full object-cover" />
-                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Holding ID')">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          View Full Size
-                        </button>
-                      </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
-                      <div class="flex items-center">
-                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
-                        <div class="tooltip">
-                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </button>
-                          <span class="tooltip-text">Document verified by admin on 2024-06-02</span>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <c:if test="${not empty user.imageHoldingCitizenship}">
+                          <div class="document-card p-4">
+                              <div class="flex items-center justify-between mb-3">
+                                  <h3 class="font-medium text-gray-700">Holding ID</h3>
+                                  <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                              </div>
+                              <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                                  <img src="${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}"
+                                       alt="Holding ID" class="w-full h-full object-cover" />
+                                  <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                                      <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
+                                              onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}', 'Holding ID')">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                          </svg>
+                                          View Full Size
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="flex items-center justify-between text-sm">
+                                  <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.holdingIdUploadDate}" pattern="yyyy-MM-dd" /></span>
+                                  <div class="flex items-center">
+                                      <a href="${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                          </svg>
+                                      </a>
+                                      <div class="tooltip">
+                                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                              </svg>
+                                          </button>
+                                          <span class="tooltip-text">Document verified by admin on <fmt:formatDate value="${user.holdingIdVerifiedDate}" pattern="yyyy-MM-dd" /></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </c:if>
+
+                      <c:if test="${not empty user.thumbPrint}">
+                          <div class="document-card p-4">
+                              <div class="flex items-center justify-between mb-3">
+                                  <h3 class="font-medium text-gray-700">Thumbprint</h3>
+                                  <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                              </div>
+                              <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                                  <img src="${pageContext.request.contextPath}/uploads/${user.thumbPrint}"
+                                       alt="Thumbprint" class="w-full h-full object-cover" />
+                                  <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                                      <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
+                                              onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.thumbPrint}', 'Thumbprint')">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                          </svg>
+                                          View Full Size
+                                      </button>
+                                  </div>
+                              </div>
+                              <div class="flex items-center justify-between text-sm">
+                                  <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.thumbPrintUploadDate}" pattern="yyyy-MM-dd" /></span>
+                                  <div class="flex items-center">
+                                      <a href="${pageContext.request.contextPath}/uploads/${user.thumbPrint}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                          </svg>
+                                      </a>
+                                      <div class="tooltip">
+                                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                              </svg>
+                                          </button>
+                                          <span class="tooltip-text">Document verified by admin on <fmt:formatDate value="${user.thumbPrintVerifiedDate}" pattern="yyyy-MM-dd" /></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </c:if>
                   </div>
 
-                  <div class="document-card p-4">
-                    <div class="flex items-center justify-between mb-3">
-                      <h3 class="font-medium text-gray-700">Thumbprint</h3>
-                      <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
-                    </div>
-                    <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                      <img src="/images/${user.thumbPrint}" alt="Thumbprint" class="w-full h-full object-cover" />
-                      <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                        <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100" onclick="openDocumentPreview('/placeholder.svg?height=800&width=1200', 'Thumbprint')">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                          </svg>
-                          View Full Size
-                        </button>
-                      </div>
-                    </div>
-                    <div class="flex items-center justify-between text-sm">
-                      <span class="text-gray-500">Uploaded: 2024-06-01</span>
-                      <div class="flex items-center">
-                        <button class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                          </svg>
-                        </button>
-                        <div class="tooltip">
-                          <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </button>
-                          <span class="tooltip-text">Document verified by admin on 2024-06-02</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-                </div>
-</div>
-                </div>
-              </div>
-
-
-            </div>
-          </div>
-
-        </div>
-      </div>
     </div>
   </div>
 
   <!-- Reject with Reason Modal -->
-  <div id="rejectReasonModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 opacity-0 invisible">
+  <div id="rejectReasonModalTst" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 opacity-0 invisible">
     <div class="modal-content bg-white rounded-xl shadow-xl max-w-lg w-full transform translate-y-8">
       <div class="p-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold text-gray-800">Rejection Reason</h3>
-          <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+          <button id="closeModalTst" class="text-gray-400 hover:text-gray-600">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -578,10 +501,10 @@
           <textarea id="rejectionReason" rows="5" class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Enter rejection reason..."></textarea>
         </div>
         <div class="flex justify-end space-x-3">
-          <button id="cancelReject" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+          <button id="cancelRejectTst" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
             Cancel
           </button>
-          <button id="submitReject" class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
+          <button id="submitRejectTst" class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
             Send Rejection
           </button>
         </div>
@@ -592,75 +515,61 @@
 
   <!-- Document Preview Modal -->
   <div id="documentPreviewModal" class="modal fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4 opacity-0 invisible">
-    <div class="modal-content bg-white rounded-xl shadow-xl max-w-4xl w-full transform translate-y-8">
-      <div class="p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h3 id="previewTitle" class="text-xl font-bold text-gray-800">Document Preview</h3>
-          <button id="closeDocumentModal" class="text-gray-400 hover:text-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+      <div class="modal-content bg-white rounded-xl shadow-xl max-w-4xl w-full transform translate-y-8">
+          <div class="p-6">
+              <div class="flex justify-between items-center mb-4">
+                  <h3 id="previewTitle" class="text-xl font-bold text-gray-800">Document Preview</h3>
+                  <button id="closeDocumentModal" class="text-gray-400 hover:text-gray-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                  </button>
+              </div>
 
-          <!-- Zoom Controls -->
-          <div class="zoom-controls">
-            <button class="zoom-btn" id="zoomIn">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-              </svg>
-            </button>
-            <button class="zoom-btn" id="zoomOut">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
-              </svg>
-            </button>
-            <button class="zoom-btn" id="resetZoom">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </button>
+              <div class="relative overflow-auto max-h-[70vh]">
+                  <img id="previewImage" src="" alt="Document Preview" class="w-full h-auto max-w-full" />
+  >
+                  <!-- Zoom Controls -->
+                  <div class="zoom-controls">
+                      <button class="zoom-btn" id="zoomIn">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                          </svg>
+                      </button>
+                      <button class="zoom-btn" id="zoomOut">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+                          </svg>
+                      </button>
+                      <button class="zoom-btn" id="resetZoom">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                      </button>
+                  </div>
+              </div>
+
+              <div class="flex justify-end mt-4">
+                  <button id="closePreviewBtn" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                      Close
+                  </button>
+              </div>
           </div>
-        </div>
-        <div class="flex justify-end mt-4">
-          <button id="closePreviewBtn" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
-            Close
-          </button>
-        </div>
-
-
-
-                    <!-- Action Buttons -->
-                    <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
-                        <form action="${pageContext.request.contextPath}/admin/user-approval/reject/${user.unverifiedUserId}" method="post" class="w-full sm:w-auto">
-                            <button type="button" onclick="showRejectReasonModal()"
-                                    class="w-full bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                        </form>
-                        <form action="${pageContext.request.contextPath}/admin/user-approval/approve/${user.unverifiedUserId}" method="post" class="w-full sm:w-auto">
-                            <button type="submit"
-                                    class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                        </form>
-                    </div>
       </div>
-    </div>
   </div>
 
   <script>
     // Modal functionality
-    const rejectReasonModal = document.getElementById('rejectReasonModal');
-    const documentPreviewModal = document.getElementById('documentPreviewModal');
-    const rejectWithReasonBtn = document.getElementById('rejectWithReasonBtn');
-    const closeModal = document.getElementById('closeModal');
-    const cancelReject = document.getElementById('cancelReject');
-    const submitReject = document.getElementById('submitReject');
-    const closeDocumentModal = document.getElementById('closeDocumentModal');
-    const closePreviewBtn = document.getElementById('closePreviewBtn');
-    const previewImage = document.getElementById('previewImage');
-    const previewTitle = document.getElementById('previewTitle');
+    const rejectReasonModalTst = document.getElementById('rejectReasonModalTst');
+    const documentPreviewModalTst = document.getElementById('documentPreviewModalTst');
+    const rejectWithReasonBtnTst = document.getElementById('rejectWithReasonBtnTst');
+    const closeModalTst = document.getElementById('closeModalTst');
+    const cancelRejectTst = document.getElementById('cancelRejectTst');
+    const submitRejectTst = document.getElementById('submitRejectTst');
+    const closeDocumentModalTst = document.getElementById('closeDocumentModalTstTstTst');
+    const closePreviewBtnTstTst = document.getElementById('closePreviewBtnTstTst');
+    const previewImageTst = document.getElementById('previewImageTst');
+    const previewTitleTst = document.getElementById('previewTitleTst');
 
     // Tab switching functionality
     function switchTab(tabName) {
@@ -686,22 +595,22 @@
     }
 
     // Open reject reason modal
-    rejectWithReasonBtn.addEventListener('click', () => {
-      rejectReasonModal.classList.add('active');
+    rejectWithReasonBtnTst.addEventListener('click', () => {
+      rejectReasonModalTst.classList.add('active');
       document.body.style.overflow = 'hidden';
     });
 
     // Close reject reason modal
     const closeRejectModal = () => {
-      rejectReasonModal.classList.remove('active');
+      rejectReasonModalTst.classList.remove('active');
       document.body.style.overflow = '';
     };
 
-    closeModal.addEventListener('click', closeRejectModal);
-    cancelReject.addEventListener('click', closeRejectModal);
+    closeModalTst.addEventListener('click', closeRejectModal);
+    cancelRejectTst.addEventListener('click', closeRejectModal);
 
     // Submit rejection with reason
-    submitReject.addEventListener('click', () => {
+    submitRejectTst.addEventListener('click', () => {
       const reason = document.getElementById('rejectionReason').value;
       if (reason.trim() === '') {
         alert('Please provide a rejection reason');
@@ -715,25 +624,25 @@
 
     // Document preview functionality
     function openDocumentPreview(imageUrl, title) {
-      previewImage.src = imageUrl;
-      previewTitle.textContent = title || 'Document Preview';
+      previewImageTst.src = imageUrl;
+      previewTitleTst.textContent = title || 'Document Preview';
 
-      documentPreviewModal.classList.add('active');
+      documentPreviewModalTst.classList.add('active');
       document.body.style.overflow = 'hidden';
 
       // Reset zoom
       currentZoom = 1;
-      previewImage.style.transform = `scale(${currentZoom})`;
+      previewImageTst.style.transform = `scale(${currentZoom})`;
     }
 
     // Close document preview modal
-    const closeDocumentPreviewModal = () => {
-      documentPreviewModal.classList.remove('active');
+    const closedocumentPreviewModalTst = () => {
+      documentPreviewModalTst.classList.remove('active');
       document.body.style.overflow = '';
     };
 
-    closeDocumentModal.addEventListener('click', closeDocumentPreviewModal);
-    closePreviewBtn.addEventListener('click', closeDocumentPreviewModal);
+    closeDocumentModalTst.addEventListener('click', closedocumentPreviewModalTst);
+    closePreviewBtnTstTst.addEventListener('click', closedocumentPreviewModalTst);
 
     // Zoom functionality
     let currentZoom = 1;
@@ -744,18 +653,18 @@
     zoomIn.addEventListener('click', () => {
       currentZoom += 0.1;
       if (currentZoom > 3) currentZoom = 3;
-      previewImage.style.transform = `scale(${currentZoom})`;
+      previewImageTst.style.transform = `scale(${currentZoom})`;
     });
 
     zoomOut.addEventListener('click', () => {
       currentZoom -= 0.1;
       if (currentZoom < 0.5) currentZoom = 0.5;
-      previewImage.style.transform = `scale(${currentZoom})`;
+      previewImageTst.style.transform = `scale(${currentZoom})`;
     });
 
     resetZoom.addEventListener('click', () => {
       currentZoom = 1;
-      previewImage.style.transform = `scale(${currentZoom})`;
+      previewImageTst.style.transform = `scale(${currentZoom})`;
     });
 
     // Approve and reject functionality
@@ -775,6 +684,38 @@
         alert('Account request rejected!');
       }
     });
+
+
+    // Tab switching functionality
+    function switchTab(tabName) {
+        // Hide all tab contents
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(content => {
+            content.classList.add('hidden');
+        });
+
+        // Show the selected tab content
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+
+        // Update active tab styling
+        const tabLinks = document.querySelectorAll('.border-b-2');
+        tabLinks.forEach(link => {
+            link.classList.remove('border-primary-500', 'text-primary-600');
+            link.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+        });
+
+        // Set active tab
+        event.currentTarget.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+        event.currentTarget.classList.add('border-primary-500', 'text-primary-600');
+    }
+
+    // Initialize first tab as active
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('citizenship-tab').classList.remove('hidden');
+        document.querySelector('.border-b-2').classList.add('border-primary-500', 'text-primary-600');
+        document.querySelector('.border-b-2').classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+    });
+
   </script>
 </body>
 </html>

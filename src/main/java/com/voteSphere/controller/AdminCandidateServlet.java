@@ -41,6 +41,14 @@ public class AdminCandidateServlet extends HttpServlet {
                 String candidateId = pathInfo.substring(6);
                 handleViewCandidate(request, response, candidateId);
             }
+            else if (pathInfo.startsWith("/update/")) {
+                String candidateId = pathInfo.substring(8);
+                handleUpdateCandidateForm(request, response, candidateId);
+            }
+            else if (pathInfo.startsWith("/search")) {
+                logger.warn("Redirecting : {} to candidate page", pathInfo);
+                response.sendRedirect("/admin/candidate/");
+            }
             else if (pathInfo.startsWith("/party/")) {
                 String partyId = pathInfo.substring(7);
                 handleCandidatesByParty(request, response, partyId);
@@ -71,6 +79,10 @@ public class AdminCandidateServlet extends HttpServlet {
             }
             else if (pathInfo.equalsIgnoreCase("/new")) {
                 handleAddCandidate(request, response);
+            }
+            else if (pathInfo.startsWith("/view/")) {
+                String candidateId = pathInfo.substring(6);
+                handleViewCandidate(request, response, candidateId);
             }
             else if (pathInfo.startsWith("/update/")) {
                 String candidateId = pathInfo.substring(8);
@@ -108,6 +120,24 @@ public class AdminCandidateServlet extends HttpServlet {
         logger.info("Successfully displayed candidate add form");
     }
 
+
+    private void handleUpdateCandidateForm(HttpServletRequest request, HttpServletResponse response, String candidateId)
+            throws ServletException, IOException {
+        logger.debug("Displaying candidate update form");
+
+        // Attach the list of election and parties in the drop-down
+        request.setAttribute("elections", ElectionService.getAllElections());
+        request.setAttribute("parties", PartyService.getAllPartys());
+
+
+        Candidate candidate = CandidateService.getCandidateById(Integer.parseInt(candidateId));
+        request.setAttribute("candidate", candidate);
+
+
+        request.getRequestDispatcher("/WEB-INF/pages/admin/update-candidate.jsp").forward(request, response);
+        logger.info("Successfully displayed candidate update form");
+    }
+
     private void handleListCandidates(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.debug("Listing all candidates");
@@ -139,7 +169,7 @@ public class AdminCandidateServlet extends HttpServlet {
             return;
         }
 
-        Candidate candidate = CandidateService.getCandidateById(request, response, Integer.parseInt(candidateId));
+        Candidate candidate = CandidateService.getCandidateById(Integer.parseInt(candidateId));
         if (candidate == null) {
             logger.warn("Candidate not found with ID: {}", candidateId);
             request.setAttribute("error", "Candidate not found");
@@ -148,6 +178,8 @@ public class AdminCandidateServlet extends HttpServlet {
         }
 
         request.setAttribute("candidate", candidate);
+        System.out.println(request.getAttribute("candidate"));
+
         request.getRequestDispatcher("/WEB-INF/pages/admin/candidate-details.jsp").forward(request, response);
         logger.info("Successfully viewed candidate ID: {}", candidateId);
     }
@@ -225,10 +257,10 @@ public class AdminCandidateServlet extends HttpServlet {
         boolean success = CandidateService.updateCandidate(request, response, Integer.parseInt(candidateId));
         if (success) {
             logger.info("Successfully updated candidate ID: {}", candidateId);
-            response.sendRedirect(request.getContextPath() + "/admin/candidate/view/" + candidateId);
+            response.sendRedirect(request.getContextPath() + "/admin/candidate");
         } else {
             logger.warn("Failed to update candidate ID: {}", candidateId);
-            request.getRequestDispatcher("/WEB-INF/pages/admin/edit-candidate.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/admin/candidates.jsp").forward(request, response);
         }
     }
 

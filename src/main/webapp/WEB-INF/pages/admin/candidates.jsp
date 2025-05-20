@@ -185,8 +185,18 @@
                                   <!-- Actions -->
                                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                       <div class="flex space-x-3">
-                                          <button class="text-primary-600 hover:text-primary-900">View</button>
+                                              <a href="${pageContext.request.contextPath}/admin/candidate/view/${candidate.candidateId}"
+
+
+                                                                                                                                                                          <button  class="text-primary-600 hover:text-primary-900">View</button>
+
+                                                                                                                                        </form>
+
+                                                                                                                                                                             <a href="${pageContext.request.contextPath}/admin/candidate/update/${candidate.candidateId}"
+
+
                                           <button class="text-yellow-600 hover:text-yellow-900">Edit</button>
+
                                           <form action="${pageContext.request.contextPath}/admin/candidate/delete/${candidate.candidateId}"
                                                                                                     method="POST"
                                                                                                     class="inline"

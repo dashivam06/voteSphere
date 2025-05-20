@@ -294,6 +294,30 @@ public class DonationService {
             return Collections.emptyList();
         }
     }
+
+
+
+    // Delete a donation
+    public static boolean refundDonation( int donationId) {
+        if (donationId <= 0) {
+            logger.warn("Invalid donation ID.");
+            return false;
+        }
+
+        try {
+            boolean deleted = DonationDao.deleteDonation(donationId);
+            if (!deleted) {
+                logger.error( "No donation found with the given ID to delete.");
+            }
+            return deleted;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to delete donation: " + dae.getMessage(), dae);
+        } catch (Exception e) {
+            logger.error("Unexpected error while deleting donation", e);
+        }
+        return false;
+    }
+
 //
 //    // Search donations with request/response handling
 //    public static List<Donation> searchDonations(HttpServletRequest request, HttpServletResponse response, String query) {

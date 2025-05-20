@@ -29,6 +29,10 @@ public class AdminDonationServlet extends HttpServlet {
             if (pathInfo == null || pathInfo.equals("/") || pathInfo.equalsIgnoreCase("/list")) {
                 handleListDonations(request, response);
             }
+            else if (pathInfo.startsWith("/search")) {
+                logger.warn("Redirecting : {} to donation page", pathInfo);
+                response.sendRedirect("/admin/donation/");
+            }
             else if (pathInfo.startsWith("/view/")) {
                 String donationId = pathInfo.substring(6);
                 handleViewDonation(request, response, donationId);
@@ -56,18 +60,23 @@ public class AdminDonationServlet extends HttpServlet {
             if (pathInfo == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
-//            else if (pathInfo.startsWith("/refund/")) {
-//                String donationId = pathInfo.substring(8);
-//                handleRefundDonation(request, response, donationId);
-//            }
+            else if (pathInfo.startsWith("/refund")) {
+                String donationId = pathInfo.substring(8);
+                handleRefundDonation(request, response, donationId);
+                handleDonationStats(request, response);
+
+            }
             else if (pathInfo.startsWith("/search")) {
                 handleSearch(request, response);
+                handleDonationStats(request, response);
             }
             else {
                 logger.warn("Invalid path requested: {}", pathInfo);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
         } catch (Exception e) {
+            System.out.println("sadsads");
+
             logger.error("Error processing donation action", e);
             request.setAttribute("error", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -125,27 +134,27 @@ public class AdminDonationServlet extends HttpServlet {
         logger.info("Successfully loaded donation statistics");
     }
 
-//    private void handleRefundDonation(HttpServletRequest request, HttpServletResponse response, String donationId)
-//            throws ServletException, IOException {
-//        logger.debug("Processing refund for donation ID: {}", donationId);
-//
-//        if (ValidationUtil.isNullOrEmpty(donationId) || !ValidationUtil.isNumeric(donationId)) {
-//            logger.warn("Invalid donation ID for refund: {}", donationId);
-//            request.setAttribute("error", "Invalid donation ID");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        boolean success = DonationService.refundDonation(Integer.parseInt(donationId));
-//        if (success) {
-//            logger.info("Successfully refunded donation ID: {}", donationId);
-//            response.sendRedirect(request.getContextPath() + "/admin/donation/list");
-//        } else {
-//            logger.warn("Failed to refund donation ID: {}", donationId);
-//            request.setAttribute("error", "Failed to process refund");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//        }
-//    }
+    private void handleRefundDonation(HttpServletRequest request, HttpServletResponse response, String donationId)
+            throws ServletException, IOException {
+        logger.debug("Processing refund for donation ID: {}", donationId);
+
+        if (ValidationUtil.isNullOrEmpty(donationId) || !ValidationUtil.isNumeric(donationId)) {
+            logger.warn("Invalid donation ID for refund: {}", donationId);
+            request.setAttribute("error", "Invalid donation ID");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
+        }
+
+        boolean success = DonationService.refundDonation(Integer.parseInt(donationId));
+        if (success) {
+            logger.info("Successfully refunded donation ID: {}", donationId);
+            response.sendRedirect(request.getContextPath() + "/admin/donation/");
+        } else {
+            logger.warn("Failed to refund donation ID: {}", donationId);
+            request.setAttribute("error", "Failed to process refund");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        }
+    }
 
     private void handleSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

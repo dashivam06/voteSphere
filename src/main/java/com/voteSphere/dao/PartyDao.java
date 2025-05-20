@@ -265,39 +265,56 @@ public class PartyDao {
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Attempting to delete party with ID: " + id);
+			logger.debug("Attempting to delete party and related data with ID: " + id);
 		}
 
-		String sql = "DELETE FROM parties WHERE party_id = ?";
+		String deleteVotesSQL = "DELETE FROM votes WHERE party_id = ?";
+		String deleteCandidatesSql = "DELETE FROM candidates WHERE party_id = ?";
+		String deletePartySql = "DELETE FROM parties WHERE party_id = ?";
 
-		try (Connection conn = DBConnectionManager.establishConnection();
-				PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-			stmt.setInt(1, id);
+		try (Connection conn = DBConnectionManager.establishConnection()) {
 
-			int affectedRows = stmt.executeUpdate();
+			conn.setAutoCommit(false); // Start transaction
 
-			if (affectedRows > 0) {
-				if (logger.isInfoEnabled()) {
-					logger.info("Successfully deleted party with ID: " + id);
+			try (PreparedStatement deleteCandidatesStmt = conn.prepareStatement(deleteCandidatesSql);
+				 PreparedStatement deletePartyStmt = conn.prepareStatement(deletePartySql);
+				PreparedStatement deleteVoteStmt = conn.prepareStatement(deleteVotesSQL)) {
+
+				// Delete the votes
+				deleteVoteStmt.setInt(1, id);
+				deleteVoteStmt.executeUpdate();
+
+				// Delete candidates associated with the party
+				deleteCandidatesStmt.setInt(1, id);
+				deleteCandidatesStmt.executeUpdate();
+
+				// Delete the party itself
+				deletePartyStmt.setInt(1, id);
+				int affectedRows = deletePartyStmt.executeUpdate();
+
+				if (affectedRows > 0) {
+					conn.commit(); // Commit transaction
+					logger.info("Successfully deleted party and its candidates along with votes with ID: " + id);
+					return true;
+				} else {
+					conn.rollback(); // No party found, rollback
+					logger.warn("No party found to delete with ID: " + id);
+					return false;
 				}
-				return true;
-			} else {
-				logger.warn("No party found to delete with ID: " + id);
-				return false;
+
+			} catch (SQLException e) {
+				conn.rollback(); // Rollback on error
+				throw e;
 			}
 
+		} catch (SQLException e) {
+			logger.error("SQL error while deleting party with ID: " + id, e);
+			throw new DataAccessException("Database error during party deletion",
+					"Failed to delete the party due to a system error.", e);
 		} catch (DatabaseException e) {
 			logger.error("Connection error while deleting party with ID: " + id, e);
 			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
-
-		} catch (SQLException e) {
-			logger.error("SQL error while deleting party with ID: " + id + ". Error code: " + e.getErrorCode()
-					+ ", SQL state: " + e.getSQLState(), e);
-
-			throw new DataAccessException("Database error during party deletion",
-					"Failed to delete the political party due to system error. Please try again later.", e);
-
 		} catch (Exception e) {
 			logger.error("Unexpected error while deleting party with ID: " + id, e);
 			throw new DataAccessException("Unexpected error during party deletion",

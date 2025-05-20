@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoteSphere - Voter Details</title>
+    <link rel="stylesheet" href="../styles/global.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                200: "#bae6fd",
+                300: "#7dd3fc",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+                800: "#075985",
+                900: "#0c4a6e",
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+    <!-- Include sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <div
+      class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
+    >
+      <!-- Include navbar -->
+      <div id="navbar-container"></div>
+
+      <!-- Content Area -->
+      <div class="p-8 overflow-y-auto">
+        <div class="bg-white rounded-lg shadow-md p-6 mx-auto">
+          <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Voter Details</h1>
+            <a
+              href="voters.html"
+              class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+              >Back to Voters</a
+            >
+          </div>
+
+          <!-- Voter Status -->
+          <div class="mb-6">
+            <span
+              class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+            >
+              Verified
+            </span>
+          </div>
+
+          <!-- Personal Information Section -->
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+              Personal Information
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <span class="font-medium text-gray-700">First Name:</span>
+                <p class="mt-1">John</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700">Last Name:</span>
+                <p class="mt-1">Doe</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700">Voter ID:</span>
+                <p class="mt-1">VS-10045</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700">Email:</span>
+                <p class="mt-1">john.doe@example.com</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700">Date of Birth:</span>
+                <p class="mt-1">1990-05-15</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700">Gender:</span>
+                <p class="mt-1">Male</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700">Role:</span>
+                <p class="mt-1">voter</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Information Section -->
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+              Address Information
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <span class="font-medium text-gray-700"
+                  >Temporary Address:</span
+                >
+                <p class="mt-1">123 Main St, Apt 4B, Springfield</p>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700"
+                  >Permanent Address:</span
+                >
+                <p class="mt-1">456 Oak Avenue, Riverside</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Identity Documents Section -->
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">
+              Identity Documents
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700">Profile Image:</span>
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Profile Image"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700"
+                  >Image Holding Citizenship:</span
+                >
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Image Holding Citizenship"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700">Voter Card Front:</span>
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Voter Card Front"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700">Voter Card Back:</span>
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Voter Card Back"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700"
+                  >Citizenship Front:</span
+                >
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Citizenship Front"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700">Citizenship Back:</span>
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Citizenship Back"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <span class="font-medium text-gray-700">Thumb Print:</span>
+                <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
+                  <img
+                    src="https://placehold.co/400x300"
+                    alt="Thumb Print"
+                    class="w-full h-full object-cover object-center"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions Section -->
+          <div class="flex justify-end space-x-3">
+            <button
+              class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200"
+            >
+              Edit
+            </button>
+            <button
+              class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+            >
+              Deactivate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Load sidebar and navbar
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("sidebar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("sidebar-container").innerHTML = data;
+          });
+
+        fetch("navbar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("navbar-container").innerHTML = data;
+          });
+
+        // In a real application, you would fetch voter details from an API
+        // Example:
+        // const voterId = new URLSearchParams(window.location.search).get('id');
+        // fetch(`/api/voters/${voterId}`)
+        //   .then(response => response.json())
+        //   .then(data => {
+        //     // Populate the page with voter data
+        //   });
+      });
+    </script>
+  </body>
+</html>

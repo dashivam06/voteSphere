@@ -29,7 +29,7 @@ public class ImageReadUtil {
 
             // Check if file exists
             if (!Files.exists(imageFile)) {
-                logger.error("Image not found: {}", imageFile);
+//                logger.error("Image not found: {}", imageFile);
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }

@@ -41,6 +41,9 @@ public class AdminVoterServlet extends HttpServlet {
                 String voterId = pathInfo.substring(6);
 //                handleViewVoter(request, response, voterId);
             }
+            else if (pathInfo.startsWith("/search/")) {
+               response.sendRedirect(request.getContextPath() + "/admin/voter");
+            }
             else if (pathInfo.startsWith("/verify/")) {
                 String voterId = pathInfo.substring(8);
 //                handleVerifyVoter(request, response, voterId);
@@ -81,6 +84,8 @@ public class AdminVoterServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/search/")) {
                 handleSearch(request, response);
+                getStats(request, response);
+
             }
             else {
                 logger.warn("Invalid path requested: {}", pathInfo);
@@ -127,6 +132,7 @@ public class AdminVoterServlet extends HttpServlet {
         voters = User.searchUsers(voters, searchQuery);
         request.setAttribute("voters", voters);
         request.setAttribute("searchInput", searchQuery);
+        getStats(request, response);
         request.getRequestDispatcher("/WEB-INF/pages/admin/voters.jsp").forward(request, response);
         logger.info("Successfully listed {} voters", voters.size());
     }
@@ -195,6 +201,8 @@ public class AdminVoterServlet extends HttpServlet {
         }
 
         handleListVotersByQuery(request, response, searchQuery);
+        getStats(request, response);
+
     }
 //
 //    private void handleAddVoter(HttpServletRequest request, HttpServletResponse response)
@@ -204,7 +212,7 @@ public class AdminVoterServlet extends HttpServlet {
 //        boolean success = UserService.addVoter(request, response);
 //        if (success) {
 //            logger.info("Successfully added new voter");
-//            response.sendRedirect(request.getContextPath() + "/admin/voter/list");
+//            response.sendRedirect(request.getContextPath() + "/admin/voter/");
 //        } else {
 //            logger.warn("Failed to add new voter");
 //            request.getRequestDispatcher("/WEB-INF/pages/admin/add-voter.jsp").forward(request, response);
@@ -246,7 +254,7 @@ public class AdminVoterServlet extends HttpServlet {
 //        boolean success = UserService.deleteVoter(Integer.parseInt(voterId));
 //        if (success) {
 //            logger.info("Successfully deleted voter ID: {}", voterId);
-//            response.sendRedirect(request.getContextPath() + "/admin/voter/list");
+//            response.sendRedirect(request.getContextPath() + "/admin/voter");
 //        } else {
 //            logger.warn("Failed to delete voter ID: {}", voterId);
 //            request.setAttribute("error", "Failed to delete voter");

@@ -177,7 +177,7 @@
                                                        class="text-primary-600 hover:text-primary-900">
                                                         View
                                                     </a>
-                                                    <a href="${pageContext.request.contextPath}/admin/party/edit/${party.partyId}"
+                                                    <a href="${pageContext.request.contextPath}/admin/party/update/${party.partyId}"
                                                        class="text-yellow-600 hover:text-yellow-900">
                                                         Edit
                                                     </a>
