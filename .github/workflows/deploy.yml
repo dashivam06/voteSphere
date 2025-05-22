@@ -1,0 +1,213 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches: [ pushkar-dev ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: pushkar-dev
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create properties files with secrets
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+          echo "${{ secrets.LOG4J2_PROPERTIES }}" > src/main/resources/log4j2.properties
+
+      - name: Compress project files
+        run: |
+          echo "Creating project archive directly..."
+          # Create a list of files to include (excluding unwanted directories)
+          find . -type f -not -path "*/\.git/*" \
+                       -not -path "*/node_modules/*" \
+                       -not -path "*/\.github/*" \
+                       -not -path "*/target/*" \
+                       -not -name "*.log" \
+                       -not -name "*.tmp" > /tmp/files_to_include.txt
+          
+          # Create archive with only the listed files
+          tar -czf voteSphere.tar.gz -T /tmp/files_to_include.txt
+          
+          echo "Checking archive size..."
+          ls -lh voteSphere.tar.gz
+
+      - name: Upload and extract project files
+        run: |
+          echo "Uploading compressed project archive..."
+          scp -o StrictHostKeyChecking=no voteSphere.tar.gz ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/voteSphere.tar.gz
+          
+          echo "Extracting project files on VM..."
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          sudo rm -rf ~/voteSphere
+          sudo mkdir -p ~/voteSphere
+          sudo tar -xzf ~/voteSphere.tar.gz -C ~/voteSphere
+          sudo chown -R $(id -u):$(id -g) ~/voteSphere
+          echo "Project files extracted successfully"
+          ls -la ~/voteSphere
+          # Clean up the archive
+          rm ~/voteSphere.tar.gz
+          EOF
+
+      - name: Install Java and Maven
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 1: Install Java (OpenJDK 21)"
+          sudo apt update
+          sudo apt install openjdk-21-jdk -y
+          
+          echo "Step 2: Install Maven"
+          sudo apt install maven -y
+          EOF
+
+      - name: Download and Setup Tomcat
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 3: Download and Set Up Apache Tomcat 10.1"
+          # First, clean up any existing setup that might be problematic
+          sudo rm -rf /opt/tomcat
+          sudo rm -f /opt/apache-tomcat-10.1.41.tar.gz
+          
+          # Create a temporary directory for downloads
+          mkdir -p ~/tomcat_temp
+          cd ~/tomcat_temp
+          
+          # Download fresh Tomcat archive
+          echo "Downloading Tomcat 10.1.41"
+          wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.41/bin/apache-tomcat-10.1.41.tar.gz
+          
+          # Extract Tomcat to temporary location first
+          echo "Extracting Tomcat archive"
+          tar -xzf apache-tomcat-10.1.41.tar.gz
+          
+          # Set execute permissions before moving
+          echo "Setting execute permissions on shell scripts"
+          chmod +x apache-tomcat-10.1.41/bin/*.sh
+          
+          # Verify permissions were set
+          ls -la apache-tomcat-10.1.41/bin/*.sh
+          
+          # Now move to final location with sudo
+          echo "Moving to final location"
+          sudo mkdir -p /opt
+          sudo mv apache-tomcat-10.1.41 /opt/tomcat
+          
+          # Set ownership
+          sudo chown -R root:root /opt/tomcat
+          
+          # Verify the installation
+          echo "Verifying Tomcat installation"
+          if [ -d "/opt/tomcat/bin" ]; then
+            echo "Tomcat bin directory exists"
+            sudo ls -la /opt/tomcat/bin/
+            echo "Verifying script permissions"
+            ls -la /opt/tomcat/bin/startup.sh || echo "startup.sh not visible to normal ls"
+            sudo ls -la /opt/tomcat/bin/startup.sh || echo "startup.sh not visible to sudo ls"
+          else
+            echo "ERROR: Tomcat bin directory not found!"
+            sudo ls -la /opt/
+            exit 1
+          fi
+          
+          # Clean up temporary files
+          rm -rf ~/tomcat_temp
+          EOF
+
+      - name: Build Application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 4: Change to project directory"
+          cd ~/voteSphere
+          
+          echo "Step 5: Build the Project Using Maven"
+          sudo mvn clean package
+          # Check if build was successful
+          if [ ! -f target/voteSphere.war ]; then
+            echo "Build failed: WAR file not created"
+            exit 1
+          else
+            echo "Build successful: WAR file created at target/voteSphere.war"
+            ls -la target/
+            sudo chown -R $(id -u):$(id -g) target/
+          fi
+          EOF
+
+      - name: Deploy Application to Tomcat
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 6: Stop Tomcat if running"
+          sudo ls -la /opt/tomcat/bin/shutdown.sh
+          if sudo test -f /opt/tomcat/bin/shutdown.sh; then
+            echo "Found shutdown.sh, stopping Tomcat"
+            cd /opt/tomcat/bin
+            sudo ./shutdown.sh || true
+            echo "Waiting for Tomcat to shut down..."
+            sleep 5
+          else
+            echo "Tomcat shutdown script not found, skipping shutdown"
+          fi
+          
+          echo "Step 7: Remove existing ROOT webapp"
+          sudo rm -rf /opt/tomcat/webapps/ROOT
+          sudo rm -f /opt/tomcat/webapps/ROOT.war
+          
+          echo "Step 8: Copy the WAR file as ROOT.war"
+          cd ~/voteSphere
+          if [ -f target/voteSphere.war ]; then
+            sudo cp target/voteSphere.war /opt/tomcat/webapps/ROOT.war
+            echo "WAR file copied to Tomcat webapps directory"
+          else
+            echo "ERROR: voteSphere.war not found!"
+            exit 1
+          fi
+          EOF
+
+      - name: Start Tomcat and Verify Deployment
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Step 9: Start Tomcat"
+          sudo ls -la /opt/tomcat/bin/startup.sh
+          
+          if sudo test -f /opt/tomcat/bin/startup.sh; then
+            echo "Found startup.sh, starting Tomcat"
+            cd /opt/tomcat/bin
+            sudo ./startup.sh
+            echo "Waiting for Tomcat to start and deploy the application..."
+            sleep 15
+          else
+            echo "ERROR: Tomcat startup script not found!"
+            sudo ls -la /opt/tomcat/bin/
+            exit 1
+          fi
+          
+          echo "Step 10: Check if the application deployed successfully"
+          if sudo test -d /opt/tomcat/webapps/ROOT; then
+            echo "Application deployed successfully!"
+            echo "Listing ROOT directory content:"
+            sudo ls -la /opt/tomcat/webapps/ROOT/
+          else
+            echo "Deployment may have failed. Check Tomcat logs."
+            echo "Last 50 lines of catalina.out:"
+            if sudo test -f /opt/tomcat/logs/catalina.out; then
+              sudo cat /opt/tomcat/logs/catalina.out | tail -50
+            else
+              echo "catalina.out not found"
+              sudo ls -la /opt/tomcat/logs/
+            fi
+          fi
+          
+          echo "Step 11: Check Tomcat process"
+          ps aux | grep tomcat
+          
+          echo "Step 12: Check application port"
+          sudo netstat -tulpn | grep 8080 || echo "Port 8080 not in use"
+          EOF
