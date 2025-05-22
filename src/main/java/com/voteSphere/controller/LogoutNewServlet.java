@@ -28,8 +28,9 @@ public class LogoutServlet extends HttpServlet {
 			SessionUtil.invalidateSession(request);
 			
 		} catch (IllegalStateException ignored) {
-			// Eat Five Star - Do Nothing
-			// Basically thrown when the session is already invalidated
+			
+			
+			
 		}
 
 		// Delete all the cookies

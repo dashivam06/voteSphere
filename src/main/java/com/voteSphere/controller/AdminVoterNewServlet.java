@@ -20,8 +20,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/admin/voter/*")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, // 1 MB
-        maxFileSize = 1024 * 1024 * 10,      // 10 MB
-        maxRequestSize = 1024 * 1024 * 50)   // 50 MB
+        maxFileSize = 1024 * 1024 * 10,     
+        maxRequestSize = 1024 * 1024 * 50)  
 public class AdminVoterServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LogManager.getLogger(AdminVoterServlet.class);
@@ -39,16 +39,16 @@ public class AdminVoterServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/view/")) {
                 String voterId = pathInfo.substring(6);
-                
-
-                
+//                handleViewVoter(request, response, voterId);
             }
             else if (pathInfo.startsWith("/verify/")) {
                 String voterId = pathInfo.substring(8);
 //                handleVerifyVoter(request, response, voterId);
             }
             else if (pathInfo.equalsIgnoreCase("/unverified")) {
-//                handleUnverifiedVoters(request, response);
+
+
+                
             }
             else {
                 logger.warn("Unknown path requested: {}", pathInfo);
