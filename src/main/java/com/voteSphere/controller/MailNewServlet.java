@@ -36,7 +36,8 @@ public class MailServlet extends HttpServlet {
 
 		try {
 			if (action == null) {
-				action = "verify"; // Default action
+				action = "verify";
+
 			}
 
 			switch (action.toLowerCase()) {
@@ -62,7 +63,7 @@ public class MailServlet extends HttpServlet {
 			throws IOException {
 		if (token == null || token.isEmpty()) {
 			logger.warn("Missing verification token");
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Verification token is missing");
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Verification token is missing!!!");
 			return;
 		}
 

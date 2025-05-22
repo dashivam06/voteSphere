@@ -24,17 +24,18 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		try {
-
+			
 			SessionUtil.invalidateSession(request);
-
+			
 		} catch (IllegalStateException ignored) {
-
+			// Eat Five Star - Do Nothing
+			// Basically thrown when the session is already invalidated
 		}
 
 		// Delete all the cookies
 		CookieUtil.deleteAllCookies(request, response);
 
-		// 3. Redirect to login or home page...
+		// 3. Redirect to login or home page
 		response.sendRedirect(request.getContextPath() + "/login");
 	}
 
