@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,8 +48,7 @@ public class UserService {
 				"image_holding_citizenship_error", "user-docs", appRealPath, maxImageSize);
 		String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front",
 				"voter_card_front_error", "user-docs", appRealPath, maxImageSize);
-		String voterCardBack = ImgUploadUtil.processImageUpload(request, "voter_card_back",
-				"voter_card_back_error", "user-docs", appRealPath, maxImageSize);
+
 		String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front",
 				"citizenship_front_error", "user-docs", appRealPath, maxImageSize);
 		String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back",
@@ -56,7 +56,7 @@ public class UserService {
 		String thumbPrint = ImgUploadUtil.processImageUpload(request, "thumb_print", "thumb_print_error",
 				"user-docs", appRealPath, maxImageSize);
 
-		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null || voterCardBack == null
+		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null
 				|| citizenshipFront == null || citizenshipBack == null || thumbPrint == null) {
 			hasErrors = true;
 
@@ -130,8 +130,8 @@ public class UserService {
 
 		try {
 			// Create user object
-			User newUser = new User(firstName, lastName, voterId, email, phoneNumber, profileImage,
-					imageHoldingCitizenship, voterCardFront, voterCardBack, citizenshipFront, citizenshipBack,
+			User newUser = new User(firstName, lastName, voterId, email,gender, phoneNumber, profileImage,
+					imageHoldingCitizenship, voterCardFront,  citizenshipFront, citizenshipBack,
 					thumbPrint, password, Timestamp.valueOf(dob + " 00:00:00"), // Convert string to Timestamp
 					permanentAddress, temporaryAddress, "voter", // Default role
 					false, // Initially not verified
@@ -173,7 +173,7 @@ public class UserService {
 	}
 
 
-	public static User getUserById( Integer id) {
+	public static User getUserById(Integer id) {
 		if (id == null || id <= 0) {
 			return null;
 		}
@@ -239,6 +239,34 @@ public class UserService {
 		}
 		return null;
 	}
+
+
+	public static User getUserByVoterId( String voterId) {
+		if (ValidationUtil.isNullOrEmpty(voterId)) {
+			logger.error( "Voter ID is required.");
+			return null;
+		}
+
+		if (!ValidationUtil.isNumeric(voterId)) {
+			logger.error( "Voter ID must contain only digit.");
+			return null;
+		}
+
+		try {
+			User user = UserDao.getUserByVoterId(voterId);
+			if (user == null) {
+				logger.error( "No user found with the given voter ID.");
+			}
+			return user;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to retrieve user by voter ID: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error retrieving user by voter ID", e);
+		}
+		return null;
+	}
+
+
 
 	public static List<User> getAllUsers() {
 		try {
@@ -327,7 +355,7 @@ public class UserService {
 			// Create updated user object
 			User updatedUser = new User(userId, firstName, lastName, existingUser.getVoterId(), email, phoneNumber,
 					existingUser.getProfileImage(), existingUser.getImageHoldingCitizenship(),
-					existingUser.getVoterCardFront(), existingUser.getVoterCardBack(),
+					existingUser.getVoterCardFront(),
 					existingUser.getCitizenshipFront(), existingUser.getCitizenshipBack(), existingUser.getThumbPrint(),
 					existingUser.getPassword(), existingUser.getDob(), permanentAddress, temporaryAddress,
 					existingUser.getRole(), existingUser.getIsVerified(), existingUser.getCreatedAt());
@@ -353,6 +381,122 @@ public class UserService {
 		return false;
 	}
 
+
+	public static boolean editUser(HttpServletRequest request, HttpServletResponse response, Integer userId) {
+		boolean hasErrors = false;
+
+		if (userId == null || userId <= 0) {
+			request.setAttribute("user_id_error", "Invalid user ID.");
+			return false;
+		}
+
+		// Extract parameters from request
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String email = request.getParameter("email");
+		String permanentAddress = request.getParameter("permanent_address");
+		String temporaryAddress = request.getParameter("temporary_address");
+
+		// Validate fields
+		if (ValidationUtil.isNullOrEmpty(firstName)) {
+			request.setAttribute("firstName_error", "First name is required.");
+			hasErrors = true;
+		} else if (!ValidationUtil.isAlphabetic(firstName)) {
+			request.setAttribute("firstName_error", "First name must contain only letters.");
+			hasErrors = true;
+		}
+
+		if (ValidationUtil.isNullOrEmpty(lastName)) {
+			request.setAttribute("lastName_error", "Last name is required.");
+			hasErrors = true;
+		} else if (!ValidationUtil.isAlphabetic(lastName)) {
+			request.setAttribute("lastName_error", "Last name must contain only letters.");
+			hasErrors = true;
+		}
+
+		if (ValidationUtil.isNullOrEmpty(email)) {
+			request.setAttribute("email_error", "Email is required.");
+			hasErrors = true;
+		} else if (!ValidationUtil.isValidEmail(email)) {
+			request.setAttribute("email_error", "Please enter a valid email address.");
+			hasErrors = true;
+		}
+
+
+		if (ValidationUtil.isNullOrEmpty(permanentAddress)) {
+			request.setAttribute("permanentAddress_error", "Permanent address is required.");
+			hasErrors = true;
+		}
+
+
+
+		String appRealPath = request.getServletContext().getRealPath("");
+		long maxImageSize = 2 * 1024 * 1024; // 2MB
+
+		// Process profile image upload
+		String profileImage = ImgUploadUtil.processImageUpload(request, "profile_image", "profile_image_error",
+				"user-profile", appRealPath, maxImageSize);
+
+
+		if (hasErrors) {
+			return false;
+		}
+
+		try {
+			User existingUser = UserDao.getUserById(userId);
+			if (existingUser == null) {
+				request.setAttribute("user_not_found", "No user found with the given ID.");
+				return false;
+			}
+
+			// Construct updated user object with preserved fields
+			User updatedUser = new User(
+					userId,
+					firstName,
+					lastName,
+					existingUser.getVoterId(),
+					email,
+					existingUser.getGender(),
+					existingUser.getPhoneNumber(), // preserve phone
+					existingUser.getProfileImage(),
+					existingUser.getImageHoldingCitizenship(),
+					existingUser.getVoterCardFront(),
+					existingUser.getCitizenshipFront(),
+					existingUser.getCitizenshipBack(),
+					existingUser.getThumbPrint(),
+					existingUser.getPassword(),
+					existingUser.getDob(), // preserve dob
+					permanentAddress,
+					temporaryAddress,
+					existingUser.getRole(),
+					existingUser.getIsVerified(),
+					existingUser.getCreatedAt()
+			);
+
+			if(profileImage!=null)
+			{
+				updatedUser.setProfileImage(profileImage);
+			}
+
+			boolean updated = UserDao.editUser(updatedUser);
+
+			if (!updated) {
+				request.setAttribute("user_update_error", "No user was updated. Possibly invalid ID.");
+			}
+
+			return updated;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to update user: " + dae.getMessage(), dae);
+			request.setAttribute("user_update_error", dae.getUserMessage());
+		} catch (Exception e) {
+			logger.error("Unexpected error occurred while updating user", e);
+			request.setAttribute("user_update_error", "An unexpected error occurred. Please try again.");
+		}
+
+		return false;
+	}
+
+
 	public static boolean deleteUser(HttpServletRequest request, HttpServletResponse response, int userId) {
 		if (userId <= 0) {
 			request.setAttribute("user_id_error", "Invalid user ID.");
@@ -371,6 +515,27 @@ public class UserService {
 		} catch (Exception e) {
 			logger.error("Unexpected error while deleting user", e);
 			request.setAttribute("user_delete_error", "An unexpected error occurred. Please try again.");
+		}
+		return false;
+	}
+
+
+	public static boolean deleteUser(int userId) {
+		if (userId <= 0) {
+			logger.warn("Invalid user ID.");
+			return false;
+		}
+
+		try {
+			boolean deleted = UserDao.deleteUser(userId);
+			if (!deleted) {
+				logger.error("No user found with the given ID to delete.");
+			}
+			return deleted;
+		} catch (DataAccessException dae) {
+			logger.error("Failed to delete user: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error while deleting user", e);
 		}
 		return false;
 	}
@@ -423,13 +588,13 @@ public class UserService {
 		boolean hasErrors = false;
 
 		if (userId <= 0) {
-			request.setAttribute("user_id_error", "Invalid user ID.");
+			logger.error("Invalid user ID.");
 			return false;
 		}
 
-		String currentPassword = request.getParameter("currentPassword");
-		String newPassword = request.getParameter("newPassword");
-		String confirmPassword = request.getParameter("confirmPassword");
+		String currentPassword = request.getParameter("current_password");
+		String newPassword = request.getParameter("new_password");
+		String confirmPassword = request.getParameter("confirm_password");
 
 		// Field validations
 		if (ValidationUtil.isNullOrEmpty(currentPassword)) {
@@ -459,20 +624,25 @@ public class UserService {
 		}
 
 		try {
-			// Verify current password first
+			// Fetch user
 			User user = UserDao.getUserById(userId);
 			if (user == null) {
 				request.setAttribute("password_update_error", "User not found.");
 				return false;
 			}
 
-			if (!user.getPassword().equals(currentPassword)) {
+			// Verify current password using BCrypt
+			BCrypt.Result result = BCrypt.verifyer().verify(currentPassword.toCharArray(), user.getPassword());
+			if (!result.verified) {
 				request.setAttribute("currentPassword_error", "Current password is incorrect.");
 				return false;
 			}
 
-			// Update password
-			boolean updated = UserDao.updatePassword(userId, newPassword);
+			// Hash the new password before updating
+			String hashedNewPassword = BCrypt.withDefaults().hashToString(12, newPassword.toCharArray());
+
+			// Update password in database
+			boolean updated = UserDao.updatePassword(userId, hashedNewPassword);
 
 			if (!updated) {
 				request.setAttribute("password_update_error", "Failed to update password.");

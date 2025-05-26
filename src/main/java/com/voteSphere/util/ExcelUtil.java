@@ -33,7 +33,6 @@ public class ExcelUtil {
             "    u.profile_image,\n" +
             "    u.image_holding_citizenship,\n" +
             "    u.voter_card_front,\n" +
-            "    u.voter_card_back,\n" +
             "    u.citizenship_front,\n" +
             "    u.citizenship_back,\n" +
             "    u.thumb_print,\n" +

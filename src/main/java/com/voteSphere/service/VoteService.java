@@ -172,6 +172,23 @@ public class VoteService {
 		}
 	}
 
+	public static List<Vote> getVotesByUserId(Integer userId) {
+		if (userId == null || userId <= 0) {
+			return Collections.emptyList();
+		}
+
+		try {
+			return VoteDao.findVotesByUserId(userId);
+		} catch (DataAccessException dae) {
+			logger.error("Data access error while fetching votes by user ID: " + dae.getMessage(), dae);
+			return Collections.emptyList();
+		} catch (Exception e) {
+			logger.error("Unexpected error while fetching votes by user ID: " + e.getMessage(), e);
+			return Collections.emptyList();
+		}
+	}
+
+
 	public static Map<Integer, Integer> getAllPartyVotesInElection(HttpServletRequest request,
 			HttpServletResponse response, Integer electionId) {
 		if (electionId == null || electionId <= 0) {

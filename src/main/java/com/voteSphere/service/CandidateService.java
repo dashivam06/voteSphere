@@ -99,13 +99,8 @@ public class CandidateService {
             hasErrors = true;
         }
 
-        Boolean isIndependent = null;
-        if (ValidationUtil.isNullOrEmpty(isIndependentStr)) {
-            request.setAttribute("isIndependent_error", "Independence status is required.");
-            hasErrors = true;
-        } else {
-            isIndependent = Boolean.valueOf(isIndependentStr);
-        }
+        Boolean isIndependent = "on".equalsIgnoreCase(isIndependentStr);
+
 
         Integer partyId = null;
         if (!ValidationUtil.isNullOrEmpty(partyIdStr)) {
@@ -442,5 +437,29 @@ public class CandidateService {
         }
         return Collections.emptyList();
     }
+
+
+
+    public static List<Candidate> getCandidatesByElection( Integer electionId) {
+        if (electionId == null || electionId <= 0) {
+            logger.error("Valid election ID is required.");
+            return Collections.emptyList();
+        }
+
+        try {
+            List<Candidate> candidates = CandidateDao.getCandidateByElection(electionId);
+            if (candidates == null || candidates.isEmpty()) {
+                logger.error( "No candidates found for the given election.");
+            }
+            return candidates;
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve candidates by election ID: " + dae.getMessage(), dae);
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving candidates by election ID", e);
+        }
+        return Collections.emptyList();
+    }
+
+
 
 }

@@ -1,4 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@ page isELIgnored="false" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -182,7 +187,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm text-gray-500 font-medium">Total Elections</p>
-                <p class="text-2xl font-bold text-gray-800">24</p>
+                <p class="text-2xl font-bold text-gray-800">${totalElection}</p>
               </div>
               <div
                 class="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center animate-pulse-slow"
@@ -237,7 +242,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm text-gray-500 font-medium">Active Voters</p>
-                <p class="text-2xl font-bold text-gray-800">8,549</p>
+                <p class="text-2xl font-bold text-gray-800">${totalVoter}</p>
               </div>
               <div
                 class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center animate-bounce-slow"
@@ -292,7 +297,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-sm text-gray-500 font-medium">Votes Cast</p>
-                <p class="text-2xl font-bold text-gray-800">42,891</p>
+                <p class="text-2xl font-bold text-gray-800">${totalVotes}</p>
               </div>
               <div
                 class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center animate-pulse-slow"
@@ -500,7 +505,7 @@
             <div class="mt-6 grid grid-cols-3 gap-4 text-center">
               <div class="bg-gray-50 rounded-lg p-3">
                 <p class="text-xs text-gray-500">Total Votes</p>
-                <p class="text-lg font-bold text-gray-800">9,427</p>
+                <p class="text-lg font-bold text-gray-800">${totalVotes}</p>
               </div>
               <div class="bg-gray-50 rounded-lg p-3">
                 <p class="text-xs text-gray-500">Peak Day</p>
@@ -601,7 +606,7 @@
                 <div
                   class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
                 >
-                  <p class="text-3xl font-bold text-gray-800">8,549</p>
+                  <p class="text-3xl font-bold text-gray-800">${totalVotes}</p>
                   <p class="text-sm text-gray-500">Total Voters</p>
                 </div>
               </div>

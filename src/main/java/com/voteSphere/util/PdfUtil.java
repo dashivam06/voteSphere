@@ -50,7 +50,6 @@ public class PdfUtil {
                     .replace("{{IMAGE_HOLDING_CITIZENSHIP_URL}}", baseUrl+user.getImageHoldingCitizenship())
                     .replace("{{THUMB_PRINT_URL}}",baseUrl+ user.getThumbPrint())
                     .replace("{{VOTER_CARD_FRONT_URL}}",baseUrl+ user.getVoterCardFront())
-                    .replace("{{VOTER_CARD_BACK_URL}}",baseUrl+ user.getVoterCardBack())
                     .replace("{{CITIZENSHIP_FRONT_URL}}",baseUrl+ user.getCitizenshipFront())
                     .replace("{{CITIZENSHIP_BACK_URL}}",baseUrl+ user.getCitizenshipBack());
 

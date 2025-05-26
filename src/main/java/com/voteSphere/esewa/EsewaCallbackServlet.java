@@ -1,56 +1,75 @@
-//package com.voteSphere.esewa;
-//
-//import jakarta.servlet.*;
-//import jakarta.servlet.annotation.WebServlet;
-//import jakarta.servlet.http.*;
-//import java.io.*;
-//import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.fasterxml.jackson.databind.*;
-//import java.util.Base64;
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
-//import com.voteSphere.dao.DonationDao;
-//import com.voteSphere.model.AuthUser;
-//import com.voteSphere.model.Donation;
-//import com.voteSphere.model.ApiResponse;
-//
-//@WebServlet("/esewa-callback")
-//public class EsewaCallbackServlet extends HttpServlet {
-//    private static final long serialVersionUID = 1L;
-//    private static final Logger logger = LogManager.getLogger(EsewaCallbackServlet.class);
-//    
-//    private final ObjectMapper objectMapper = new ObjectMapper()
-//        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//    
-//    private final DonationDao donationDao = new DonationDao();
-//
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-//            throws ServletException, IOException {
-//        try {
-//            processPaymentCallback(request, response);
-//        } catch (Exception e) {
-//            handleUnexpectedError(request, response, e);
-//        }
-//    }
-//
-//    private void processPaymentCallback(HttpServletRequest request, HttpServletResponse response) 
+package com.voteSphere.esewa;
+
+import com.voteSphere.service.DonationService;
+import com.voteSphere.util.CookieUtil;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+import java.io.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
+import java.util.Base64;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import com.voteSphere.dao.DonationDao;
+import com.voteSphere.model.AuthUser;
+import com.voteSphere.model.Donation;
+
+@WebServlet("/esewa-callback")
+public class EsewaCallbackServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private static final Logger logger = LogManager.getLogger(EsewaCallbackServlet.class);
+
+    private final ObjectMapper objectMapper = new ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            logger.info("Esewa callback servlet triggered");
+
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    switch (cookie.getName()) {
+                        case "esewaTotalAmount":
+                            request.setAttribute("amount", cookie.getValue());
+                            break;
+                        case "esewaTransactionUuid":
+                            request.setAttribute("transactionId", cookie.getValue());
+                            break;
+                        case "esewaProductCode":
+                            request.setAttribute("productCode", cookie.getValue());
+                            break;
+                    }
+                }
+            }
+
+            request.getRequestDispatcher("/WEB-INF/pages/esewa-payment-received.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    private void processPaymentCallback(HttpServletRequest request, HttpServletResponse response)
 //            throws IOException, ServletException {
 //        String encodedData = validateAndGetDataParameter(request, response);
 //        String jsonData = decodeAndParseData(encodedData, request, response);
 //        EsewaCallbackData callbackData = parseCallbackData(jsonData, request, response);
 //        validateCallbackData(callbackData, request, response);
-////        Integer userId = validateAndGetUserId(request, response);
+//        Integer userId = validateAndGetUserId(request, response);
 //        Integer userId =5;
 //
 //        processPaymentStatus(request, response, callbackData, userId);
 //    }
-//
-//    private String validateAndGetDataParameter(HttpServletRequest request, HttpServletResponse response) 
+
+//    private String validateAndGetDataParameter(HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //        String encodedData = request.getParameter("data");
 //        if (encodedData == null || encodedData.isEmpty()) {
 //            logger.warn("Missing data parameter");
-//            forwardError(request, response, 
+//            forwardError(request, response,
 //                new ApiResponse<>(false, "Missing payment data", "Parameter 'data' is required", "/esewa-callback"),
 //                400
 //            );
@@ -58,8 +77,8 @@
 //        }
 //        return encodedData;
 //    }
-//
-//    private String decodeAndParseData(String encodedData, HttpServletRequest request, HttpServletResponse response) 
+
+//    private String decodeAndParseData(String encodedData, HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //        try {
 //            return new String(Base64.getDecoder().decode(encodedData));
@@ -73,7 +92,7 @@
 //        }
 //    }
 //
-//    private EsewaCallbackData parseCallbackData(String jsonData, HttpServletRequest request, HttpServletResponse response) 
+//    private EsewaCallbackData parseCallbackData(String jsonData, HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //        try {
 //            return objectMapper.readValue(jsonData, EsewaCallbackData.class);
@@ -87,10 +106,10 @@
 //        }
 //    }
 //
-//    private void validateCallbackData(EsewaCallbackData callbackData, HttpServletRequest request, HttpServletResponse response) 
+//    private void validateCallbackData(EsewaCallbackData callbackData, HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
-//    	
-//    	
+//
+//
 //        System.out.println(callbackData.toString());
 //        System.out.println(callbackData.getSignature().equals(response));
 //
@@ -119,7 +138,7 @@
 //        }
 //    }
 //
-//    private Integer validateAndGetUserId(HttpServletRequest request, HttpServletResponse response) 
+//    private Integer validateAndGetUserId(HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //        Object userAttr = request.getAttribute("user");
 //        if (!(userAttr instanceof AuthUser)) {
@@ -133,9 +152,9 @@
 //        return ((AuthUser)userAttr).getId();
 //    }
 //
-//    private void processPaymentStatus(HttpServletRequest request, HttpServletResponse response, 
+//    private void processPaymentStatus(HttpServletRequest request, HttpServletResponse response,
 //            EsewaCallbackData callbackData, Integer userId) throws ServletException, IOException {
-//        
+//
 //        String status = callbackData.getStatus();
 //        String transactionUuid = callbackData.getTransaction_uuid();
 //
@@ -143,28 +162,28 @@
 //            switch (status) {
 //                case "COMPLETE":
 //                    handleCompletePayment(callbackData, userId);
-//                    forwardSuccess(request, response, 
+//                    forwardSuccess(request, response,
 //                        new ApiResponse<>(true, null, "Payment completed", "/esewa-callback"));
 //                    break;
-//                    
+//
 //                case "PENDING":
 //                    handlePendingPayment(callbackData, userId);
-//                    forwardSuccess(request, response, 
+//                    forwardSuccess(request, response,
 //                        new ApiResponse<>(true, null, "Payment pending verification", "/esewa-callback"));
 //                    break;
-//                    
+//
 //                case "FULL_REFUND":
 //                    handleFullRefund(callbackData);
-//                    forwardSuccess(request, response, 
+//                    forwardSuccess(request, response,
 //                        new ApiResponse<>(true, null, "Full refund processed", "/esewa-callback"));
 //                    break;
-//                    
+//
 //                case "PARTIAL_REFUND":
 //                    handlePartialRefund(callbackData);
-//                    forwardSuccess(request, response, 
+//                    forwardSuccess(request, response,
 //                        new ApiResponse<>(true, null, "Partial refund processed", "/esewa-callback"));
 //                    break;
-//                    
+//
 //                case "NOT_FOUND":
 //                    handleNotFound(transactionUuid);
 //                    forwardError(request, response,
@@ -172,13 +191,13 @@
 //                        404
 //                    );
 //                    break;
-//                    
+//
 //                case "CANCELED":
 //                    handleCancellation(transactionUuid);
-//                    forwardSuccess(request, response, 
+//                    forwardSuccess(request, response,
 //                        new ApiResponse<>(true, null, "Payment canceled", "/esewa-callback"));
 //                    break;
-//                    
+//
 //                case "AMBIGUOUS":
 //                    handleAmbiguousStatus(transactionUuid);
 //                    forwardError(request, response,
@@ -186,7 +205,7 @@
 //                        409
 //                    );
 //                    break;
-//                    
+//
 //                default:
 //                    handleUnknownStatus(transactionUuid, status);
 //                    forwardError(request, response,
@@ -213,7 +232,7 @@
 //                callbackData.getTransaction_uuid(),
 //                "COMPLETED"
 //            );
-//            
+//
 //            if (donationDao.getDonationByTransactionId(callbackData.getTransaction_uuid()) == null) {
 //                donationDao.makeDonation(donation);
 //                logger.info("Created new COMPLETED donation for transaction: {}", callbackData.getTransaction_uuid());
@@ -240,7 +259,7 @@
 //                callbackData.getTransaction_uuid(),
 //                "PENDING"
 //            );
-//            
+//
 //            if (donationDao.getDonationByTransactionId(callbackData.getTransaction_uuid()) == null) {
 //                donationDao.makeDonation(donation);
 //                logger.info("Created new PENDING donation for transaction: {}", callbackData.getTransaction_uuid());
@@ -281,20 +300,20 @@
 //        logger.warn("Unknown payment status {} for transaction: {}", status, transactionUuid);
 //    }
 //
-//    private void forwardSuccess(HttpServletRequest request, HttpServletResponse response, 
+//    private void forwardSuccess(HttpServletRequest request, HttpServletResponse response,
 //            ApiResponse<?> apiResponse) throws ServletException, IOException {
 //        request.setAttribute("apiResponse", apiResponse);
 //        request.getRequestDispatcher("/WEB-INF/pages/paymentSuccess.jsp").forward(request, response);
 //    }
 //
-//    private void forwardError(HttpServletRequest request, HttpServletResponse response, 
+//    private void forwardError(HttpServletRequest request, HttpServletResponse response,
 //            ApiResponse<?> apiResponse, int httpStatus) throws ServletException, IOException {
 //        response.setStatus(httpStatus);
 //        request.setAttribute("apiResponse", apiResponse);
 //        request.getRequestDispatcher("/WEB-INF/pages/paymentError.jsp").forward(request, response);
 //    }
 //
-//    private void handleUnexpectedError(HttpServletRequest request, HttpServletResponse response, 
+//    private void handleUnexpectedError(HttpServletRequest request, HttpServletResponse response,
 //            Exception e) throws ServletException, IOException {
 //        logger.error("Unexpected error", e);
 //        forwardError(request, response,
@@ -302,4 +321,4 @@
 //            500
 //        );
 //    }
-//}
+}

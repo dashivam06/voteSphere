@@ -216,6 +216,7 @@ public class VoteDao {
 		}
 	}
 
+
 	public static boolean updateVote(Vote vote) {
 		if (vote == null) {
 			logger.error("Attempt to update null vote");

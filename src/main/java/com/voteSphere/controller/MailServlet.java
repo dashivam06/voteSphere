@@ -2,6 +2,11 @@ package com.voteSphere.controller;
 
 import java.io.IOException;
 
+import com.voteSphere.model.UnverifiedUser;
+import com.voteSphere.model.User;
+import com.voteSphere.service.UserService;
+import com.voteSphere.util.CookieUtil;
+import com.voteSphere.util.SessionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +20,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "/mail", asyncSupported = true)
+@WebServlet(urlPatterns = "/mail/*", asyncSupported = true)
 public class MailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -77,13 +82,29 @@ public class MailServlet extends HttpServlet {
 
 			Integer userId = jwtUtil.extractUserID(token);
 			String email = jwtUtil.extractEmail(token);
+			UnverifiedUser unverifiedUser = UnverifiedUserService.getUnverifiedUserById(userId);
+			System.out.println(unverifiedUser);
+
+			if(unverifiedUser == null)
+			{
+				response.sendRedirect(request.getContextPath()+"/");
+				return;
+			}
 
 			logger.info("Processing email verification for user ID: {}, Email: {}", userId, email);
 
 			if (UnverifiedUserService.setIsEmailVerifiedTrue(request, response, userId)) {
 				logger.info("Email verified successfully for user ID: {}", userId);
 				UnverifiedUserService.promoteToVerifiedUser(request, response, userId);
-				response.sendRedirect("dashboard?verified=true");
+				User user = UserService.getUserByVoterId(unverifiedUser.getVoterId());
+				SessionUtil.createAndUpdateSession(request,user);
+
+				// Set cookies
+				CookieUtil.addUserRoleCookie(response, user.getRole());
+				CookieUtil.addLoginTimeCookie(response);
+				CookieUtil.addRememberMeCookie(request, response, String.valueOf(user.getUserId()));
+
+				response.sendRedirect("/dashboard");
 			} else {
 				logger.error("Failed to verify email for user ID: {}", userId);
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Verification failed");

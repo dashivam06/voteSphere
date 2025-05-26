@@ -236,7 +236,10 @@ public class AdminCandidateServlet extends HttpServlet {
         boolean success = CandidateService.addCandidate(request, response);
         if (success) {
             logger.info("Successfully added new candidate");
-            response.sendRedirect(request.getContextPath() + "/admin/candidate/list");
+            // Attach the list of election and parties in the drop-down
+            request.setAttribute("elections", ElectionService.getAllElections());
+            request.setAttribute("parties", PartyService.getAllPartys());
+            response.sendRedirect(request.getContextPath() + "/admin/candidate/");
         } else {
             logger.warn("Failed to add new candidate");
             request.getRequestDispatcher("/WEB-INF/pages/admin/add-candidate.jsp").forward(request, response);

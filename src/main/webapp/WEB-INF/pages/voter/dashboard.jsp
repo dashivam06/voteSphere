@@ -1,3 +1,8 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,13 +82,13 @@
 </head>
 <body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
 	<!-- Include sidebar -->
-	<div id="sidebar-container"></div>
+    <%@ include file="sidebar.jsp" %>
 
 	<!-- Main Content -->
 	<div
 		class="flex-grow flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
 		<!-- Navbar -->
-		<div id="navbar-container"></div>
+    <%@ include file="navbar.jsp" %>
 
 		<!-- Main Content Area -->
 		<main class="flex-1 overflow-y-auto p-4 bg-gray-100">
@@ -92,12 +97,12 @@
 				<div class="flex flex-wrap items-center justify-between">
 					<div class="w-full md:w-3/4">
 						<h1 class="text-2xl font-bold text-gray-800">Welcome back,
-							John!</h1>
+							${user.firstName}!</h1>
 						<p class="text-gray-600 mt-1">Your voice matters - participate
 							in upcoming elections and help shape the future.</p>
 					</div>
 					<div class="w-full md:w-1/4 flex justify-end mt-4 md:mt-0">
-						<a href="elections.html"
+						<a href="/election"
 							class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200">
 							View Elections </a>
 					</div>
@@ -121,7 +126,27 @@
 						<div class="ml-4">
 							<h2 class="text-lg font-semibold text-gray-800">
 								Verification Status</h2>
-							<p class="text-green-600 font-medium">Verified ✓</p>
+<c:choose>
+    <c:when test="${user.status == 'Verified'}">
+        <p class="text-green-600 font-medium flex items-center gap-1">
+            ${user.status} &nbsp;
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 101.6"
+                 class="w-4 h-4 fill-green-600 inline-block" aria-hidden="true">
+                <path d="M4.67,67.27c-14.45-15.53,7.77-38.7,23.81-24C34.13,48.4,42.32,55.9,48,61L93.69,5.3c15.33-15.86,39.53,7.42,24.4,23.36L61.14,96.29a17,17,0,0,1-12.31,5.31h-.2a16.24,16.24,0,0,1-11-4.26c-9.49-8.8-23.09-21.71-32.91-30v0Z"/>
+            </svg>
+        </p>
+    </c:when>
+    <c:otherwise>
+        <p class="text-red-600 font-medium flex items-center gap-1">
+            ${user.status}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 101.6"
+                 class="w-4 h-4 fill-red-600 inline-block" aria-hidden="true">
+                <path d="M4.67,67.27c-14.45-15.53,7.77-38.7,23.81-24C34.13,48.4,42.32,55.9,48,61L93.69,5.3c15.33-15.86,39.53,7.42,24.4,23.36L61.14,96.29a17,17,0,0,1-12.31,5.31h-.2a16.24,16.24,0,0,1-11-4.26c-9.49-8.8-23.09-21.71-32.91-30v0Z"/>
+            </svg>
+        </p>
+    </c:otherwise>
+</c:choose>
+
 						</div>
 					</div>
 				</div>
@@ -143,7 +168,7 @@
 						<div class="ml-4">
 							<h2 class="text-lg font-semibold text-gray-800">Total Votes
 								Cast</h2>
-							<p class="text-gray-700 font-medium">3 Elections</p>
+							<p class="text-gray-700 font-medium">${totalVoteCountOfUser} Elections</p>
 						</div>
 					</div>
 				</div>
@@ -165,112 +190,122 @@
 						<div class="ml-4">
 							<h2 class="text-lg font-semibold text-gray-800">Active
 								Tokens</h2>
-							<p class="text-gray-700 font-medium">2 Available</p>
+							<p class="text-gray-700 font-medium">${totalActiveToken} Available</p>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Upcoming Elections Section -->
-			<div class="bg-white rounded-lg shadow-sm p-6 mb-6 animate-fade-in"
-				style="animation-delay: 0.3s">
-				<div class="flex justify-between items-center mb-6">
-					<h2 class="text-xl font-bold text-gray-800">Upcoming Elections</h2>
-					<a href="elections.html"
-						class="text-primary-600 hover:text-primary-700 font-medium">View
-						All</a>
-				</div>
 
-				<!-- Elections Grid -->
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					<!-- Election 1 -->
-					<div
-						class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors duration-200 hover-scale">
-						<div class="flex items-center mb-3">
-							<img src="https://placehold.co/100x100" alt="Election"
-								class="w-12 h-12 rounded-lg object-cover" />
-							<div class="ml-3">
-								<h3 class="font-semibold text-gray-800">Presidential
-									Election 2024</h3>
-								<span
-									class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
-									Upcoming </span>
-							</div>
-						</div>
-						<div class="text-gray-600 text-sm">
-							<p class="mb-1">
-								<span class="font-medium">Date:</span> Nov 5, 2024
-							</p>
-							<p class="mb-1">
-								<span class="font-medium">Time:</span> 06:00 AM - 08:00 PM
-							</p>
-						</div>
-						<div class="mt-3">
-							<a href="vote.html"
-								class="bg-primary-600 text-white text-sm px-3 py-1.5 rounded hover:bg-primary-700 transition-colors duration-200 inline-block">
-								View Details </a>
-						</div>
-					</div>
+    <!-- Upcoming Elections Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6 animate-fade-in" style="animation-delay: 0.3s">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-800">Upcoming Elections</h2>
+            <a href="/election" class="text-primary-600 hover:text-primary-700 font-medium">View All</a>
+        </div>
 
-					<!-- Election 2 -->
-					<div
-						class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors duration-200 hover-scale">
-						<div class="flex items-center mb-3">
-							<img src="https://placehold.co/100x100" alt="Election"
-								class="w-12 h-12 rounded-lg object-cover" />
-							<div class="ml-3">
-								<h3 class="font-semibold text-gray-800">Municipal Elections
-								</h3>
-								<span
-									class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
-									Active </span>
-							</div>
-						</div>
-						<div class="text-gray-600 text-sm">
-							<p class="mb-1">
-								<span class="font-medium">Date:</span> Oct 15, 2024
-							</p>
-							<p class="mb-1">
-								<span class="font-medium">Time:</span> 07:00 AM - 07:00 PM
-							</p>
-						</div>
-						<div class="mt-3">
-							<a href="cast-vote.html"
-								class="bg-green-600 text-white text-sm px-3 py-1.5 rounded hover:bg-green-700 transition-colors duration-200 inline-block">
-								Cast Vote </a>
-						</div>
-					</div>
+        <!-- Elections Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <c:forEach items="${upcomingElections}" var="election" varStatus="loop" end="2">
+                <c:set var="now" value="<%= new java.util.Date() %>" />
+                <c:set var="daysUntil" value="${(election.date.time - now.time) / (1000 * 60 * 60 * 24)}" />
 
-					<!-- Election 3 -->
-					<div
-						class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors duration-200 hover-scale">
-						<div class="flex items-center mb-3">
-							<img src="https://placehold.co/100x100" alt="Election"
-								class="w-12 h-12 rounded-lg object-cover" />
-							<div class="ml-3">
-								<h3 class="font-semibold text-gray-800">State Assembly
-									Election</h3>
-								<span
-									class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-800">
-									Coming Soon </span>
-							</div>
-						</div>
-						<div class="text-gray-600 text-sm">
-							<p class="mb-1">
-								<span class="font-medium">Date:</span> Dec 10, 2024
-							</p>
-							<p class="mb-1">
-								<span class="font-medium">Time:</span> 08:00 AM - 06:00 PM
-							</p>
-						</div>
-						<div class="mt-3">
-							<a href="vote.html"
-								class="bg-primary-600 text-white text-sm px-3 py-1.5 rounded hover:bg-primary-700 transition-colors duration-200 inline-block">
-								View Details </a>
-						</div>
-					</div>
-				</div>
-			</div>
+                <div class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors duration-200 hover-scale">
+                    <div class="flex items-center mb-3">
+                        <img src="/uploads/${election.coverImage}"
+                             alt="${election.name}"
+                             class="w-12 h-12 rounded-lg object-cover"
+                             onerror="this.onerror=null;this.src='https://placehold.co/100x100'"/>
+                        <div class="ml-3">
+                            <h3 class="font-semibold text-gray-800">${election.name}</h3>
+                            <c:choose>
+                                <%-- Election is today or in progress --%>
+                                <c:when test="${daysUntil <= 0}">
+                                    <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
+                                        Active Now
+                                    </span>
+                                </c:when>
+                                <%-- Within 3 days --%>
+                                <c:when test="${daysUntil <= 3}">
+                                    <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
+                                        Starts Soon
+                                    </span>
+                                </c:when>
+                                <%-- Within 7 days --%>
+                                <c:when test="${daysUntil <= 7}">
+                                    <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
+                                        Coming Up
+                                    </span>
+                                </c:when>
+                                <%-- Within 30 days --%>
+                                <c:when test="${daysUntil <= 30}">
+                                    <span class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-800">
+                                        Upcoming
+                                    </span>
+                                </c:when>
+                                <%-- More than 30 days away --%>
+                                <c:otherwise>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-800">
+                                        Future Election
+                                    </span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                    <div class="text-gray-600 text-sm">
+                        <p class="mb-1">
+                            <span class="font-medium">Date:</span>
+                            <fmt:formatDate value="${election.date}" pattern="MMM d, yyyy"/>
+                        </p>
+                        <p class="mb-1">
+                            <span class="font-medium">Time:</span>
+                            <fmt:formatDate value="${election.startTime}" pattern="hh:mm a"/> -
+                            <fmt:formatDate value="${election.endTime}" pattern="hh:mm a"/>
+                        </p>
+                        <p class="mb-1">
+                            <span class="font-medium">Starts in:</span>
+                            <c:choose>
+                                <c:when test="${daysUntil <= 0}">
+                                    Today
+                                </c:when>
+                                <c:when test="${daysUntil < 1}">
+                                    Less than 1 day
+                                </c:when>
+                                <c:when test="${daysUntil == 1}">
+                                    1 day
+                                </c:when>
+                                <c:otherwise>
+                                    <fmt:formatNumber value="${daysUntil}" maxFractionDigits="0"/> days
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <c:choose>
+                            <c:when test="${daysUntil <= 0}">
+                                <a href="cast-vote.html?electionId=${election.id}"
+                                   class="bg-green-600 text-white text-sm px-3 py-1.5 rounded hover:bg-green-700 transition-colors duration-200 inline-block">
+                                    Vote Now
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="vote.html?electionId=${election.id}"
+                                   class="bg-primary-600 text-white text-sm px-3 py-1.5 rounded hover:bg-primary-700 transition-colors duration-200 inline-block">
+                                    View Details
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </c:forEach>
+
+            <c:if test="${empty upcomingElections}">
+                <div class="col-span-3 text-center py-8">
+                    <p class="text-gray-500">No upcoming elections at this time</p>
+                </div>
+            </c:if>
+        </div>
+    </div>
 
 			<!-- Recent Activity & Verification Status -->
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

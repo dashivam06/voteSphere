@@ -1,8 +1,11 @@
 package com.voteSphere.model;
 
+import com.voteSphere.util.ValidationUtil;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +20,6 @@ public class UnverifiedUser {
 	private String phoneNumber;
 	private String imageHoldingCitizenship;
 	private String voterCardFront;
-	private String voterCardBack;
 	private String citizenshipFront;
 	private String citizenshipBack;
 	private String thumbPrint;
@@ -34,7 +36,7 @@ public class UnverifiedUser {
 	
 	public UnverifiedUser(int unverifiedUserId, String firstName, String lastName, String voterId,
 			String notificationEmail, String profileImage, String phoneNumber, String imageHoldingCitizenship,
-			String voterCardFront, String voterCardBack, String citizenshipFront, String citizenshipBack,
+			String voterCardFront,  String citizenshipFront, String citizenshipBack,
 			String thumbPrint, String password, Timestamp dob, String gender, String permanentAddress,
 			String temporaryAddress, String role, Boolean isVerified, boolean isEmailVerified, Timestamp createdAt) {
 		super();
@@ -47,7 +49,6 @@ public class UnverifiedUser {
 		this.phoneNumber = phoneNumber;
 		this.imageHoldingCitizenship = imageHoldingCitizenship;
 		this.voterCardFront = voterCardFront;
-		this.voterCardBack = voterCardBack;
 		this.citizenshipFront = citizenshipFront;
 		this.citizenshipBack = citizenshipBack;
 		this.thumbPrint = thumbPrint;
@@ -67,7 +68,7 @@ public class UnverifiedUser {
 
 	public UnverifiedUser(String firstName, String lastName, String voterId, String notificationEmail,
 			String profileImage, String phoneNumber, String imageHoldingCitizenship, String voterCardFront,
-			String voterCardBack, String citizenshipFront, String citizenshipBack, String thumbPrint, String password,
+			 String citizenshipFront, String citizenshipBack, String thumbPrint, String password,
 			Timestamp dob, String gender, String permanentAddress, String temporaryAddress) {
 		super();
 		this.firstName = firstName;
@@ -78,7 +79,6 @@ public class UnverifiedUser {
 		this.phoneNumber = phoneNumber;
 		this.imageHoldingCitizenship = imageHoldingCitizenship;
 		this.voterCardFront = voterCardFront;
-		this.voterCardBack = voterCardBack;
 		this.citizenshipFront = citizenshipFront;
 		this.citizenshipBack = citizenshipBack;
 		this.thumbPrint = thumbPrint;
@@ -159,13 +159,6 @@ public class UnverifiedUser {
 		this.voterCardFront = voterCardFront;
 	}
 
-	public String getVoterCardBack() {
-		return voterCardBack;
-	}
-
-	public void setVoterCardBack(String voterCardBack) {
-		this.voterCardBack = voterCardBack;
-	}
 
 	public String getCitizenshipFront() {
 		return citizenshipFront;
@@ -230,6 +223,11 @@ public class UnverifiedUser {
 	public java.sql.Timestamp getCreatedAt() {
 		return createdAt;
 	}
+
+	public LocalDate getFormattedCreatedAt() {
+		return ValidationUtil.convertTimestampToDateOnly(createdAt);
+	}
+
 
 	public void setCreatedAt(java.sql.Timestamp createdAt) {
 		this.createdAt = createdAt;
@@ -324,7 +322,7 @@ public class UnverifiedUser {
 		return "UnverifiedUser [unverifiedUserId=" + unverifiedUserId + ", firstName=" + firstName + ", lastName="
 				+ lastName + ", voterId=" + voterId + ", notificationEmail=" + notificationEmail + ", profileImage="
 				+ profileImage + ", phoneNumber=" + phoneNumber + ", imageHoldingCitizenship=" + imageHoldingCitizenship
-				+ ", voterCardFront=" + voterCardFront + ", voterCardBack=" + voterCardBack + ", citizenshipFront="
+				+ ", voterCardFront=" + voterCardFront +  ", citizenshipFront="
 				+ citizenshipFront + ", citizenshipBack=" + citizenshipBack + ", thumbPrint=" + thumbPrint
 				+ ", password=" + password + ", dob=" + dob + ", gender=" + gender + ", permanentAddress="
 				+ permanentAddress + ", temporaryAddress=" + temporaryAddress + ", role=" + role + ", isVerified="

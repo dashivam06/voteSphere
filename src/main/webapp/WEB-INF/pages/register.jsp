@@ -4,18 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VoteSphere - Register</title>
-    <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
-
-    *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
       /* Base styles */
       body {
@@ -491,6 +490,67 @@
       .border-red {
         border-color: #ef4444 !important;
       }
+
+      .radio-group {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+      }
+
+      .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .image-preview {
+        max-width: 100px;
+        height: auto;
+        margin-top: 8px;
+        padding: 2px;
+      }
+
+      /* Error message styles */
+      .error-message {
+        color: #dc2626;
+        font-size: 0.875rem;
+        margin-top: 4px;
+        display: none;
+      }
+
+      .error-message.visible {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .form-input.error,
+      .form-textarea.error {
+        border-color: #dc2626;
+      }
+
+      .validation-summary {
+        background-color: #fee2e2;
+        border: 1px solid #ef4444;
+        border-radius: 6px;
+        padding: 12px;
+        margin-bottom: 16px;
+        margin-top: 16px;
+        color: #b91c1c;
+        display: none;
+      }
+
+      .validation-summary.visible {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .validation-summary ul {
+        margin: 8px 0 0 20px;
+      }
+
+      .validation-summary li {
+        margin-bottom: 4px;
+      }
     </style>
   </head>
   <body>
@@ -573,7 +633,7 @@
           <!-- Registration Form -->
           <form
             id="registrationForm"
-            action="register.jsp"
+            action="/register"
             method="post"
             enctype="multipart/form-data"
           >
@@ -621,7 +681,7 @@
                   <input
                     type="email"
                     id="email"
-                    name="email"
+                    name="notification_email"
                     required
                     class="form-input"
                   />
@@ -635,6 +695,55 @@
                     required
                     class="form-input"
                   />
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="phone_number" class="form-label"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="text"
+                    id="phone_number"
+                    name="phone_number"
+                    required
+                    class="form-input"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="gender" class="form-label">Gender</label>
+                  <div class="radio-group flex items-center gap-4">
+                    <div class="radio-option">
+                      <input
+                        type="radio"
+                        id="gender_male"
+                        name="gender"
+                        value="male"
+                        checked
+                      />
+                      <label for="gender_male">Male</label>
+                    </div>
+                    <div class="radio-option">
+                      <input
+                        type="radio"
+                        id="gender_female"
+                        name="gender"
+                        value="female"
+                      />
+                      <label for="gender_female">Female</label>
+                    </div>
+                    <div class="radio-option">
+                      <input
+                        type="radio"
+                        id="gender_other"
+                        name="gender"
+                        value="other"
+                      />
+                      <label for="gender_other">Others</label>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -673,6 +782,12 @@
                 >
                   Next
                 </button>
+              </div>
+
+              <!-- Validation Summary -->
+              <div class="validation-summary" id="validation-summary-step1">
+                <strong>Please correct the following errors:</strong>
+                <ul id="validation-list-step1"></ul>
               </div>
             </div>
 
@@ -722,42 +837,57 @@
                   Next
                 </button>
               </div>
+
+              <!-- Validation Summary -->
+              <div class="validation-summary" id="validation-summary-step2">
+                <strong>Please correct the following errors:</strong>
+                <ul id="validation-list-step2"></ul>
+              </div>
             </div>
 
             <!-- Step 3: Profile Image -->
             <div class="form-step" id="step3">
               <h2 class="step-title">Profile Image</h2>
 
-              <div class="form-group">
-                <label for="profile_image" class="form-label"
-                  >Profile Image</label
-                >
-                <input
-                  type="file"
-                  id="profile_image"
-                  name="profile_image"
-                  accept="image/*"
-                  required
-                  class="form-input"
-                />
-                <p class="form-hint">Upload a clear photo of yourself</p>
-              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="profile_image" class="form-label"
+                    >Profile Image</label
+                  >
+                  <input
+                    type="file"
+                    id="profile_image"
+                    name="profile_image"
+                    accept="image/*"
+                    required
+                    class="form-input"
+                    onchange="previewImage(this, 'profile_image_preview')"
+                  />
+                  <p class="form-hint">Upload a clear photo of yourself</p>
+                  <div class="image-preview" id="profile_image_preview"></div>
+                </div>
 
-              <div class="form-group">
-                <label for="image_holding_citizenship" class="form-label"
-                  >Image Holding Citizenship</label
-                >
-                <input
-                  type="file"
-                  id="image_holding_citizenship"
-                  name="image_holding_citizenship"
-                  accept="image/*"
-                  required
-                  class="form-input"
-                />
-                <p class="form-hint">
-                  Upload a photo of yourself holding your citizenship document
-                </p>
+                <div class="form-group">
+                  <label for="image_holding_citizenship" class="form-label"
+                    >Image Holding Citizenship</label
+                  >
+                  <input
+                    type="file"
+                    id="image_holding_citizenship"
+                    name="image_holding_citizenship"
+                    accept="image/*"
+                    required
+                    class="form-input"
+                    onchange="previewImage(this, 'holding_citizenship_preview')"
+                  />
+                  <p class="form-hint">
+                    Upload a photo of yourself holding your citizenship document
+                  </p>
+                  <div
+                    class="image-preview"
+                    id="holding_citizenship_preview"
+                  ></div>
+                </div>
               </div>
 
               <div class="form-group">
@@ -769,10 +899,12 @@
                   accept="image/*"
                   required
                   class="form-input"
+                  onchange="previewImage(this, 'thumb_print_preview')"
                 />
                 <p class="form-hint">
                   Upload a clear image of your thumb print
                 </p>
+                <div class="image-preview" id="thumb_print_preview"></div>
               </div>
 
               <div class="form-buttons">
@@ -791,39 +923,32 @@
                   Next
                 </button>
               </div>
+
+              <!-- Validation Summary -->
+              <div class="validation-summary" id="validation-summary-step3">
+                <strong>Please correct the following errors:</strong>
+                <ul id="validation-list-step3"></ul>
+              </div>
             </div>
 
             <!-- Step 4: Document Verification -->
             <div class="form-step" id="step4">
               <h2 class="step-title">Document Verification</h2>
 
-              <div class="form-grid">
-                <div class="form-group">
-                  <label for="voter_card_front" class="form-label"
-                    >Voter Card (Front)</label
-                  >
-                  <input
-                    type="file"
-                    id="voter_card_front"
-                    name="voter_card_front"
-                    accept="image/*"
-                    required
-                    class="form-input"
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="voter_card_back" class="form-label"
-                    >Voter Card (Back)</label
-                  >
-                  <input
-                    type="file"
-                    id="voter_card_back"
-                    name="voter_card_back"
-                    accept="image/*"
-                    required
-                    class="form-input"
-                  />
-                </div>
+              <div class="form-group">
+                <label for="voter_card_front" class="form-label"
+                  >Voter Card (Front)</label
+                >
+                <input
+                  type="file"
+                  id="voter_card_front"
+                  name="voter_card_front"
+                  accept="image/*"
+                  required
+                  class="form-input"
+                  onchange="previewImage(this, 'voter_card_front_preview')"
+                />
+                <div class="image-preview" id="voter_card_front_preview"></div>
               </div>
 
               <div class="form-grid">
@@ -838,7 +963,12 @@
                     accept="image/*"
                     required
                     class="form-input"
+                    onchange="previewImage(this, 'citizenship_front_preview')"
                   />
+                  <div
+                    class="image-preview"
+                    id="citizenship_front_preview"
+                  ></div>
                 </div>
                 <div class="form-group">
                   <label for="citizenship_back" class="form-label"
@@ -851,7 +981,12 @@
                     accept="image/*"
                     required
                     class="form-input"
+                    onchange="previewImage(this, 'citizenship_back_preview')"
                   />
+                  <div
+                    class="image-preview"
+                    id="citizenship_back_preview"
+                  ></div>
                 </div>
               </div>
 
@@ -878,9 +1013,19 @@
                 >
                   Previous
                 </button>
-                <button type="submit" class="btn btn-primary">
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  onclick="validateStep(4); return false;"
+                >
                   Submit Registration
                 </button>
+              </div>
+
+              <!-- Validation Summary -->
+              <div class="validation-summary" id="validation-summary-step4">
+                <strong>Please correct the following errors:</strong>
+                <ul id="validation-list-step4"></ul>
               </div>
             </div>
           </form>
@@ -900,20 +1045,9 @@
 
     <script>
       function nextStep(currentStep, nextStep) {
-        // Only check password matching in step 1
-        if (currentStep === 1) {
-          const password = document.getElementById("password");
-          const confirmPassword = document.getElementById("confirm_password");
-
-          if (password.value !== confirmPassword.value) {
-            confirmPassword.classList.add("border-red");
-            alert(
-              "Passwords do not match! Please make sure your passwords match."
-            );
-            return;
-          } else {
-            confirmPassword.classList.remove("border-red");
-          }
+        // Validate current step
+        if (!validateStep(currentStep)) {
+          return false;
         }
 
         // Apply slide-out animation to current step
@@ -947,6 +1081,173 @@
         }, 500);
       }
 
+      function validateStep(stepNumber) {
+        // Clear previous validation messages
+        clearValidationMessages(stepNumber);
+
+        const validationSummary = document.getElementById(
+          `validation-summary-step${stepNumber}`
+        );
+        const validationList = document.getElementById(
+          `validation-list-step${stepNumber}`
+        );
+        const errors = [];
+
+        // Step 1 validation
+        if (stepNumber === 1) {
+          // Validate each required field in step 1
+          validateField("first_name", "First Name is required", errors);
+          validateField("last_name", "Last Name is required", errors);
+          validateField("voter_id", "Voter ID is required", errors);
+          validateField("email", "Email is required", errors);
+          validateField("dob", "Date of Birth is required", errors);
+          validateField("phone_number", "Phone Number is required", errors);
+          validateField("password", "Password is required", errors);
+          validateField(
+            "confirm_password",
+            "Confirm Password is required",
+            errors
+          );
+
+          // Check if passwords match
+          const password = document.getElementById("password");
+          const confirmPassword = document.getElementById("confirm_password");
+          if (password.value !== confirmPassword.value) {
+            errors.push("Passwords do not match");
+            confirmPassword.classList.add("error");
+          }
+
+          // Check if gender is selected
+          const genderMale = document.getElementById("gender_male");
+          const genderFemale = document.getElementById("gender_female");
+          const genderOther = document.getElementById("gender_other");
+          if (
+            !genderMale.checked &&
+            !genderFemale.checked &&
+            !genderOther.checked
+          ) {
+            errors.push("Please select your gender");
+          }
+        }
+
+        // Step 2 validation
+        else if (stepNumber === 2) {
+          validateField(
+            "temporary_address",
+            "Temporary Address is required",
+            errors
+          );
+          validateField(
+            "permanent_address",
+            "Permanent Address is required",
+            errors
+          );
+        }
+
+        // Step 3 validation
+        else if (stepNumber === 3) {
+          validateFileField(
+            "profile_image",
+            "Profile Image is required",
+            errors
+          );
+          validateFileField(
+            "image_holding_citizenship",
+            "Image Holding Citizenship is required",
+            errors
+          );
+          validateFileField("thumb_print", "Thumb Print is required", errors);
+        }
+
+        // Step 4 validation
+        else if (stepNumber === 4) {
+          validateFileField(
+            "voter_card_front",
+            "Voter Card Front is required",
+            errors
+          );
+          validateFileField(
+            "citizenship_front",
+            "Citizenship Front is required",
+            errors
+          );
+          validateFileField(
+            "citizenship_back",
+            "Citizenship Back is required",
+            errors
+          );
+
+          // Check terms checkbox
+          const terms = document.getElementById("terms");
+          if (!terms.checked) {
+            errors.push("You must agree to the Terms and Conditions");
+          }
+
+          // If no errors and this is the final step, submit the form
+          if (errors.length === 0) {
+            document.getElementById("registrationForm").submit();
+            return true;
+          }
+        }
+
+        // If there are errors, show them
+        if (errors.length > 0) {
+          // Clear previous errors
+          validationList.innerHTML = "";
+
+          // Add each error to the list
+          errors.forEach((error) => {
+            const li = document.createElement("li");
+            li.textContent = error;
+            validationList.appendChild(li);
+          });
+
+          // Show validation summary
+          validationSummary.classList.add("visible");
+
+          // Scroll to the validation summary
+          validationSummary.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+
+          return false;
+        }
+
+        return true;
+      }
+
+      function validateField(fieldId, errorMessage, errors) {
+        const field = document.getElementById(fieldId);
+        if (!field.value.trim()) {
+          errors.push(errorMessage);
+          field.classList.add("error");
+        }
+      }
+
+      function validateFileField(fieldId, errorMessage, errors) {
+        const field = document.getElementById(fieldId);
+        if (!field.files || field.files.length === 0) {
+          errors.push(errorMessage);
+          field.classList.add("error");
+        }
+      }
+
+      function clearValidationMessages(stepNumber) {
+        // Hide validation summary
+        const validationSummary = document.getElementById(
+          `validation-summary-step${stepNumber}`
+        );
+        validationSummary.classList.remove("visible");
+
+        // Clear error classes from inputs in this step
+        const stepElement = document.getElementById(`step${stepNumber}`);
+        const inputs = stepElement.querySelectorAll("input, textarea");
+        inputs.forEach((input) => {
+          input.classList.remove("error");
+        });
+      }
+
       function prevStep(currentStep, prevStep) {
         // Apply slide-out animation to current step
         const currentStepEl = document.getElementById(`step${currentStep}`);
@@ -977,6 +1278,19 @@
             "step-indicator"
           ).textContent = `Step ${prevStep} of 4`;
         }, 500);
+      }
+
+      function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; height: auto;">`;
+          };
+          reader.readAsDataURL(input.files[0]);
+        } else {
+          preview.innerHTML = "";
+        }
       }
     </script>
   </body>

@@ -175,12 +175,21 @@ public class Candidate {
 
 	}
 
+	public String getFoundingMember()
+	{
+		return  PartyService.getPartyById(partyId).getFounderName();
+	}
+
 	public String  getElectionName()
 	{
 		Election election = ElectionService.getElectionById(electionId);
 		return (election != null) ? election.getName() : "";
 	}
 
+	public  String getName()
+	{
+		return  this.fname+" "+this.lname;
+	}
 	public static List<Candidate> searchCandidates(List<Candidate> allCandidates, String keyword) {
 		if (keyword == null || keyword.trim().isEmpty()) {
 			return allCandidates;

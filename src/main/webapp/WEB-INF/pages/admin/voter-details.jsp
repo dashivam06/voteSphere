@@ -175,7 +175,7 @@
               </svg>
               Pending Verification
             </span>
-            <a href="/admin/user-approval" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center">
+            <a href="/admin/voter" class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
@@ -197,7 +197,7 @@
 
               <div class="flex flex-col items-center mb-6">
                 <div class="relative w-80 h-80 rounded-full overflow-hidden mb-3 border-4 border-primary-100">
-                  <img src="/images/${user.profileImage}" alt="Profile" class="w-full h-full object-cover" />
+                  <img src="/uploads/${user.profileImage}" alt="Profile" class="w-full h-full object-cover" />
                   <button class="absolute bottom-0 right-0 bg-primary-500 text-white p-1 rounded-full w-6 h-6 flex items-center justify-center" onclick="openDocumentPreview('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-k8QLAvWE5XYRv8cM02f2QJivHcM8pA.png', 'Profile Image')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -219,7 +219,7 @@
                 </div>
                 <div class="flex justify-between items-center pb-2 border-b border-gray-100">
                   <span class="text-gray-500">Email</span>
-                  <span class="font-medium text-gray-800">${user.notificationEmail}</span>
+                  <span class="font-medium text-gray-800">${user.email}</span>
                 </div>
                 <div class="flex justify-between items-center pb-2 border-b border-gray-100">
                   <span class="text-gray-500">Date of Birth</span>
@@ -507,21 +507,16 @@
               <!-- Verification Actions -->
               <div class="mt-8 pt-6 border-t border-gray-200">
                 <div class="flex flex-col sm:flex-row justify-end gap-3">
+
+                                    <form action="/admin/voter/delete/${user.userId}" method="post">
+
                   <button id="rejectWithReasonBtn" class="bg-red-600 text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    Reject Request
+                    Remove Voter
                   </button>
-                                    <form action="/admin/user-approval/approve/${user.unverifiedUserId}" method="post">
-
-                  <button id="approveBtn" class="bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-colors duration-200 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Approve Request
-                  </button>
-                  </form>
+</form>
                 </div>
               </div>
             </div>
@@ -543,21 +538,7 @@
             </svg>
           </button>
         </div>
-                  <form action="/admin/user-approval/reject/${user.unverifiedUserId}" method="post">
 
-        <p class="text-gray-600 mb-4">Please provide a reason for rejecting this account request. This will be sent to the applicant.</p>
-        <div class="mb-4">
-          <textarea id="rejectionReason" rows="5" name="reason" class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" placeholder="Enter rejection reason..."></textarea>
-        </div>
-        <div class="flex justify-end space-x-3">
-          <button id="cancelReject" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">
-            Cancel
-          </button>
-
-          <button id="submitReject" class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
-            Send Rejection
-          </button>
-          </form>
         </div>
       </div>
     </div>

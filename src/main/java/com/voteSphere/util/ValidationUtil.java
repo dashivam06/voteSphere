@@ -46,7 +46,14 @@ public class ValidationUtil {
 
 	// 4. Validate if a string is "male" or "female" (case insensitive)
 	public static boolean isValidGender(String value) {
-		return value != null && (value.equalsIgnoreCase("male") || value.equalsIgnoreCase("female"));
+		return value != null && (value.equalsIgnoreCase("male")
+					|| value.equalsIgnoreCase("female") ||
+						value.equalsIgnoreCase("others"));
+	}
+
+
+	public static String formatWithCommas(int number) {
+		return String.format("%,d", number);
 	}
 
 	// 5. Validate if a string is a valid email address

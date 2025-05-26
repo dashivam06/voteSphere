@@ -39,7 +39,7 @@ public class AdminVoterServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/view/")) {
                 String voterId = pathInfo.substring(6);
-//                handleViewVoter(request, response, voterId);
+                handleViewVoter(request, response, voterId);
             }
             else if (pathInfo.startsWith("/search/")) {
                response.sendRedirect(request.getContextPath() + "/admin/voter");
@@ -72,15 +72,15 @@ public class AdminVoterServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
             else if (pathInfo.equalsIgnoreCase("/new")) {
-//                handleAddVoter(request, response);
+                handleAddVoter(request, response);
             }
             else if (pathInfo.startsWith("/update/")) {
                 String voterId = pathInfo.substring(8);
-//                handleUpdateVoter(request, response, voterId);
+                handleUpdateVoter(request, response, voterId);
             }
             else if (pathInfo.startsWith("/delete/")) {
                 String voterId = pathInfo.substring(8);
-//                handleDeleteVoter(request, response, voterId);
+                handleDeleteVoter(request, response, voterId);
             }
             else if (pathInfo.startsWith("/search/")) {
                 handleSearch(request, response);
@@ -146,29 +146,29 @@ public class AdminVoterServlet extends HttpServlet {
 //        logger.info("Successfully listed {} unverified voters", voters.size());
 //    }
 //
-//    private void handleViewVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
-//            throws ServletException, IOException {
-//        logger.debug("Viewing voter with ID: {}", voterId);
-//
-//        if (ValidationUtil.isNullOrEmpty(voterId) || !ValidationUtil.isNumeric(voterId)) {
-//            logger.warn("Invalid voter ID: {}", voterId);
-//            request.setAttribute("error", "Invalid voter ID");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        User voter = UserService.getVoterById(Integer.parseInt(voterId));
-//        if (voter == null) {
-//            logger.warn("Voter not found with ID: {}", voterId);
-//            request.setAttribute("error", "Voter not found");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        request.setAttribute("voter", voter);
-//        request.getRequestDispatcher("/WEB-INF/pages/admin/voter-details.jsp").forward(request, response);
-//        logger.info("Successfully viewed voter ID: {}", voterId);
-//    }
+    private void handleViewVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
+            throws ServletException, IOException {
+        logger.debug("Viewing voter with ID: {}", voterId);
+
+        if (ValidationUtil.isNullOrEmpty(voterId) || !ValidationUtil.isNumeric(voterId)) {
+            logger.warn("Invalid voter ID: {}", voterId);
+            request.setAttribute("error", "Invalid voter ID");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
+        }
+
+        User voter = UserService.getUserById(Integer.parseInt(voterId));
+        if (voter == null) {
+            logger.warn("Voter not found with ID: {}", voterId);
+            request.setAttribute("error", "Voter not found");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
+        }
+
+        request.setAttribute("user", voter);
+        request.getRequestDispatcher("/WEB-INF/pages/admin/voter-details.jsp").forward(request, response);
+        logger.info("Successfully viewed voter ID: {}", voterId);
+    }
 //
 //    private void handleVerifyVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
 //            throws ServletException, IOException {
@@ -204,61 +204,61 @@ public class AdminVoterServlet extends HttpServlet {
         getStats(request, response);
 
     }
-//
-//    private void handleAddVoter(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        logger.debug("Attempting to add new voter");
-//
-//        boolean success = UserService.addVoter(request, response);
-//        if (success) {
-//            logger.info("Successfully added new voter");
-//            response.sendRedirect(request.getContextPath() + "/admin/voter/");
-//        } else {
-//            logger.warn("Failed to add new voter");
-//            request.getRequestDispatcher("/WEB-INF/pages/admin/add-voter.jsp").forward(request, response);
-//        }
-//    }
-//
-//    private void handleUpdateVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
-//            throws ServletException, IOException {
-//        logger.debug("Updating voter with ID: {}", voterId);
-//
-//        if (ValidationUtil.isNullOrEmpty(voterId) || !ValidationUtil.isNumeric(voterId)) {
-//            logger.warn("Invalid voter ID for update: {}", voterId);
-//            request.setAttribute("error", "Invalid voter ID");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        boolean success = UserService.updateVoter(request, response, Integer.parseInt(voterId));
-//        if (success) {
-//            logger.info("Successfully updated voter ID: {}", voterId);
-//            response.sendRedirect(request.getContextPath() + "/admin/voter/view/" + voterId);
-//        } else {
-//            logger.warn("Failed to update voter ID: {}", voterId);
-//            request.getRequestDispatcher("/WEB-INF/pages/admin/edit-voter.jsp").forward(request, response);
-//        }
-//    }
-//
-//    private void handleDeleteVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
-//            throws ServletException, IOException {
-//        logger.debug("Deleting voter with ID: {}", voterId);
-//
-//        if (ValidationUtil.isNullOrEmpty(voterId) || !ValidationUtil.isNumeric(voterId)) {
-//            logger.warn("Invalid voter ID for deletion: {}", voterId);
-//            request.setAttribute("error", "Invalid voter ID");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//            return;
-//        }
-//
-//        boolean success = UserService.deleteVoter(Integer.parseInt(voterId));
-//        if (success) {
-//            logger.info("Successfully deleted voter ID: {}", voterId);
-//            response.sendRedirect(request.getContextPath() + "/admin/voter");
-//        } else {
-//            logger.warn("Failed to delete voter ID: {}", voterId);
-//            request.setAttribute("error", "Failed to delete voter");
-//            request.getRequestDispatcher("/error.jsp").forward(request, response);
-//        }
-//    }
+
+    private void handleAddVoter(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        logger.debug("Attempting to add new voter");
+
+        boolean success = UserService.registerUser(request, response);
+        if (success) {
+            logger.info("Successfully added new voter");
+            response.sendRedirect(request.getContextPath() + "/admin/voter/");
+        } else {
+            logger.warn("Failed to add new voter");
+            request.getRequestDispatcher("/WEB-INF/pages/admin/add-voter.jsp").forward(request, response);
+        }
+    }
+
+    private void handleUpdateVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
+            throws ServletException, IOException {
+        logger.debug("Updating voter with ID: {}", voterId);
+
+        if (ValidationUtil.isNullOrEmpty(voterId) || !ValidationUtil.isNumeric(voterId)) {
+            logger.warn("Invalid voter ID for update: {}", voterId);
+            request.setAttribute("error", "Invalid voter ID");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
+        }
+
+        boolean success = UserService.updateUser(request, response, Integer.parseInt(voterId));
+        if (success) {
+            logger.info("Successfully updated voter ID: {}", voterId);
+            response.sendRedirect(request.getContextPath() + "/admin/voter/view/" + voterId);
+        } else {
+            logger.warn("Failed to update voter ID: {}", voterId);
+            request.getRequestDispatcher("/WEB-INF/pages/admin/edit-voter.jsp").forward(request, response);
+        }
+    }
+
+    private void handleDeleteVoter(HttpServletRequest request, HttpServletResponse response, String voterId)
+            throws ServletException, IOException {
+        logger.debug("Deleting voter with ID: {}", voterId);
+
+        if (ValidationUtil.isNullOrEmpty(voterId) || !ValidationUtil.isNumeric(voterId)) {
+            logger.warn("Invalid voter ID for deletion: {}", voterId);
+            request.setAttribute("error", "Invalid voter ID");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
+        }
+
+        boolean success = UserService.deleteUser(Integer.parseInt(voterId));
+        if (success) {
+            logger.info("Successfully deleted voter ID: {}", voterId);
+            response.sendRedirect(request.getContextPath() + "/admin/voter");
+        } else {
+            logger.warn("Failed to delete voter ID: {}", voterId);
+            request.setAttribute("error", "Failed to delete voter");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        }
+    }
 }

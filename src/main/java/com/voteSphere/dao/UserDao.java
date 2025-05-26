@@ -31,10 +31,10 @@ public class UserDao {
         }
 
         String sql = "INSERT INTO users (first_name, last_name, voter_id, notification_email, profile_image, " +
-                     "phone_number, image_holding_citizenship, voter_card_front, voter_card_back, " +
+                     "phone_number, image_holding_citizenship, voter_card_front, " +
                      "citizenship_front, citizenship_back, thumb_print, password, dob, gender, " +
                      "permanent_address, temporary_address, role, is_verified, is_email_verified, created_at) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnectionManager.establishConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -51,19 +51,18 @@ public class UserDao {
             stmt.setString(6, user.getPhoneNumber());
             stmt.setString(7, user.getImageHoldingCitizenship());
             stmt.setString(8, user.getVoterCardFront());
-            stmt.setString(9, user.getVoterCardBack());
-            stmt.setString(10, user.getCitizenshipFront());
-            stmt.setString(11, user.getCitizenshipBack());
-            stmt.setString(12, user.getThumbPrint());
-            stmt.setString(13, user.getPassword());
-            stmt.setTimestamp(14, user.getDob());
-            stmt.setString(15, user.getGender());
-            stmt.setString(16, user.getPermanentAddress());
-            stmt.setString(17, user.getTemporaryAddress());
-            stmt.setString(18, user.getRole());
-            stmt.setBoolean(19, user.getIsVerified());
-            stmt.setBoolean(20, user.isEmailVerified());
-            stmt.setTimestamp(21, user.getCreatedAt());
+            stmt.setString(9, user.getCitizenshipFront());
+            stmt.setString(10, user.getCitizenshipBack());
+            stmt.setString(11, user.getThumbPrint());
+            stmt.setString(12, user.getPassword());
+            stmt.setTimestamp(13, user.getDob());
+            stmt.setString(14, user.getGender());
+            stmt.setString(15, user.getPermanentAddress());
+            stmt.setString(16, user.getTemporaryAddress());
+            stmt.setString(17, user.getRole());
+            stmt.setBoolean(18, user.getIsVerified());
+            stmt.setBoolean(19, user.isEmailVerified());
+            stmt.setTimestamp(20, user.getCreatedAt());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -246,7 +245,7 @@ public class UserDao {
 
         String sql = "UPDATE users SET first_name=?, last_name=?, voter_id=?, notification_email=?, " +
                      "profile_image=?, phone_number=?, image_holding_citizenship=?, " +
-                     "voter_card_front=?, voter_card_back=?, citizenship_front=?, " +
+                     "voter_card_front=?,  citizenship_front=?, " +
                      "citizenship_back=?, thumb_print=?, password=?, dob=?, gender=?, " +
                      "permanent_address=?, temporary_address=?, role=?, is_verified=?, " +
                      "is_email_verified=? WHERE user_id=?";
@@ -266,19 +265,18 @@ public class UserDao {
             stmt.setString(6, user.getPhoneNumber());
             stmt.setString(7, user.getImageHoldingCitizenship());
             stmt.setString(8, user.getVoterCardFront());
-            stmt.setString(9, user.getVoterCardBack());
-            stmt.setString(10, user.getCitizenshipFront());
-            stmt.setString(11, user.getCitizenshipBack());
-            stmt.setString(12, user.getThumbPrint());
-            stmt.setString(13, user.getPassword());
-            stmt.setTimestamp(14, user.getDob());
-            stmt.setString(15, user.getGender());
-            stmt.setString(16, user.getPermanentAddress());
-            stmt.setString(17, user.getTemporaryAddress());
-            stmt.setString(18, user.getRole());
-            stmt.setBoolean(19, user.getIsVerified());
-            stmt.setBoolean(20, user.isEmailVerified());
-            stmt.setInt(21, user.getUserId());
+            stmt.setString(9, user.getCitizenshipFront());
+            stmt.setString(10, user.getCitizenshipBack());
+            stmt.setString(11, user.getThumbPrint());
+            stmt.setString(12, user.getPassword());
+            stmt.setTimestamp(13, user.getDob());
+            stmt.setString(14, user.getGender());
+            stmt.setString(15, user.getPermanentAddress());
+            stmt.setString(16, user.getTemporaryAddress());
+            stmt.setString(17, user.getRole());
+            stmt.setBoolean(18, user.getIsVerified());
+            stmt.setBoolean(19, user.isEmailVerified());
+            stmt.setInt(20, user.getUserId());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -313,6 +311,55 @@ public class UserDao {
         }
     }
 
+
+
+    public static boolean editUser(User user) {
+        if (user == null) {
+            logger.error("Attempt to edit null user");
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Editing user with ID: " + user.getUserId());
+        }
+
+        String sql = "UPDATE users SET first_name = ?, last_name = ?, notification_email = ?, " +
+                "profile_image = ?, temporary_address = ?, permanent_address = ? " +
+                "WHERE user_id = ?";
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getFirstName());
+            stmt.setString(2, user.getLastName());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getProfileImage());
+            stmt.setString(5, user.getTemporaryAddress());
+            stmt.setString(6, user.getPermanentAddress());
+            stmt.setInt(7, user.getUserId());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.warn("No user found to update with ID: " + user.getUserId());
+                return false;
+            }
+
+            logger.info("User successfully edited with ID: " + user.getUserId());
+            return true;
+
+        } catch (SQLException e) {
+            logger.error("SQL error while editing user ID: " + user.getUserId(), e);
+            throw new DataAccessException("SQL error during user edit",
+                    "Unable to update user information. Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while editing user ID: " + user.getUserId(), e);
+            throw new DataAccessException("Unexpected error during user edit",
+                    "An unexpected error occurred. Please contact support.", e);
+        }
+    }
+
+
     public static boolean deleteUser(int id) {
         if (id <= 0) {
             logger.error("Invalid user ID provided for deletion: " + id);
@@ -323,38 +370,44 @@ public class UserDao {
             logger.debug("Attempting to delete user with ID: " + id);
         }
 
-        String sql = "DELETE FROM users WHERE user_id = ?";
+        String deleteDonationsSql = "DELETE FROM donations WHERE user_id = ?";
+        String deleteUserSql = "DELETE FROM users WHERE user_id = ?";
 
-        try (Connection conn = DBConnectionManager.establishConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnectionManager.establishConnection()) {
+            conn.setAutoCommit(false); // Start transaction
 
-            stmt.setInt(1, id);
+            try (
+                    PreparedStatement deleteDonationsStmt = conn.prepareStatement(deleteDonationsSql);
+                    PreparedStatement deleteUserStmt = conn.prepareStatement(deleteUserSql)
+            ) {
+                deleteDonationsStmt.setInt(1, id);
+                deleteDonationsStmt.executeUpdate();
 
-            int affectedRows = stmt.executeUpdate();
+                deleteUserStmt.setInt(1, id);
+                int affectedRows = deleteUserStmt.executeUpdate();
 
-            if (affectedRows > 0) {
-                if (logger.isInfoEnabled()) {
+                if (affectedRows > 0) {
+                    conn.commit();
                     logger.info("Successfully deleted user with ID: " + id);
+                    return true;
+                } else {
+                    conn.rollback();
+                    logger.warn("No user found to delete with ID: " + id);
+                    return false;
                 }
-                return true;
-            } else {
-                logger.warn("No user found to delete with ID: " + id);
-                return false;
+            } catch (SQLException e) {
+                conn.rollback();
+                logger.error("SQL error during deletion", e);
+                throw new DataAccessException("Database error during user deletion",
+                        "Failed to delete user due to system error.", e);
             }
-        } catch (DatabaseException e) {
-            logger.error("Connection error while deleting user with ID: " + id, e);
-            throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
-        } catch (SQLException e) {
-            logger.error("SQL error while deleting user with ID: " + id + 
-                       ". Error code: " + e.getErrorCode() + ", SQL state: " + e.getSQLState(), e);
-            throw new DataAccessException("Database error during user deletion",
-                    "Failed to delete the user due to system error. Please try again later.", e);
         } catch (Exception e) {
             logger.error("Unexpected error while deleting user with ID: " + id, e);
             throw new DataAccessException("Unexpected error during user deletion",
                     "An unexpected error occurred. Please contact support.", e);
         }
     }
+
 
     public static User getUserByEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
@@ -643,7 +696,6 @@ public class UserDao {
         user.setPhoneNumber(rs.getString("phone_number"));
         user.setImageHoldingCitizenship(rs.getString("image_holding_citizenship"));
         user.setVoterCardFront(rs.getString("voter_card_front"));
-        user.setVoterCardBack(rs.getString("voter_card_back"));
         user.setCitizenshipFront(rs.getString("citizenship_front"));
         user.setCitizenshipBack(rs.getString("citizenship_back"));
         user.setThumbPrint(rs.getString("thumb_print"));

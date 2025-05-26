@@ -146,6 +146,53 @@ public class ElectionDao {
 	}
 
 
+	public static int getIndependentCandidateCount(int electionId) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Attempting to count independent candidates for election ID: " + electionId);
+		}
+
+		String sql = "SELECT COUNT(*) AS count FROM candidates WHERE election_id = ? AND is_independent = true";
+
+		try (Connection conn = DBConnectionManager.establishConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+			stmt.setInt(1, electionId);
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("Executing SQL query to count independent candidates for election ID: " + electionId);
+			}
+
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					int count = rs.getInt("count");
+					if (logger.isInfoEnabled()) {
+						logger.info("Independent candidate count: " + count + " for election ID: " + electionId);
+					}
+					return count;
+				} else {
+					logger.warn("No result returned when counting independent candidates for election ID: " + electionId);
+					return 0;
+				}
+			}
+
+		} catch (DatabaseException e) {
+			logger.error("Database connection error while counting independent candidates for election ID: " + electionId, e);
+			throw new DataAccessException(e.getMessage(), e.getUserMessage(), e);
+
+		} catch (SQLException e) {
+			logger.error("SQL error while counting independent candidates for election ID: " + electionId +
+					". Error code: " + e.getErrorCode() + ", SQL state: " + e.getSQLState(), e);
+			throw new DataAccessException("Database error while counting independent candidates",
+					"Failed to count independent candidates due to system error. Please try again later.", e);
+
+		} catch (Exception e) {
+			logger.error("Unexpected error while counting independent candidates for election ID: " + electionId, e);
+			throw new DataAccessException("Unexpected error while counting independent candidates",
+					"An unexpected error occurred. Please contact support.", e);
+		}
+	}
+
+
 	public static boolean updateElection(Election election) {
 		if (election == null) {
 			logger.error("Attempt to update null election");
@@ -708,8 +755,8 @@ public class ElectionDao {
 	    Candidate candidate = new Candidate();
 	    candidate.setCandidateId(rs.getInt("candidate_id"));
 	    candidate.setElectionId(rs.getInt("election_id"));
-	    candidate.setFname(rs.getString("fname"));
-	    candidate.setLname(rs.getString("lname"));
+	    candidate.setFname(rs.getString("first_name"));
+	    candidate.setLname(rs.getString("last_name"));
 	    candidate.setPartyId(rs.getInt("party_id"));
 	    candidate.setBio(rs.getString("bio"));
 	    candidate.setProfileImage(rs.getString("profile_image"));

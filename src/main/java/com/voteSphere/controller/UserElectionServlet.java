@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
 
+import com.voteSphere.model.AuthUser;
+import com.voteSphere.util.SessionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +21,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/user-election")
+@WebServlet("/election")
 public class UserElectionServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LogManager.getLogger(UserElectionServlet.class);
@@ -36,7 +38,7 @@ public class UserElectionServlet extends HttpServlet {
         }
         
         try {
-            if ("list".equalsIgnoreCase(action) || action == null) {
+            if ("list".equalsIgnoreCase(action) || action == null || "/".equalsIgnoreCase(action)) {
                 handleListRunningElections(request, response);
             } 
             else if ("viewCandidates".equalsIgnoreCase(action)) {
@@ -81,8 +83,12 @@ public class UserElectionServlet extends HttpServlet {
         {
         	System.out.println(election.toString());
         }
-        request.setAttribute("runningElections", runningElections);
-        request.getRequestDispatcher("/user/election-list.jsp").forward(request, response);
+        request.setAttribute("activeElections", runningElections);
+        request.setAttribute("upcomingElections",ElectionService.getUpcomingElections());
+        request.setAttribute("pastElections",ElectionService.getPastElections());
+        System.out.println(ElectionService.getPastElections());
+
+        request.getRequestDispatcher("/WEB-INF/pages/voter/elections.jsp").forward(request, response);
         logger.info("Successfully listed {} running elections", runningElections.size());
     }
 

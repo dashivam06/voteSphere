@@ -20,7 +20,7 @@ public class EsewaPaymentRequest {
         this.productDeliveryCharge = "0";
         this.transactionUuid = generateTransactionId();
         this.productCode = "EPAYTEST";
-        this.successUrl = "http://localhost:8080/voteSphere/esewa-callback";
+        this.successUrl = "http://localhost:80/esewa-callback";
         this.failureUrl = "https://developer.esewa.com.np/failure";
         this.signedFieldNames = "total_amount,transaction_uuid,product_code";
         this.totalAmount = calculateTotalAmount();

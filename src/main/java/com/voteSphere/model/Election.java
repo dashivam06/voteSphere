@@ -1,8 +1,14 @@
 package com.voteSphere.model;
 
+import com.voteSphere.dao.UserDao;
+import com.voteSphere.service.UserService;
+import com.voteSphere.service.VoteService;
+import com.voteSphere.util.SessionUtil;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -41,9 +47,12 @@ public class Election {
 		this.endTime = endTime;
 	}
 
-	public Election() { } 
+	public Election() { }
+
+
 	
-	
+	public Integer getId(){return electionId;}
+	public String getImageUrl(){return coverImage;}
 	public Integer getElectionId() {
 		return electionId;
 	}
@@ -87,6 +96,22 @@ public class Election {
 		this.endTime = endTime;
 	}
 
+	public Integer getEligibleVoters()
+	{
+		return UserService.getAllUsers().size();
+	}
+
+
+	public String getFormattedEndDateTime() {
+		if (date != null && endTime != null) {
+			LocalDateTime dateTime = LocalDateTime.of(
+					date.toLocalDate(),
+					endTime.toLocalTime()
+			);
+			return dateTime.toString(); // returns ISO format like "2025-05-22T18:00"
+		}
+		return "";
+	}
 
 	@Override
 	public String toString() {
@@ -139,7 +164,20 @@ public class Election {
 				.toList();
 	}
 
+	public String getElectionToken() {
+		if (electionId == null || name == null || date == null) {
+			throw new IllegalStateException("Cannot generate token: Some required fields are null");
+		}
 
+		// Compose a raw string with key fields, including date's timestamp
+		String raw = electionId + "-" + name + "-" + date.getTime();
+
+		// Generate hash code, then convert to base36 (alphanumeric) for shorter token
+		int hash = Math.abs(raw.hashCode());
+		String encoded = Integer.toString(hash, 36).toUpperCase();
+
+		return "ELEC-" + encoded;
+	}
 
 
 }

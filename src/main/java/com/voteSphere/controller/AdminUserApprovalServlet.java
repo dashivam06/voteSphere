@@ -33,7 +33,6 @@ public class AdminUserApprovalServlet extends HttpServlet {
 			}
 			else if (pathInfo.startsWith("/view/")) {
 				String userId = pathInfo.substring(6);
-				System.out.println("In View : "+pathInfo+" ID: "+userId);
 				handleViewUser(request, response, userId);
 			}
 			else {
@@ -211,7 +210,7 @@ public class AdminUserApprovalServlet extends HttpServlet {
 		}
 
 		logger.info("Successfully rejected user ID: {}", userId);
-		response.sendRedirect(request.getContextPath() + "/admin/account-requests/");
+		response.sendRedirect(request.getContextPath() + "/admin/user-approval");
 	}
 
 	private void handleUpdateUser(HttpServletRequest request, HttpServletResponse response, String userId)

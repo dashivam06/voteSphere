@@ -137,7 +137,7 @@ public class MailUtil {
                 String token = jwtUtil.generateToken(email, userId);
 
                 // Build verification link
-                String verificationLink = baseUrl + "verify-email?token=" + token;
+				String verificationLink = baseUrl + "mail/email_verification_token?action=verify&email_verification_token=" + token;
 
                 // Prepare email
                 String subject = "Verify your VoteSphere account";

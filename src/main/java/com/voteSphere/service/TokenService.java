@@ -129,6 +129,22 @@ public class TokenService {
         return Collections.emptyList();
     }
 
+    public static List<Token> getActiveTokensByUserId(Integer userId) {
+        if (userId == null || userId <= 0) {
+            logger.error( "Valid user ID is required.");
+            return Collections.emptyList();
+        }
+
+        try {
+            return TokenDao.getActiveTokensByUserId(userId);
+        } catch (DataAccessException dae) {
+            logger.error("Failed to retrieve tokens by user ID: " + dae.getMessage(), dae);
+        } catch (Exception e) {
+            logger.error("Unexpected error retrieving tokens by user ID", e);
+        }
+        return Collections.emptyList();
+    }
+
     public static List<Token> getAllTokens() {
         try {
             return TokenDao.getAllTokens();

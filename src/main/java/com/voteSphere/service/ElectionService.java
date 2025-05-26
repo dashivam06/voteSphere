@@ -357,20 +357,36 @@ public class ElectionService {
 	/**
 	 * Gets total votes for an election
 	 */
-	public static int getTotalVotes(HttpServletRequest request, HttpServletResponse response, int electionId) {
+	public static int getTotalVotes( int electionId) {
 	    try {
 	        return ElectionDao.getTotalVotes(electionId);
 	    } catch (DataAccessException dae) {
 	        logger.error("Failed to get total votes: " + dae.getMessage(), dae);
-	        request.setAttribute("votes_error", dae.getUserMessage());
+
 	    } catch (Exception e) {
 	        logger.error("Unexpected error while getting total votes", e);
-	        request.setAttribute("votes_error", "An unexpected error occurred. Please try again.");
+
 	    }
 	    return 0;
 	}
-	
-	
+
+
+	/**
+	 * Gets count of independent candidates for a specific election
+	 */
+	public static int getIndependentCandidateCount(int electionId) {
+		try {
+			return ElectionDao.getIndependentCandidateCount(electionId);
+		} catch (DataAccessException dae) {
+			logger.error("Failed to get independent candidate count: " + dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error while getting independent candidate count", e);
+		}
+		return 0;
+	}
+
+
+
 	/**
 	 * Gets all currently running elections (where current date/time is within election period)
 	 */

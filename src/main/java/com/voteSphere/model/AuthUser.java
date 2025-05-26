@@ -1,5 +1,6 @@
 package com.voteSphere.model;
 
+import com.voteSphere.service.UserService;
 import com.voteSphere.util.ValidationUtil;
 
 public class AuthUser {
@@ -10,7 +11,7 @@ public class AuthUser {
 	private final String roles;
 	private final String profileImage ;
 
-	public AuthUser(Integer userId, String lname, String fname, String roles, String profileImage) {
+	public AuthUser(Integer userId, String fname, String lname, String roles, String profileImage) {
 		super();
 		this.userId = userId;
 		this.lname = lname;
@@ -29,6 +30,27 @@ public class AuthUser {
 		
 	}
 
+
+	public String getVoterId()
+	{
+		return UserService.getUserById(userId).getVoterId();
+	}
+	public String getEmail()
+	{
+		return UserService.getUserById(userId).getEmail();
+	}
+
+	public String getProfileImageFromUser()
+	{
+		String profileImagePath =  UserService.getUserById(userId).getProfileImage();
+		System.out.println(profileImagePath);
+		return profileImagePath;
+	}
+
+	public String getFullName()
+	{
+		return this.fname +" "+this.lname;
+	}
 
 
 

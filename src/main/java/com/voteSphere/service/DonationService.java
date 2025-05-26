@@ -91,7 +91,6 @@ public class DonationService {
     }
 
 
-
     // Retrieve donation by ID
     public static Donation getDonationById(Integer donationId) {
         if (donationId == null || donationId <= 0) {
@@ -114,6 +113,31 @@ public class DonationService {
     }
 
 
+    public static boolean updateDonationById(Integer donationId, Donation newData) {
+        if (donationId == null || donationId <= 0) {
+            throw new IllegalArgumentException("Valid donation ID is required.");
+        }
+
+        // Retrieve existing donation
+        Donation existingDonation = DonationDao.findDonationById(donationId);
+
+        if (existingDonation == null) {
+            logger.warn("Donation with ID " + donationId + " not found for update.");
+            return false;
+        }
+
+
+
+        try {
+            return DonationDao.updateDonation(existingDonation);
+        } catch (DataAccessException dae) {
+            logger.error("Error updating donation with ID " + donationId, dae);
+        } catch (Exception e) {
+            logger.error("Unexpected error updating donation", e);
+        }
+
+        return false;
+    }
 
     // Retrieve all donations
     public static List<Donation> getAllDonations() {

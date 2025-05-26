@@ -146,7 +146,7 @@
 			</div>
 
 			<div class="mt-8 bg-white py-8 px-6 shadow-lg rounded-lg">
-				<form id="loginForm" class="space-y-6" action="login" method="post">
+				<form id="loginForm" class="space-y-6" action="login" method="post" action="/login">
 					<div>
 						<label for="userId"
 							class="block text-sm font-medium text-gray-700"> User ID

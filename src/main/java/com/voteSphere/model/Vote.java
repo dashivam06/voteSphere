@@ -1,5 +1,7 @@
 package com.voteSphere.model;
 
+import com.voteSphere.service.ElectionService;
+import com.voteSphere.service.PartyService;
 import com.voteSphere.service.UserService;
 
 import java.sql.Timestamp;
@@ -59,6 +61,43 @@ public class Vote {
 		this.partyId = partyId;
 		this.votedAt = Timestamp.from(Instant.now());
 		this.ip = ip;
+	}
+
+
+	public String getElectionImageUrl()
+	{
+		return ElectionService.getElectionById(electionId).getCoverImage();
+	}
+
+	public String getElectionName()
+	{
+		return ElectionService.getElectionById(electionId).getName();
+	}
+
+
+	public String getVoteToken() {
+		if (voteId == null || userId == null || electionId == null || partyId == null || votedAt == null || ip == null) {
+			throw new IllegalStateException("Cannot generate token: Some required fields are null");
+		}
+
+		String raw = voteId + "-" + userId + "-" + electionId + "-" + partyId + "-" + votedAt.getTime() + "-" + ip;
+
+		// Use hashCode and convert to base36 for short alphanumeric token
+		int hash = Math.abs(raw.hashCode());
+		String encoded = Integer.toString(hash, 36).toUpperCase(); // base36 encoding (digits + letters)
+
+		return "VOTE-" + encoded;
+	}
+
+
+	public String getStatus()
+	{
+		return "VOTE_CAST";
+	}
+
+	public String getPartyName()
+	{
+		return PartyService.getPartyById(partyId).getName();
 	}
 
 	public User getVoter()

@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.voteSphere.model.AuthUser;
 import com.voteSphere.util.ImgUploadUtil;
+import com.voteSphere.util.SessionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +36,7 @@ public class UnverifiedUserService {
 		String email = request.getParameter("notification_email");
 		String phoneNumber = request.getParameter("phone_number");
 		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("confirm_password");
 		String dob = request.getParameter("dob");
 		String gender = request.getParameter("gender");
 		String permanentAddress = request.getParameter("permanent_address");
@@ -51,8 +54,7 @@ public class UnverifiedUserService {
 				"image_holding_citizenship_error", "unverified-user-docs", appRealPath, maxImageSize);
 		String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front",
 				"voter_card_front_error", "unverified-user-docs", appRealPath, maxImageSize);
-		String voterCardBack = ImgUploadUtil.processImageUpload(request, "voter_card_back",
-				"voter_card_back_error", "unverified-user-docs", appRealPath, maxImageSize);
+
 		String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front",
 				"citizenship_front_error", "unverified-user-docs", appRealPath, maxImageSize);
 		String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back",
@@ -60,7 +62,7 @@ public class UnverifiedUserService {
 		String thumbPrint = ImgUploadUtil.processImageUpload(request, "thumb_print", "thumb_print_error",
 				"unverified-user-docs", appRealPath, maxImageSize);
 
-		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null || voterCardBack == null
+		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null
 				|| citizenshipFront == null || citizenshipBack == null || thumbPrint == null) {
 			hasErrors = true;
 			logger.warn("One or more required document images are missing or failed to upload.");
@@ -143,6 +145,23 @@ public class UnverifiedUserService {
 			hasErrors = true;
 		}
 
+
+		// Validate confirm password
+		if (ValidationUtil.isNullOrEmpty(confirmPassword)) {
+			logger.warn("Validation failed: Confirm Password is empty.");
+			request.setAttribute("confirmPassword_error", "Confirm password is required.");
+			hasErrors = true;
+		}
+
+		// Check if passwords match
+		if (!ValidationUtil.isNullOrEmpty(password) && !password.equals(confirmPassword)) {
+			logger.warn("Validation failed: Passwords do not match.");
+			request.setAttribute("passwordMatch_error", "Passwords do not match.");
+			hasErrors = true;
+		}
+
+
+
 		if (hasErrors) {
 			logger.info("User registration aborted due to validation errors.");
 			return false;
@@ -154,7 +173,7 @@ public class UnverifiedUserService {
 
 			// Create unverified user object
 			UnverifiedUser newUser = new UnverifiedUser(firstName, lastName, voterId, email, profileImage, phoneNumber,
-					imageHoldingCitizenship, voterCardFront, voterCardBack, citizenshipFront, citizenshipBack,
+					imageHoldingCitizenship, voterCardFront, citizenshipFront, citizenshipBack,
 					thumbPrint, hashedPassword, Timestamp.valueOf(dob + " 00:00:00"), gender, permanentAddress,
 					temporaryAddress);
 
@@ -346,8 +365,7 @@ public class UnverifiedUserService {
 	            "image_holding_citizenship_error", "unverified-user-docs", appRealPath, maxImageSize);
 	    String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front", "voter_card_front_error",
 	            "unverified-user-docs", appRealPath, maxImageSize);
-	    String voterCardBack = ImgUploadUtil.processImageUpload(request, "voter_card_back", "voter_card_back_error",
-	            "unverified-user-docs", appRealPath, maxImageSize);
+
 	    String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front", "citizenship_front_error",
 	            "unverified-user-docs", appRealPath, maxImageSize);
 	    String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back", "citizenship_back_error",
@@ -356,7 +374,7 @@ public class UnverifiedUserService {
 	            "unverified-user-docs", appRealPath, maxImageSize);
 
 	    // Check if any image upload failed or is missing
-	    if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null || voterCardBack == null
+	    if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null
 	            || citizenshipFront == null || citizenshipBack == null || thumbPrint == null) {
 	        hasErrors = true;
 	        logger.warn("One or more required document images are missing or failed to upload.");
@@ -377,7 +395,7 @@ public class UnverifiedUserService {
 			// Create updated user object
 			UnverifiedUser updatedUser = new UnverifiedUser(userId, firstName, lastName, existingUser.getVoterId(),
 					email, existingUser.getProfileImage(), phoneNumber, imageHoldingCitizenship,
-					voterCardFront, voterCardBack,
+					voterCardFront,
 					citizenshipFront, citizenshipBack, thumbPrint,
 					existingUser.getPassword(), existingUser.getDob(), gender, permanentAddress, temporaryAddress,
 					existingUser.getRole(), existingUser.getIsVerified(), existingUser.isEmailVerified(),

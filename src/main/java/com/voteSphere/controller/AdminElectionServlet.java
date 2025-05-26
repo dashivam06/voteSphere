@@ -1,8 +1,14 @@
 package com.voteSphere.controller;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import com.voteSphere.model.Candidate;
+import com.voteSphere.service.CandidateService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,6 +51,11 @@ public class AdminElectionServlet extends HttpServlet {
             else if (pathInfo.startsWith("/add/")) {
                 handleAddElectionForm(request, response);
             }
+            else if (pathInfo.startsWith("/edit/")) {
+                handleUpdateElectionForm(request, response);
+            }else if (pathInfo.startsWith("/handleElectionAction")) {
+                handleElectionAction(request, response);
+            }
             else {
                 logger.warn("Unknown path requested: {}", pathInfo);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
@@ -54,6 +65,23 @@ public class AdminElectionServlet extends HttpServlet {
             request.setAttribute("error", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
+    }
+
+    private void handleUpdateElectionForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        logger.debug("Displaying election update form");
+        request.getRequestDispatcher("/WEB-INF/pages/admin/update-election.jsp").forward(request, response);
+        logger.info("Successfully displayed election update form");
+    }
+
+    private void handleElectionAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String action = String.valueOf(request.getParameter("action"));
+        int electionId = Integer.parseInt(request.getParameter("electionId"));
+
+        if(action.equals("download"))
+        {
+            response.sendRedirect("/voteChart?electionId=" + electionId);
+        }
+
     }
 
     private void handleAddElectionForm(HttpServletRequest request, HttpServletResponse response)
@@ -119,7 +147,7 @@ public class AdminElectionServlet extends HttpServlet {
     }
 
     private void handleViewElection(HttpServletRequest request, HttpServletResponse response, String electionId)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         logger.debug("Viewing election with ID: {}", electionId);
 
         if (ValidationUtil.isNullOrEmpty(electionId) || !ValidationUtil.isNumeric(electionId)) {
@@ -137,7 +165,50 @@ public class AdminElectionServlet extends HttpServlet {
             return;
         }
 
+        String dateStr = election.getDate().toString();      // "2025-05-23"
+        String timeStr = election.getStartTime().toString(); // "14:00:00"
+
+        String combined = dateStr + "T" + timeStr;           // "2025-05-23T14:00:00"
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date startDate = sdf.parse(combined);
+
+        request.setAttribute("startDateJs", startDate);
+
+
+        String endTimeStr = election.getEndTime().toString(); // e.g. "16:00:00"
+
+        String combinedEndDateTime = dateStr + "T" + endTimeStr; // "2025-05-23T16:00:00"
+        Date endDate = sdf.parse(combinedEndDateTime);
+
+        request.setAttribute("endDateJs", endDate);
+
+        System.out.println("Start Date : "+request.getAttribute("startDateJs"));
+        System.out.println("End Date : "+request.getAttribute("endDateJs"));
+
+        if(election.getStatus().equals("Past")) {
+            List<ElectionResult> results = ElectionService.getElectionResults(Integer.parseInt(electionId));
+            if (results != null && !results.isEmpty()) {
+                request.setAttribute("winningPartyName", results.get(0).getPartyName());
+            } else {
+                request.setAttribute("winningPartyName", "No result available");
+            }
+            request.setAttribute("votesCastCount", ElectionService.getTotalVotes(Integer.parseInt(electionId)));
+            request.setAttribute("independentCount", ElectionService.getIndependentCandidateCount(Integer.parseInt(electionId)));
+
+        }
+
+
+        List<Candidate> candidateList = CandidateService.getCandidatesByElection(Integer.parseInt(electionId));
         request.setAttribute("election", election);
+        System.out.println(candidateList);
+        request.setAttribute("candidates", candidateList);
+        System.out.println(election.getStatus());
+        if(election.getStatus().equals("Ongoing"))
+        {
+            request.getRequestDispatcher("/WEB-INF/pages/admin/live-election.jsp").forward(request, response);
+            logger.info("Successfully viewed live election count for  ID: {}", electionId);
+            return;
+        }
         request.getRequestDispatcher("/WEB-INF/pages/admin/election-details.jsp").forward(request, response);
         logger.info("Successfully viewed election ID: {}", electionId);
     }
@@ -223,7 +294,7 @@ public class AdminElectionServlet extends HttpServlet {
 
         int id = Integer.parseInt(electionId);
         List<ElectionResult> results = ElectionService.getElectionResults(request, response, id);
-        int totalVotes = ElectionService.getTotalVotes(request, response, id);
+        int totalVotes = ElectionService.getTotalVotes(id);
 
         request.setAttribute("results", results);
         request.setAttribute("totalVotes", totalVotes);

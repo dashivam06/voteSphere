@@ -54,6 +54,8 @@ if (user != null) {
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Account Request
 						Details</h1>
+
+
 					<a href="account-requests.html"
 						class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200">Back
 						to List</a>
@@ -93,12 +95,7 @@ if (user != null) {
 							href="${pageContext.request.contextPath}/images/<%=user.getVoterCardFront()%>"
 							class="text-primary-600 underline">View</a>
 					</div>
-					<div>
-						<span class="font-medium text-gray-700">Voter Card Back:</span> <a
-							target="_blank"
-							href="${pageContext.request.contextPath}/images/<%=user.getVoterCardBack()%>"
-							class="text-primary-600 underline">View</a>
-					</div>
+
 					<div>
 						<span class="font-medium text-gray-700">Citizenship Front:</span>
 						<a target="_blank"

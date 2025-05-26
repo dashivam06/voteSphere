@@ -3,8 +3,10 @@ package com.voteSphere.controller;
 import java.io.IOException;
 import java.util.Enumeration;
 
+import com.voteSphere.model.AuthUser;
 import com.voteSphere.service.UnverifiedUserService;
 
+import com.voteSphere.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;

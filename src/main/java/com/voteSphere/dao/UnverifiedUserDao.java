@@ -32,10 +32,10 @@ public class UnverifiedUserDao {
 
         String sql = "INSERT INTO unverified_users (first_name, last_name, voter_id, notification_email, " +
                     "profile_image, phone_number, image_holding_citizenship, voter_card_front, " +
-                    "voter_card_back, citizenship_front, citizenship_back, thumb_print, password, " +
+                    " citizenship_front, citizenship_back, thumb_print, password, " +
                     "dob, gender, permanent_address, temporary_address, role, is_verified, " +
                     "is_email_verified, created_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnectionManager.establishConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -52,19 +52,18 @@ public class UnverifiedUserDao {
             stmt.setString(6, user.getPhoneNumber());
             stmt.setString(7, user.getImageHoldingCitizenship());
             stmt.setString(8, user.getVoterCardFront());
-            stmt.setString(9, user.getVoterCardBack());
-            stmt.setString(10, user.getCitizenshipFront());
-            stmt.setString(11, user.getCitizenshipBack());
-            stmt.setString(12, user.getThumbPrint());
-            stmt.setString(13, user.getPassword());
-            stmt.setTimestamp(14, user.getDob());
-            stmt.setString(15, user.getGender());
-            stmt.setString(16, user.getPermanentAddress());
-            stmt.setString(17, user.getTemporaryAddress());
-            stmt.setString(18, user.getRole());
-            stmt.setBoolean(19, user.getIsVerified());
-            stmt.setBoolean(20, user.isEmailVerified());
-            stmt.setTimestamp(21, user.getCreatedAt());
+            stmt.setString(9, user.getCitizenshipFront());
+            stmt.setString(10, user.getCitizenshipBack());
+            stmt.setString(11, user.getThumbPrint());
+            stmt.setString(12, user.getPassword());
+            stmt.setTimestamp(13, user.getDob());
+            stmt.setString(14, user.getGender());
+            stmt.setString(15, user.getPermanentAddress());
+            stmt.setString(16, user.getTemporaryAddress());
+            stmt.setString(17, user.getRole());
+            stmt.setBoolean(18, user.getIsVerified());
+            stmt.setBoolean(19, user.isEmailVerified());
+            stmt.setTimestamp(20, user.getCreatedAt());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -164,7 +163,7 @@ public class UnverifiedUserDao {
 
         String sql = "UPDATE unverified_users SET first_name=?, last_name=?, voter_id=?, " +
                      "notification_email=?, profile_image=?, phone_number=?, " +
-                     "image_holding_citizenship=?, voter_card_front=?, voter_card_back=?, " +
+                     "image_holding_citizenship=?, voter_card_front=?, " +
                      "citizenship_front=?, citizenship_back=?, thumb_print=?, password=?, " +
                      "dob=?, gender=?, permanent_address=?, temporary_address=?, role=?, " +
                      "is_verified=?, is_email_verified=? WHERE unverified_user_id=?";
@@ -184,19 +183,18 @@ public class UnverifiedUserDao {
             stmt.setString(6, user.getPhoneNumber());
             stmt.setString(7, user.getImageHoldingCitizenship());
             stmt.setString(8, user.getVoterCardFront());
-            stmt.setString(9, user.getVoterCardBack());
-            stmt.setString(10, user.getCitizenshipFront());
-            stmt.setString(11, user.getCitizenshipBack());
-            stmt.setString(12, user.getThumbPrint());
-            stmt.setString(13, user.getPassword());
-            stmt.setTimestamp(14, user.getDob());
-            stmt.setString(15, user.getGender());
-            stmt.setString(16, user.getPermanentAddress());
-            stmt.setString(17, user.getTemporaryAddress());
-            stmt.setString(18, user.getRole());
-            stmt.setBoolean(19, user.getIsVerified());
-            stmt.setBoolean(20, user.isEmailVerified());
-            stmt.setInt(21, user.getUnverifiedUserId());
+            stmt.setString(9, user.getCitizenshipFront());
+            stmt.setString(10, user.getCitizenshipBack());
+            stmt.setString(11, user.getThumbPrint());
+            stmt.setString(12, user.getPassword());
+            stmt.setTimestamp(13, user.getDob());
+            stmt.setString(14, user.getGender());
+            stmt.setString(15, user.getPermanentAddress());
+            stmt.setString(16, user.getTemporaryAddress());
+            stmt.setString(17, user.getRole());
+            stmt.setBoolean(18, user.getIsVerified());
+            stmt.setBoolean(19, user.isEmailVerified());
+            stmt.setInt(20, user.getUnverifiedUserId());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -400,10 +398,10 @@ public class UnverifiedUserDao {
                 // 2. Insert into verified_users table
                 String insertSql = "INSERT INTO users (first_name, last_name, voter_id, notification_email, " +
                         "profile_image, phone_number, image_holding_citizenship, voter_card_front, " +
-                        "voter_card_back, citizenship_front, citizenship_back, thumb_print, password, " +
+                        " citizenship_front, citizenship_back, thumb_print, password, " +
                         "dob, gender, permanent_address, temporary_address, role, is_verified, " +
                         "is_email_verified, created_at) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
                     insertStmt.setString(1, user.getFirstName());
@@ -414,19 +412,18 @@ public class UnverifiedUserDao {
                     insertStmt.setString(6, user.getPhoneNumber());
                     insertStmt.setString(7, user.getImageHoldingCitizenship());
                     insertStmt.setString(8, user.getVoterCardFront());
-                    insertStmt.setString(9, user.getVoterCardBack());
-                    insertStmt.setString(10, user.getCitizenshipFront());
-                    insertStmt.setString(11, user.getCitizenshipBack());
-                    insertStmt.setString(12, user.getThumbPrint());
-                    insertStmt.setString(13, user.getPassword());
-                    insertStmt.setTimestamp(14, user.getDob());
-                    insertStmt.setString(15, user.getGender());
-                    insertStmt.setString(16, user.getPermanentAddress());
-                    insertStmt.setString(17, user.getTemporaryAddress());
-                    insertStmt.setString(18, user.getRole());
-                    insertStmt.setBoolean(19, true); 
-                    insertStmt.setBoolean(20, user.isEmailVerified());
-                    insertStmt.setTimestamp(21, user.getCreatedAt());
+                    insertStmt.setString(9, user.getCitizenshipFront());
+                    insertStmt.setString(10, user.getCitizenshipBack());
+                    insertStmt.setString(11, user.getThumbPrint());
+                    insertStmt.setString(12, user.getPassword());
+                    insertStmt.setTimestamp(13, user.getDob());
+                    insertStmt.setString(14, user.getGender());
+                    insertStmt.setString(15, user.getPermanentAddress());
+                    insertStmt.setString(16, user.getTemporaryAddress());
+                    insertStmt.setString(17, user.getRole());
+                    insertStmt.setBoolean(18, true);
+                    insertStmt.setBoolean(19, user.isEmailVerified());
+                    insertStmt.setTimestamp(20, user.getCreatedAt());
 
                     int inserted = insertStmt.executeUpdate();
                     if (inserted == 0) {
@@ -729,7 +726,6 @@ public class UnverifiedUserDao {
         user.setPhoneNumber(rs.getString("phone_number"));
         user.setImageHoldingCitizenship(rs.getString("image_holding_citizenship"));
         user.setVoterCardFront(rs.getString("voter_card_front"));
-        user.setVoterCardBack(rs.getString("voter_card_back"));
         user.setCitizenshipFront(rs.getString("citizenship_front"));
         user.setCitizenshipBack(rs.getString("citizenship_back"));
         user.setThumbPrint(rs.getString("thumb_print"));
