@@ -1,6 +1,8 @@
 package com.voteSphere.model;
 
 
+import com.voteSphere.service.PartyService;
+
 public class ElectionResult  {
     private int candidateId;
     private String candidateName;
@@ -8,6 +10,8 @@ public class ElectionResult  {
     private Integer partyId;
     private int voteCount;
     private double percentage;
+    private String partyImage;
+
 
     // Getters and Setters
     public int getCandidateId() {
@@ -57,11 +61,14 @@ public class ElectionResult  {
 	public void setPartyId(Integer partyId) {
 		this.partyId = partyId;
 	}
-	
-	
-	
-	
-	@Override
+
+    public void setPartyImage() { this.partyImage= PartyService.getPartyById(partyId).getSymbolImage(); }
+
+    public String getPartyImage() {
+        return partyImage;
+    }
+
+    @Override
 	public String toString() {
 		return "ElectionResult [candidateId=" + candidateId + ", candidateName=" + candidateName + ", partyName="
 				+ partyName + ", partyId=" + partyId + ", voteCount=" + voteCount + ", percentage=" + percentage + "]";

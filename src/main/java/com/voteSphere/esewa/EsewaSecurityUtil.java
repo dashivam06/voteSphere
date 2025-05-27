@@ -8,7 +8,6 @@ public class EsewaSecurityUtil {
     public static String generateSignature(String message) {
         try {
         	
-        	System.out.println(" Message :"+message );
             Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
             String secret = "8gBm/:&EnhH.1/q";
             SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
@@ -16,7 +15,6 @@ public class EsewaSecurityUtil {
             
             byte[] hashBytes = sha256_HMAC.doFinal(message.getBytes());
             String signature = Base64.getEncoder().encodeToString(hashBytes);
-        	System.out.println(" Signature :"+signature );
 
             return signature;
         } catch (Exception e) {

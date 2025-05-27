@@ -33,7 +33,6 @@ public class CookieUtil {
 
     public static void addRememberMeCookie(HttpServletRequest request, HttpServletResponse response, String userId) {
         String rememberMe = request.getParameter("remember_me");
-        System.out.print(rememberMe);
         if ("on".equals(rememberMe)) {
             Cookie rememberCookie = CookieUtil.createCookie("remember_me", userId, 7 * 24 * 60 * 60); // 7 days
             CookieUtil.addCookie(response, rememberCookie);

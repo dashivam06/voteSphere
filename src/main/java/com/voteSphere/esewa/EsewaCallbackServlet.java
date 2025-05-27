@@ -45,7 +45,11 @@ public class EsewaCallbackServlet extends HttpServlet {
                     }
                 }
             }
-
+            Donation previouseDonation = DonationDao.getDonationByTransactionId(String.valueOf(request.getAttribute("transactionId")));
+            previouseDonation.setStatus("COMPLETED");
+            System.out.println(previouseDonation);
+            DonationService.updateDonationById(previouseDonation.getDonationId(),previouseDonation);
+            System.out.println("jhgfhghghfghf");
             request.getRequestDispatcher("/WEB-INF/pages/esewa-payment-received.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

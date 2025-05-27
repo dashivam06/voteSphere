@@ -176,7 +176,7 @@ public class DonationDao {
             stmt.setInt(7, donation.getDonationId());
 
             int affectedRows = stmt.executeUpdate();
-
+            logger.info("Updated donation "+ "for donation ID: " + donation.getDonationId() + " with new values: " + donation.toString() + ". Total affected rows: " + affectedRows + ".");
             return affectedRows > 0;
         } catch (SQLException e) {
             logger.error("SQL error while updating donation", e);

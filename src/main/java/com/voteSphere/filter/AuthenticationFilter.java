@@ -1,54 +1,114 @@
 //package com.voteSphere.filter;
 //
-//import jakarta.servlet.Filter;
-//import jakarta.servlet.FilterChain;
-//import jakarta.servlet.FilterConfig;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.ServletRequest;
-//import jakarta.servlet.ServletResponse;
-//import jakarta.servlet.annotation.WebFilter;
-//import jakarta.servlet.http.HttpFilter;
+//import jakarta.servlet.*;
 //import java.io.IOException;
+//import java.util.concurrent.TimeUnit;
+//import jakarta.servlet.http.*;
+//import jakarta.servlet.annotation.WebFilter;
 //
-///**
-// * Servlet Filter implementation class AuthenticationFilter
-// */
-//@WebFilter(urlPatterns = "/*", asyncSupported = true) 
-//public class AuthenticationFilter extends HttpFilter implements Filter {
-//       
-//    private static final long serialVersionUID = 1L;
+//@WebFilter("/*")
+//public class AuthenticationFilter implements Filter {
 //
-//	/**
-//     * @see HttpFilter#HttpFilter()
-//     */
-//    public AuthenticationFilter() {
-//        super();
-//        // TODO Auto-generated constructor stub
+//    private static final long SESSION_TIMEOUT_MINUTES = 5;
+//    private static final String LAST_ACTIVITY_ATTR = "lastActivityTime";
+//    private static final String AUTH_USER_ATTR = "authenticated_user";
+//    private static final String USER_ROLE_ATTR = "userRole";
+//
+//    @Override
+//    public void init(FilterConfig filterConfig) throws ServletException {
+//        // Initialization if needed
 //    }
 //
-//	/**
-//	 * @see Filter#destroy()
-//	 */
-//	public void destroy() {
-//		// TODO Auto-generated method stub
-//	}
+//    @Override
+//    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+//            throws IOException, ServletException {
 //
-//	/**
-//	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-//	 */
-//	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//		// TODO Auto-generated method stub
-//		// place your code here
+//        HttpServletRequest httpRequest = (HttpServletRequest) request;
+//        HttpServletResponse httpResponse = (HttpServletResponse) response;
 //
-//		// pass the request along the filter chain
-//		chain.doFilter(request, response);
-//	}
+//        String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 //
-//	/**
-//	 * @see Filter#init(FilterConfig)
-//	 */
-//	public void init(FilterConfig fConfig) throws ServletException {
-//		// TODO Auto-generated method stub
-//	}
+//        // Public paths accessible without authentication
+//        if (isPublicPath(path)) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
 //
+//        HttpSession session = httpRequest.getSession(false);
+//
+//        // Check authentication
+//        if (session == null || session.getAttribute(AUTH_USER_ATTR) == null) {
+//            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login?redirect=" + path);
+//            return;
+//        }
+//
+//        // Check session timeout
+//        if (!isSessionActive(session)) {
+//            session.invalidate();
+//            httpResponse.sendRedirect(httpRequest.getContextPath() + "/login?timeout=true");
+//            return;
+//        }
+//
+//        // Update activity timestamp
+//        updateLastActivityTime(session);
+//
+//        // Authorization checks
+//        String userRole = (String) session.getAttribute(USER_ROLE_ATTR);
+//
+//        // Admin-only paths
+//        if (path.startsWith("/admin/")) {
+//            if (!"admin".equals(userRole)) {
+//                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin access required");
+//                return;
+//            }
+//        }
+//
+//        // Payment-related paths (special handling)
+//        if (path.equals("/initiate-payment") || path.equals("/payment-update-servlet")) {
+//            if (!"voter".equals(userRole)) {
+//                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Payment operations require user role");
+//                return;
+//            }
+//        }
+//
+//        // Voting paths
+//        if (path.equals("/vote") || path.startsWith("/cast-vote/")) {
+//            if (!"voter".equals(userRole)) {
+//                httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Only registered voters can cast votes");
+//                return;
+//            }
+//        }
+//
+//        chain.doFilter(request, response);
+//    }
+//
+//    private boolean isPublicPath(String path) {
+//        return path.equals("/login") ||
+//                path.equals("/register") ||
+//                path.equals("/") ||
+//                path.startsWith("/assets/") ||
+//                path.startsWith("/css/") ||
+//                path.startsWith("/js/") ||
+//                path.startsWith("/images/");
+//    }
+//
+//    private boolean isSessionActive(HttpSession session) {
+//        Long lastActivityTime = (Long) session.getAttribute(LAST_ACTIVITY_ATTR);
+//        if (lastActivityTime == null) return false;
+//
+//        long currentTime = System.currentTimeMillis();
+//        long elapsedMinutes = TimeUnit.MILLISECONDS.toMinutes(currentTime - lastActivityTime);
+//
+//        return elapsedMinutes < SESSION_TIMEOUT_MINUTES;
+//    }
+//
+//    private void updateLastActivityTime(HttpSession session) {
+//        session.setAttribute(LAST_ACTIVITY_ATTR, System.currentTimeMillis());
+//        session.setMaxInactiveInterval((int) TimeUnit.MINUTES.toSeconds(SESSION_TIMEOUT_MINUTES));
+//    }
+//
+//    @Override
+//    public void destroy() {
+//        // Cleanup if needed
+//    }
 //}

@@ -161,5 +161,16 @@ public class Donation
 				.toList();
 	}
 
-
+	@Override
+	public String toString() {
+		return "Donation{" +
+				"donationId=" + donationId +
+				", userId=" + userId +
+				", amount=" + amount +
+				", productCode='" + productCode + '\'' +
+				", transactionUuid='" + transactionUuid + '\'' +
+				", status='" + status + '\'' +
+				", donationTime=" + donationTime +
+				'}';
+	}
 }

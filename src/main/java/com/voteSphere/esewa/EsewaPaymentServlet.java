@@ -3,15 +3,15 @@ package com.voteSphere.esewa;
 import com.voteSphere.dao.DonationDao;
 import com.voteSphere.model.AuthUser;
 import com.voteSphere.model.Donation;
-
 import com.voteSphere.service.DonationService;
 import com.voteSphere.util.CookieUtil;
 import com.voteSphere.util.SessionUtil;
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 
 @WebServlet("/initiate-payment")
@@ -19,44 +19,70 @@ public class EsewaPaymentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, java.io.IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
+        try {
+            String amount = request.getParameter("amount");
 
-        String amount = request.getParameter("amount");
-        System.out.print(amount.repeat(10));
-        EsewaPaymentRequest paymentRequest = new EsewaPaymentRequest(amount);
-//        AuthUser authUser = (AuthUser) request.getSession(false).getAttribute("authenticated_user");
+            // Validate amount
+            if (amount == null || amount.isEmpty() || Double.parseDouble(amount) <= 0) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid amount");
+                return;
+            }
 
-        Integer userId = SessionUtil.getUserValueFromSession(request,AuthUser::getUserId);
-        DonationDao.createDonation(new Donation(
-        				userId,
-        				Double.parseDouble(amount),
-        				paymentRequest.getProductCode(),
-        				paymentRequest.getTransactionUuid(),
-        				"INITIATED"));
+            // Create payment request
+            EsewaPaymentRequest paymentRequest = new EsewaPaymentRequest(amount);
 
-        System.out.print(paymentRequest);
+            // Get user ID from session
+            Integer userId = SessionUtil.getUserValueFromSession(request, AuthUser::getUserId);
 
-        request.setAttribute("paymentRequest", paymentRequest);
-        Cookie esewaTotalAmountCookie = new Cookie("esewaTotalAmount", paymentRequest.getAmount());
-        Cookie transactionUuidCookie = new Cookie("esewaTransactionUuid", paymentRequest.getTransactionUuid());
-        Cookie productCodeCookie = new Cookie("esewaProductCode", paymentRequest.getProductCode());
-//        Cookie donationId = new Cookie("donationId", DonationService.getpaymentRequest.getTransactionUuid());
+            // Record donation in database
+            DonationDao.createDonation(new Donation(
+                    userId,
+                    Double.parseDouble(amount),
+                    paymentRequest.getProductCode(),
+                    paymentRequest.getTransactionUuid(),
+                    "INITIATED"
+            ));
 
-        CookieUtil.addCookie(response,esewaTotalAmountCookie);
-        CookieUtil.addCookie(response,transactionUuidCookie);
-        CookieUtil.addCookie(response,productCodeCookie);
+            // Set cookies (optional)
+            Cookie esewaTotalAmountCookie = new Cookie("esewaTotalAmount", paymentRequest.getAmount());
+            Cookie transactionUuidCookie = new Cookie("esewaTransactionUuid", paymentRequest.getTransactionUuid());
+            Cookie productCodeCookie = new Cookie("esewaProductCode", paymentRequest.getProductCode());
 
-		request.getRequestDispatcher("/WEB-INF/pages/esewa-payment-form.jsp").forward(request, response);
+            CookieUtil.addCookie(response, esewaTotalAmountCookie);
+            CookieUtil.addCookie(response, transactionUuidCookie);
+            CookieUtil.addCookie(response, productCodeCookie);
 
+            // Return JSON response
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            PrintWriter out = response.getWriter();
+            out.print("{");
+            out.print("\"amount\":\"" + paymentRequest.getAmount() + "\",");
+            out.print("\"taxAmount\":\"" + paymentRequest.getTaxAmount() + "\",");
+            out.print("\"totalAmount\":\"" + paymentRequest.getTotalAmount() + "\",");
+            out.print("\"transactionUuid\":\"" + paymentRequest.getTransactionUuid() + "\",");
+            out.print("\"productCode\":\"" + paymentRequest.getProductCode() + "\",");
+            out.print("\"productServiceCharge\":\"0\",");
+            out.print("\"productDeliveryCharge\":\"0\",");
+            out.print("\"successUrl\":\"" + paymentRequest.getSuccessUrl() + "\",");
+            out.print("\"failureUrl\":\"" + paymentRequest.getFailureUrl() + "\",");
+            out.print("\"signedFieldNames\":\"" + paymentRequest.getSignedFieldNames() + "\",");
+            out.print("\"signature\":\"" + paymentRequest.getSignature() + "\"");
+            out.print("}");
+            out.flush();
+
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing payment");
+            e.printStackTrace();
+        }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, java.io.IOException {
-		// TODO Auto-generated method stub
-		request.getRequestDispatcher("/WEB-INF/pages/esewa-payment-form.jsp").forward(request, response);
-
-
-	}
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/pages/voter/donation.jsp").forward(request, response);
+    }
 }

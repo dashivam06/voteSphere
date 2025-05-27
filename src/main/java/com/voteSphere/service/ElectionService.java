@@ -329,6 +329,7 @@ public class ElectionService {
 	        // Calculate percentages
 	        for (ElectionResult result : results) {
 	            result.calculatePercentage(totalVotes);
+				result.setPartyImage();
 	        }
 	        
 	        return results;

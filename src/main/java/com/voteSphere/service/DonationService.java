@@ -129,7 +129,7 @@ public class DonationService {
 
 
         try {
-            return DonationDao.updateDonation(existingDonation);
+            return DonationDao.updateDonation(newData);
         } catch (DataAccessException dae) {
             logger.error("Error updating donation with ID " + donationId, dae);
         } catch (Exception e) {

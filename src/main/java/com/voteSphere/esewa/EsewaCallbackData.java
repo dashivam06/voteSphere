@@ -90,15 +90,10 @@ public boolean isSignatureValid() {
             EsewaSecurityUtil.truncateToTwoDecimals(this.total_amount), this.transaction_uuid, this.product_code
         );
 
-        System.out.println("In Esewa Callback :"+ dataToSign+"//") ;
 
         
         String generatedSignature =  EsewaSecurityUtil.generateSignature(dataToSign);
-        System.out.print(" Signature :"  +generatedSignature);
-        System.out.print(" Received Signature :"  +this.signature);
-
-        System.out.print("Results  : " +generatedSignature.equals(this.signature));
-        // Compare with received signature
+         // Compare with received signature
         return generatedSignature.equals(this.signature);
     } catch (Exception e) {
         throw new RuntimeException("Error verifying signature", e);

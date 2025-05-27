@@ -182,7 +182,6 @@ public class EsewaPaymentRequest {
     private String generateSignature() {
         String message = String.format("total_amount=%s,transaction_uuid=%s,product_code=%s",
                 totalAmount, transactionUuid, productCode);
-        System.out.println("In Esewa Payment :"+ message+"//") ;
 
         return EsewaSecurityUtil.generateSignature(message);
     }
