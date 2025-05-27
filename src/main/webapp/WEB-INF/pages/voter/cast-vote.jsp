@@ -390,7 +390,7 @@
 
                 // Update selected party info
                 selectedPartyId = this.dataset.partyId;
-                selectedPartyName = this.querySelector('.party-name').textContent;
+                selectedPartyName = this.dataset.partyName; // Use dataset if stored as attribute
                 selectedPartyText.textContent = `You selected: ${selectedPartyName}`;
             });
         });
@@ -414,7 +414,7 @@
                 // Create a form dynamically
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '${pageContext.request.contextPath}/vote';
+                form.action = '${pageContext.request.contextPath}/cast-vote';
 
                 // Add hidden inputs
                 const userIdInput = document.createElement('input');
@@ -473,6 +473,29 @@
         </c:if>
     });
 
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const partyCards = document.querySelectorAll('.party-card');
+        const selectedPartyText = document.getElementById('selected-party-text');
+        let selectedPartyId = null;
+        let selectedPartyName = null;
+
+        partyCards.forEach(card => {
+            card.addEventListener('click', function () {
+                // Remove previous selection
+                partyCards.forEach(c => c.classList.remove('selected'));
+
+                // Add current selection
+                this.classList.add('selected');
+
+                // Update selected party info
+                selectedPartyId = this.dataset.partyId;
+                selectedPartyName = this.dataset.partyName;
+                selectedPartyText.textContent = `You selected: ${selectedPartyName}`;
+            });
+        });
+    });
+
         document.addEventListener('DOMContentLoaded', function() {
         // ... (keep all your existing JavaScript code)
 
@@ -484,52 +507,6 @@
         // Hide all other content
         document.querySelector('.flex-1.overflow-y-auto.bg-gray-100').style.display = 'none';
         </c:if>
-    });
-
-    // Submit vote button
-    submitVoteBtn.addEventListener('click', function() {
-        if (selectedPartyId && userId && electionId) {
-            // Show loading state
-            submitVoteBtn.disabled = true;
-            submitVoteBtn.innerHTML = 'Processing... <span class="ml-2 loading-spinner"></span>';
-
-            // Create a form dynamically
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '${pageContext.request.contextPath}/vote';
-
-            // Add hidden inputs
-            const userIdInput = document.createElement('input');
-            userIdInput.type = 'hidden';
-            userIdInput.name = 'user_id';
-            userIdInput.value = userId;
-            form.appendChild(userIdInput);
-
-            const partyIdInput = document.createElement('input');
-            partyIdInput.type = 'hidden';
-            partyIdInput.name = 'party_id';
-            partyIdInput.value = selectedPartyId;
-            form.appendChild(partyIdInput);
-
-            const electionIdInput = document.createElement('input');
-            electionIdInput.type = 'hidden';
-            electionIdInput.name = 'election_id';
-            electionIdInput.value = electionId;
-            form.appendChild(electionIdInput);
-
-            // Add CSRF token if needed (for Spring Security)
-            <c:if test="${not empty _csrf}">
-            const csrfToken = document.createElement('input');
-            csrfToken.type = 'hidden';
-            csrfToken.name = '${_csrf.parameterName}';
-            csrfToken.value = '${_csrf.token}';
-            form.appendChild(csrfToken);
-            </c:if>
-
-            // Submit the form
-            document.body.appendChild(form);
-            form.submit();
-        }
     });
 </script>
 </body>

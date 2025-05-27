@@ -130,13 +130,13 @@ public class VoteService {
 		        
 				if (votePushed) {
 					 String baseUrl = MailUtil.getBaseUrl(request);
-//			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
-//			        		 		baseUrl,
-//			        		 		user.getVoterId(),
-//			        		 		user.getFirstName(),
-//			        		 		user.getEmail(),
-//			        		 		electionName,time,
-//							 		String.valueOf(newVote.getVoteToken()));
+			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
+			        		 		baseUrl,
+			        		 		user.getVoterId(),
+			        		 		user.getFirstName(),
+			        		 		user.getEmail(),
+			        		 		electionName,time,
+							 		String.valueOf(newVote.getVoteToken()));
 			       
 					ElectionResultServlet.notifyVoteAdded(electionId);
 					return votePushed;
@@ -404,6 +404,24 @@ public class VoteService {
 			logger.error("Unexpected error while deleting vote", e);
 		}
 		return 0;
+	}
+
+	public static boolean hasUserVotedInElection(Integer userId, Integer electionId) {
+		if (userId == null || userId <= 0 || electionId == null || electionId <= 0) {
+			logger.warn("Invalid userId or electionId provided: userId={}, electionId={}", userId, electionId);
+			return false;
+		}
+
+		try {
+			List<Vote> votes = VoteService.getVotesByUserId(userId);
+			return votes.stream().anyMatch(vote -> vote.getElectionId().equals(electionId));
+		} catch (DataAccessException dae) {
+			logger.error("Data access error while checking vote for userId={} and electionId={}: {}", userId, electionId, dae.getMessage(), dae);
+		} catch (Exception e) {
+			logger.error("Unexpected error while checking vote status for userId={} and electionId={}", userId, electionId, e);
+		}
+
+		return false;
 	}
 
 }

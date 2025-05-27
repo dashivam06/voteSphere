@@ -113,6 +113,15 @@ public class Election {
 		return "";
 	}
 
+	public java.util.Date getStartDateTime() {
+		return new java.util.Date(date.getTime() + startTime.getTime());
+	}
+
+	public java.util.Date getEndDateTime() {
+		return new java.util.Date(date.getTime() + endTime.getTime());
+	}
+
+
 	@Override
 	public String toString() {
 		return "Election [electionId=" + electionId + ", name=" + name + ", type=" + type + ", coverImage=" + coverImage
@@ -178,6 +187,7 @@ public class Election {
 
 		return "ELEC-" + encoded;
 	}
+
 
 
 }

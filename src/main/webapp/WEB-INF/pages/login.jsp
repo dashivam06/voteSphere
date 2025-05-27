@@ -149,7 +149,7 @@
 				<form id="loginForm" class="space-y-6" action="login" method="post" action="/login">
 					<div>
 						<label for="userId"
-							class="block text-sm font-medium text-gray-700"> User ID
+							class="block text-sm font-medium text-gray-700"> Voter ID
 						</label>
 						<div class="mt-1 relative rounded-md shadow-sm">
 							<div
@@ -163,7 +163,7 @@
                   </svg>
 							</div>
 							<input type="text" id="userId" name="voter_id" required
-								autocomplete="username" placeholder="Enter your user ID"
+								autocomplete="username" placeholder="Enter your voter ID"
 								class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400 text-sm" />
 						</div>
 						<p class="mt-1 text-sm text-red-600 hidden" id="userIdError"></p>

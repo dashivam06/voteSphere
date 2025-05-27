@@ -2,7 +2,9 @@ package com.voteSphere.controller;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.voteSphere.model.AuthUser;
 import com.voteSphere.util.SessionUtil;
@@ -74,23 +76,37 @@ public class UserElectionServlet extends HttpServlet {
         }
     }
 
-    // 1. List all running elections
     private void handleListRunningElections(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.debug("Listing running elections");
+
         List<Election> runningElections = ElectionService.getRunningElections();
-        for(Election election : runningElections )
-        {
-        	System.out.println(election.toString());
-        }
         request.setAttribute("activeElections", runningElections);
-        request.setAttribute("upcomingElections",ElectionService.getUpcomingElections());
-        request.setAttribute("pastElections",ElectionService.getPastElections());
-        System.out.println(ElectionService.getPastElections());
+
+        List<Election> upcomingElections = ElectionService.getUpcomingElections();
+        List<Election> pastElections = ElectionService.getPastElections();
+
+        request.setAttribute("upcomingElections", upcomingElections);
+        request.setAttribute("pastElections", pastElections);
+
+        // Get logged-in user ID
+        Integer userId = SessionUtil.getUserValueFromSession(request, AuthUser::getUserId);
+
+        // Create map of electionId -> hasUserVoted
+        Map<Integer, Boolean> hasUserVotedMap = new HashMap<>();
+        for (Election election : runningElections) {
+            boolean hasVoted = VoteService.hasUserVotedInElection(userId, election.getId());
+            hasUserVotedMap.put(election.getId(), hasVoted);
+        }
+
+        request.setAttribute("hasUserVotedMap", hasUserVotedMap);
+
+        logger.info("User ID {} has vote statuses calculated for {} running elections", userId, runningElections.size());
 
         request.getRequestDispatcher("/WEB-INF/pages/voter/elections.jsp").forward(request, response);
-        logger.info("Successfully listed {} running elections", runningElections.size());
+        logger.info("Successfully forwarded to elections.jsp with running elections data");
     }
+
 
     // 2. View candidates for a particular election
     private void handleViewCandidates(HttpServletRequest request, HttpServletResponse response)

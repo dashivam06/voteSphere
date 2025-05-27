@@ -97,11 +97,6 @@
             </div>
           </div>
 
-         <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
         <!-- Active Elections Section -->
         <section class="mb-8">
@@ -119,9 +114,9 @@
                                          class="w-full h-full object-cover"
                                          onerror="this.onerror=null;this.src='https://placehold.co/800x400?text=Election'">
                                     <div class="absolute top-3 right-3">
-                                        <span class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
-                                            ${election.type}
-                                        </span>
+                <span class="px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-full">
+                        ${election.type}
+                </span>
                                     </div>
                                 </div>
 
@@ -145,16 +140,32 @@
                                         </div>
                                     </div>
 
-                                    <!-- Action Button -->
+                                    <!-- Action Area -->
                                     <div class="flex justify-end">
-                                        <a href="${pageContext.request.contextPath}/cast-vote/${election.electionId}"
-                                           class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors">
-                                            Cast Vote
-                                        </a>
+                                        <c:choose>
+                                            <c:when test="${hasUserVotedMap[election.electionId]}">
+                                                <!-- Already Voted Message -->
+                                                <div class="flex items-center bg-blue-100 text-blue-700 px-3 py-2 rounded-md text-sm">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                              d="M13 16h-1v-4h-1m2-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                                                    </svg>
+                                                    You have already voted
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <!-- Cast Vote Button -->
+                                                <a href="${pageContext.request.contextPath}/cast-vote/${election.electionId}"
+                                                   class="bg-primary-600 text-white px-4 py-2 rounded-md text-sm hover:bg-primary-700 transition-colors">
+                                                    Cast Vote
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                             </div>
                         </c:forEach>
+
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -168,8 +179,7 @@
                 </c:otherwise>
             </c:choose>
         </section>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 
 <!-- Upcoming Elections Section -->
 <section class="mb-8">
@@ -252,8 +262,7 @@
             </div>
         </c:otherwise>
     </c:choose>
-</section><%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-          <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+</section>
 
           <!-- Past Elections Section -->
           <section>

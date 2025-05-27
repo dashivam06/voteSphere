@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.Collections;
 import java.util.List;
 
+import com.voteSphere.model.Vote;
 import com.voteSphere.util.ImgUploadUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -143,6 +144,8 @@ public class ElectionService {
 		}
 		return null;
 	}
+
+
 
 	public static List<Election> getAllElections() {
 		try {
