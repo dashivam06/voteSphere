@@ -33,7 +33,7 @@ public class MailUtil {
 	 // Template names
     private static final String KYC_FAILED_TEMPLATE = "kyc-failed.html";
     private static final String VERIFICATION_TEMPLATE = "email-verification.html";
-    private static final String VOTE_CASTED_TEMPLATE = "vote-confirmation.html";
+    private static final String VOTE_CASTED_TEMPLATE = "vote-casted.html";
     
     private static final ExecutorService emailExecutor = Executors.newFixedThreadPool(10);
 

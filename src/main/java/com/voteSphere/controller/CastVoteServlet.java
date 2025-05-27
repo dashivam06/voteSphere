@@ -1,8 +1,10 @@
 package com.voteSphere.controller;
 
+import com.voteSphere.model.AuthUser;
 import com.voteSphere.model.Candidate;
 import com.voteSphere.model.Election;
 import com.voteSphere.service.ElectionService;
+import com.voteSphere.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +21,6 @@ public class CastVoteServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            System.out.println("ddsdasdasdsadas");
             // Get the path info from the URL, e.g., "/1"
             String pathInfo = request.getPathInfo(); // returns "/1"
 
@@ -57,6 +58,11 @@ public class CastVoteServlet extends HttpServlet {
                 request.setAttribute("hoursRemaining", hoursRemaining);
                 request.setAttribute("progressPercent", progressPercent);
                 request.setAttribute("voterToken", generateVoterToken(request));
+
+
+                Integer userId = SessionUtil.getUserValueFromSession(request, AuthUser::getUserId);
+                request.setAttribute("user_id", userId);
+
 
                 // Forward to JSP
                 request.getRequestDispatcher("/WEB-INF/pages/voter/cast-vote.jsp").forward(request, response);

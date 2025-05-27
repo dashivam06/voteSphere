@@ -130,13 +130,13 @@ public class VoteService {
 		        
 				if (votePushed) {
 					 String baseUrl = MailUtil.getBaseUrl(request);
-			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
-			        		 		baseUrl, 
-			        		 		user.getVoterId(), 
-			        		 		user.getFirstName(),
-			        		 		user.getEmail(), 
-			        		 		electionName,time,
-							 		String.valueOf(newVote.getVoteId()));
+//			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
+//			        		 		baseUrl,
+//			        		 		user.getVoterId(),
+//			        		 		user.getFirstName(),
+//			        		 		user.getEmail(),
+//			        		 		electionName,time,
+//							 		String.valueOf(newVote.getVoteToken()));
 			       
 					ElectionResultServlet.notifyVoteAdded(electionId);
 					return votePushed;
