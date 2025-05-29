@@ -242,7 +242,7 @@
                                         Starts in <fmt:formatNumber value="${daysUntil}" maxFractionDigits="0" /> days
                                     </p>
                                 </div>
-                                <a href="${pageContext.request.contextPath}/elections/${election.electionId}"
+                                <a href="${pageContext.request.contextPath}/election/view/${election.electionId}"
                                    class="border border-primary-600 text-primary-600 px-4 py-2 rounded-md text-sm hover:bg-primary-50 transition-colors">
                                     View Details
                                 </a>
@@ -329,7 +329,7 @@
                                       <!-- Voting Status and Action -->
                                       <div class="flex justify-between items-center">
 
-                                          <a href="${pageContext.request.contextPath}/elections/${election.electionId}/results"
+                                          <a href="javascript:void(0)"
                                              class="border border-gray-300 text-gray-600 px-4 py-2 rounded-md text-sm hover:bg-gray-50 transition-colors">
                                               See Results
                                           </a>

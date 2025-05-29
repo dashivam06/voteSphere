@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.voter;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -12,7 +12,6 @@ import java.sql.*;
 
 import com.voteSphere.model.User;
 import com.voteSphere.service.UserService;
-import com.voteSphere.util.ImageReadUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

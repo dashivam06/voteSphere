@@ -1,5 +1,6 @@
 package com.voteSphere.esewa;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.voteSphere.dao.DonationDao;
 import com.voteSphere.model.AuthUser;
 import com.voteSphere.model.Donation;
@@ -59,21 +60,10 @@ public class EsewaPaymentServlet extends HttpServlet {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            PrintWriter out = response.getWriter();
-            out.print("{");
-            out.print("\"amount\":\"" + paymentRequest.getAmount() + "\",");
-            out.print("\"taxAmount\":\"" + paymentRequest.getTaxAmount() + "\",");
-            out.print("\"totalAmount\":\"" + paymentRequest.getTotalAmount() + "\",");
-            out.print("\"transactionUuid\":\"" + paymentRequest.getTransactionUuid() + "\",");
-            out.print("\"productCode\":\"" + paymentRequest.getProductCode() + "\",");
-            out.print("\"productServiceCharge\":\"0\",");
-            out.print("\"productDeliveryCharge\":\"0\",");
-            out.print("\"successUrl\":\"" + paymentRequest.getSuccessUrl() + "\",");
-            out.print("\"failureUrl\":\"" + paymentRequest.getFailureUrl() + "\",");
-            out.print("\"signedFieldNames\":\"" + paymentRequest.getSignedFieldNames() + "\",");
-            out.print("\"signature\":\"" + paymentRequest.getSignature() + "\"");
-            out.print("}");
-            out.flush();
+            ObjectMapper mapper = new ObjectMapper();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            mapper.writeValue(response.getWriter(), paymentRequest);
 
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing payment");

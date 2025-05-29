@@ -70,8 +70,6 @@ public class DashboardServlet extends HttpServlet {
                 List<Vote> totalVoteCountOfUser = VoteService.getVotesByUserId(user.getUserId());
 
                 List<Token> totalActiveToken = TokenService.getActiveTokensByUserId(user.getUserId());
-                System.out.println("Total Token : " +totalActiveToken);
-                System.out.println("User Id For  Token : " +user.getUserId());
 
                 request.setAttribute("electionList",electionList);
                 request.setAttribute("ongoingElection",ongoingElection);

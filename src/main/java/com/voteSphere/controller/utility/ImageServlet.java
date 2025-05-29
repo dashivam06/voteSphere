@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.utility;
 
 import com.voteSphere.util.ImageReadUtil;
 

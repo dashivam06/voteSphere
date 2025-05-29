@@ -1,12 +1,7 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.utility;
 
 import com.voteSphere.dao.ElectionDao;
-import com.voteSphere.dao.VoteDao;
-import com.voteSphere.model.User;
-import com.voteSphere.service.ElectionService;
-import com.voteSphere.service.UserService;
 import com.voteSphere.util.*;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

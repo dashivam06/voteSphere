@@ -152,7 +152,7 @@
 
         // WebSocket connection
         let socket = new WebSocket(
-            `ws://votesphere.com/election-results/${election.electionId}`
+            `${wsUrl}${election.electionId}`
         );
 
         // WebSocket event handlers
@@ -175,7 +175,7 @@
             setTimeout(function () {
                 console.log("Attempting to reconnect...");
                 const newSocket = new WebSocket(
-                    `ws://votesphere.com/election-results/${election.electionId}`
+                    `${wsUrl}${election.electionId}`
                 );
                 socket = newSocket;
             }, 5000);

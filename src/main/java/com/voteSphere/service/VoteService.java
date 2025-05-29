@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.voteSphere.controller.ElectionResultServlet;
+import com.voteSphere.controller.admin.ElectionResultServlet;
 import com.voteSphere.dao.ElectionDao;
 import com.voteSphere.dao.UserDao;
 import com.voteSphere.dao.VoteDao;

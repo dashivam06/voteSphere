@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <%@ page isELIgnored="false" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +11,9 @@
 <title>VoteSphere - Voter Dashboard</title>
 <link rel="stylesheet" href="../styles/global.css" />
 <script src="https://cdn.tailwindcss.com"></script>
-<link
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+	<link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
 	rel="stylesheet" />
 <script>
@@ -281,20 +283,12 @@
                         </p>
                     </div>
                     <div class="mt-3">
-                        <c:choose>
-                            <c:when test="${daysUntil <= 0}">
-                                <a href="cast-vote.html?electionId=${election.id}"
-                                   class="bg-green-600 text-white text-sm px-3 py-1.5 rounded hover:bg-green-700 transition-colors duration-200 inline-block">
-                                    Vote Now
-                                </a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="vote.html?electionId=${election.id}"
+
+                                <a href="/election/${election.id}"
                                    class="bg-primary-600 text-white text-sm px-3 py-1.5 rounded hover:bg-primary-700 transition-colors duration-200 inline-block">
                                     View Details
                                 </a>
-                            </c:otherwise>
-                        </c:choose>
+
                     </div>
                 </div>
             </c:forEach>

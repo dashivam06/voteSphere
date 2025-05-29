@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.utility;
 
 import java.io.IOException;
 
@@ -83,7 +83,6 @@ public class MailServlet extends HttpServlet {
 			Integer userId = jwtUtil.extractUserID(token);
 			String email = jwtUtil.extractEmail(token);
 			UnverifiedUser unverifiedUser = UnverifiedUserService.getUnverifiedUserById(userId);
-			System.out.println(unverifiedUser);
 
 			if(unverifiedUser == null)
 			{

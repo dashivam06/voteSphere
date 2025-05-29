@@ -1,12 +1,12 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.admin;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.voteSphere.config.AppConfig;
 import com.voteSphere.model.Candidate;
 import com.voteSphere.service.CandidateService;
 import org.apache.logging.log4j.LogManager;
@@ -182,8 +182,6 @@ public class AdminElectionServlet extends HttpServlet {
 
         request.setAttribute("endDateJs", endDate);
 
-        System.out.println("Start Date : "+request.getAttribute("startDateJs"));
-        System.out.println("End Date : "+request.getAttribute("endDateJs"));
 
         if(election.getStatus().equals("Past")) {
             List<ElectionResult> results = ElectionService.getElectionResults(Integer.parseInt(electionId));
@@ -200,11 +198,11 @@ public class AdminElectionServlet extends HttpServlet {
 
         List<Candidate> candidateList = CandidateService.getCandidatesByElection(Integer.parseInt(electionId));
         request.setAttribute("election", election);
-        System.out.println(candidateList);
         request.setAttribute("candidates", candidateList);
-        System.out.println(election.getStatus());
         if(election.getStatus().equals("Ongoing"))
         {
+            String webSocketUrl = AppConfig.get("LIVE_VOTE_COUNT_WS_URL");
+            request.setAttribute("wsUrl",webSocketUrl);
             request.getRequestDispatcher("/WEB-INF/pages/admin/live-election.jsp").forward(request, response);
             logger.info("Successfully viewed live election count for  ID: {}", electionId);
             return;

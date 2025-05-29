@@ -102,7 +102,9 @@
                          <c:when test="${election.status == 'Past'}">
                            <c:set var="action" value="download"/>
                            <c:set var="label" value="Download Report"/>
-                           <c:set var="icon" value="download-icon.svg"/>
+                           <c:set var="icon">
+
+                           </c:set>
                          </c:when>
 
                          <c:otherwise>
@@ -116,6 +118,7 @@
                          type="submit"
                          name="action"
                          value="${action}"
+
                          class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200 flex items-center"
                        >
                          ${label}

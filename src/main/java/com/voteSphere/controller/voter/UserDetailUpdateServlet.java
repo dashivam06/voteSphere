@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.voter;
 
 import com.voteSphere.exception.DatabaseConnectionException;
 import com.voteSphere.model.AuthUser;
@@ -10,7 +10,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

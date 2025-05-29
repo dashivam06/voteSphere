@@ -1,12 +1,8 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.voter;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
-import com.voteSphere.dao.UserDao;
 import com.voteSphere.exception.DatabaseConnectionException;
 import com.voteSphere.model.AuthUser;
-import com.voteSphere.model.User;
 import com.voteSphere.service.UserService;
-import com.voteSphere.util.CookieUtil;
 import com.voteSphere.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,9 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.sound.midi.Soundbank;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Enumeration;
 
 @WebServlet("/voter/password-change")

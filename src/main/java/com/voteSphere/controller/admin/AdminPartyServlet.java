@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.admin;
 
 import java.io.IOException;
 import java.util.List;
@@ -118,7 +118,6 @@ public class AdminPartyServlet extends HttpServlet {
 
         Party party = PartyService.getPartyById(request, response, Integer.parseInt(partyId));
         List<Candidate> partyCandidates = CandidateService.getCandidatesByParty(request,response,party.getPartyId());
-        System.out.println("ajhsjhagsjhgahgjsghjaghjshgjjghasjhga"+request.getAttribute("partyCandidates"));
         request.setAttribute("partyCandidates", partyCandidates);
         if (party == null) {
             logger.warn("Party not found with ID: {}", partyId);

@@ -39,7 +39,7 @@ public class ImageReadUtil {
 
             // Send file
             Files.copy(imageFile, response.getOutputStream());
-            logger.info("Successfully sent image: {}", imageFile);
+//            logger.info("Successfully sent image: {}", imageFile);
 
         } catch (IOException e) {
             logger.error("Error sending image: {}", imagePath, e);

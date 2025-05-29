@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.admin;
 
 import java.io.IOException;
 import java.util.List;
@@ -90,7 +90,6 @@ public class AdminCandidateServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/delete/")) {
                 String candidateId = pathInfo.substring(8);
-                System.out.println("Candidate Id: "+candidateId);
                 handleDeleteCandidate(request, response, candidateId);
             }
             else if (pathInfo.equalsIgnoreCase("/search")) {
@@ -178,7 +177,6 @@ public class AdminCandidateServlet extends HttpServlet {
         }
 
         request.setAttribute("candidate", candidate);
-        System.out.println(request.getAttribute("candidate"));
 
         request.getRequestDispatcher("/WEB-INF/pages/admin/candidate-details.jsp").forward(request, response);
         logger.info("Successfully viewed candidate ID: {}", candidateId);

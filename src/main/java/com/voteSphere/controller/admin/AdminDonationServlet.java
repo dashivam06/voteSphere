@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.admin;
 
 import java.io.IOException;
 import java.util.List;
@@ -75,7 +75,6 @@ public class AdminDonationServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
         } catch (Exception e) {
-            System.out.println("sadsads");
 
             logger.error("Error processing donation action", e);
             request.setAttribute("error", "An error occurred: " + e.getMessage());

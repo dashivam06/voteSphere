@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.admin;
 
 import java.io.IOException;
 import java.util.List;
@@ -111,7 +111,6 @@ public class AdminVoterServlet extends HttpServlet {
         List<User> voters = UserService.getAllUsers();
         request.setAttribute("voters", voters);
         getStats(request, response);
-        System.out.println(voters);
         request.getRequestDispatcher("/WEB-INF/pages/admin/voters.jsp").forward(request, response);
         logger.info("Successfully listed {} voters", voters.size());
     }

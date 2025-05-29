@@ -1,4 +1,4 @@
-package com.voteSphere.controller;
+package com.voteSphere.controller.voter;
 
 import java.io.IOException;
 import java.util.List;
