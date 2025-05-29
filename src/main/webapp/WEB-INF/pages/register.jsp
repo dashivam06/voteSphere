@@ -54,6 +54,7 @@
       .logo {
         display: flex;
         align-items: center;
+        text-decoration: none;
       }
 
       .logo svg {
@@ -583,8 +584,8 @@
             <a href="/#contact">Contact</a>
           </nav>
           <div class="auth-buttons">
-            <a href="/login.html" class="login-btn">Log in</a>
-            <a href="/register.html" class="register-btn">Register</a>
+            <a href="/login" class="login-btn">Log in</a>
+            <a href="/register" class="register-btn">Register</a>
             <button type="button" class="menu-btn">
               <svg
                 class="h-6 w-6"

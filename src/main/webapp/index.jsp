@@ -337,7 +337,7 @@ background-position
 						style="animation-delay: 0.4s">
 						<div
 							class="flex flex-col sm:flex-row sm:justify-center lg:justify-start gap-4">
-							<a href="voter/dashboard.html"
+							<a href="/dashboard"
 								class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 animate-pulse-slow">
 								Get Started </a> <a href="#how-it-works"
 								class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-600 bg-white hover:bg-gray-50 border-primary-600 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">

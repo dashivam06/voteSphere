@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +45,12 @@ public class UserDetailUpdateServlet extends HttpServlet {
 
             if (profileUpdated) {
                 logger.info("Profile updated successfully for user ID: {}", loggedInUserId);
+                HttpSession session = request.getSession(false);
+                if(session != null)
+                {
+                    AuthUser authUser = new AuthUser(UserService.getUserById(loggedInUserId));
+                    session.setAttribute("authenticated_user", authUser);
+                }
                 request.setAttribute("success", "Profile updated successfully.");
             } else {
                 logger.warn("Profile update failed for user ID: {}", loggedInUserId);

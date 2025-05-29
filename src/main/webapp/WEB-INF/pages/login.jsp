@@ -114,7 +114,7 @@
 				<div class="flex items-center">
 					<a href="login"
 						class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">
-						Log in </a> <a href="register"
+						Log in </a> <a href="/register"
 						class="ml-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-white hover:bg-gray-50 border-primary-600 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">
 						Register </a>
 					<button type="button"
@@ -139,7 +139,7 @@
 				<h2 class="mt-6 text-3xl font-extrabold text-gray-800">Sign in
 					to your account</h2>
 				<p class="mt-2 text-sm text-gray-600">
-					Or <a href="register.html"
+					Or <a href="/register"
 						class="font-medium text-primary-700 hover:text-primary-800">
 						register for a new account </a>
 				</p>
