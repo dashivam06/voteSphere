@@ -616,19 +616,6 @@
 </div>
 
 <script>
-  // Load sidebar
-  fetch("sidebar.html")
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("sidebar-container").innerHTML = data;
-          });
-
-  // Load navbar
-  fetch("navbar.html")
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("navbar-container").innerHTML = data;
-          });
 
   // Tab switching
   document.addEventListener("DOMContentLoaded", function () {

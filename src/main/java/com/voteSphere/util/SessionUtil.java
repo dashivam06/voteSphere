@@ -19,10 +19,11 @@ public class SessionUtil {
 	private static final long SESSION_EXTENSION_INCREMENT_MINUTES = 5;
 
 	public static void createAndUpdateSession(HttpServletRequest request, User user) {
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 
 		// Invalidate any existing session first
 		session.invalidate();
+
 		session = request.getSession(true);
 
 		AuthUser authenticatedUser = new AuthUser(user);
@@ -135,4 +136,14 @@ public class SessionUtil {
 		return null;
 	}
 
+    public static AuthUser getCurrentUser(HttpServletRequest httpRequest) {
+		HttpSession session = httpRequest.getSession(false);
+		if (session != null) {
+			Object userObj = session.getAttribute("authenticated_user");
+			if (userObj instanceof AuthUser authUser) {
+				return authUser;
+			}
+		}
+		return null;
+    }
 }

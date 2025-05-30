@@ -9,11 +9,15 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.LogEvent;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(name = "TelegramAppender", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
 public class TelegramAppender extends AbstractAppender {
@@ -66,13 +70,43 @@ public class TelegramAppender extends AbstractAppender {
         }
     }
 
-    private void sendMessage(String message) throws IOException {
-        String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
-        String urlString = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + encodedMessage;
+    private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.getInputStream().close(); // Fire and forget
+    private void sendMessage(String message) {
+        executor.submit(() -> {
+            try {
+                String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
+                String urlString = "https://api.telegram.org/bot" + botToken +
+                        "/sendMessage?chat_id=" + chatId +
+                        "&text=" + encodedMessage;
+
+                HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(3000);
+                conn.setReadTimeout(3000);
+
+                try (InputStream is = conn.getInputStream()) {
+                    // do nothing
+                }
+            } catch (IOException e) {
+                LOGGER.warn("TelegramAppender failed to send message", e);
+            }
+        });
     }
+
+
+    @Override
+    public void stop() {
+        super.stop();
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
 }

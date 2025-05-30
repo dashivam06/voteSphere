@@ -120,6 +120,6 @@ public class CastVoteServlet extends HttpServlet {
     }
 
     private String generateVoterToken(HttpServletRequest request) {
-        return "VOTE-" + request.getSession().getId().substring(0, 6).toUpperCase();
+        return "VOTE-" + request.getSession(false).getId().substring(0, 6).toUpperCase();
     }
 }

@@ -20,12 +20,20 @@ public class EssentialFolderInitializer implements ServletContextListener {
 
     String REQUIRED_DIRECTORIES_IN_COMMA_SEPERATED_STRING = AppConfig.get("REQUIRED_FOLDER_INITIALIZATION_BEFORE_STARTUP");
 
-
     String[] REQUIRED_DIRECTORIES = REQUIRED_DIRECTORIES_IN_COMMA_SEPERATED_STRING.split(",");
 
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+
+        // Skip this listener for now cause we will be deploying it on railway.app and not locally
+        boolean skipListener = AppConfig.get("SKIP_ESSENTIAL_FOLDER_INIT").equals("true");
+
+        if (skipListener) {
+            logger.info("EssentialFolderInitializer skipped");
+            return;
+        }
+
         logger.info("Checking required directories...");
 
         for (String dirPath : REQUIRED_DIRECTORIES) {
