@@ -74,7 +74,7 @@
           <!-- Election Banner -->
           <div class="mb-8">
             <div class="h-48 w-full bg-gray-100 rounded-lg overflow-hidden">
-              <img id="cover-image" src="/uploads/${election.coverImage}" alt="Election Cover" class="w-full h-full object-cover object-center" />
+              <img id="cover-image" src="${election.coverImage}" alt="Election Cover" class="w-full h-full object-cover object-center" />
             </div>
           </div>
 
@@ -245,7 +245,7 @@
               <c:forEach var="candidate" items="${candidates}">
                 <div class="bg-white rounded-lg border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                   <div class="h-41  bg-gray-100">
-                    <img src="/uploads/${candidate.profileImage}" alt="${candidate.fname} ${candidate.lname}" class="w-full h-full object-cover object-center" />
+                    <img src="${candidate.profileImage}" alt="${candidate.fname} ${candidate.lname}" class="w-full h-full object-cover object-center" />
                   </div>
                   <div class="p-4">
                     <div class="flex items-center mb-2">

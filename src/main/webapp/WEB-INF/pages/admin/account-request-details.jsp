@@ -197,7 +197,7 @@
 
               <div class="flex flex-col items-center mb-6">
                 <div class="relative w-80 h-80 rounded-full overflow-hidden mb-3 border-4 border-primary-100">
-                  <img src="/images/${user.profileImage}" alt="Profile" class="w-full h-full object-cover" />
+                  <img src="${user.profileImage}" alt="Profile" class="w-full h-full object-cover" />
                   <button class="absolute bottom-0 right-0 bg-primary-500 text-white p-1 rounded-full w-6 h-6 flex items-center justify-center" onclick="openDocumentPreview('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-k8QLAvWE5XYRv8cM02f2QJivHcM8pA.png', 'Profile Image')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -279,11 +279,11 @@
                              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
                            </div>
                            <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                             <img src="${pageContext.request.contextPath}/uploads/${user.citizenshipFront}"
+                             <img src="${user.citizenshipFront}"
                                   alt="Citizenship Front" class="w-full h-full object-cover" />
                              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
                                <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
-                                       onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.citizenshipFront}', 'Citizenship Front')">
+                                       onclick="openDocumentPreview('${user.citizenshipFront}', 'Citizenship Front')">
                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -295,7 +295,7 @@
                            <div class="flex items-center justify-between text-sm">
                              <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
                              <div class="flex items-center">
-                               <a href="${pageContext.request.contextPath}/uploads/${user.citizenshipFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                               <a href="${user.citizenshipFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
                                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                  </svg>
@@ -320,11 +320,11 @@
                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
                              </div>
                              <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                               <img src="${pageContext.request.contextPath}/uploads/${user.citizenshipBack}"
+                               <img src="${user.citizenshipBack}"
                                     alt="Citizenship Back" class="w-full h-full object-cover" />
                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
                                  <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
-                                         onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.citizenshipBack}', 'Citizenship Back')">
+                                         onclick="openDocumentPreview('${user.citizenshipBack}', 'Citizenship Back')">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -336,7 +336,7 @@
                              <div class="flex items-center justify-between text-sm">
                                <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
                                <div class="flex items-center">
-                                 <a href="${pageContext.request.contextPath}/uploads/${user.citizenshipBack}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                 <a href="${user.citizenshipBack}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                    </svg>
@@ -373,11 +373,11 @@
                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
                              </div>
                              <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                               <img src="${pageContext.request.contextPath}/uploads/${user.voterCardFront}"
+                               <img src="${user.voterCardFront}"
                                     alt="Voter Card Front" class="w-full h-full object-cover" />
                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
                                  <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
-                                         onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.voterCardFront}', 'Voter Card Front')">
+                                         onclick="openDocumentPreview('${user.voterCardFront}', 'Voter Card Front')">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -389,7 +389,7 @@
                              <div class="flex items-center justify-between text-sm">
                                <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
                                <div class="flex items-center">
-                                 <a href="${pageContext.request.contextPath}/uploads/${user.voterCardFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                 <a href="${user.voterCardFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                    </svg>
@@ -426,11 +426,11 @@
                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
                              </div>
                              <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                               <img src="${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}"
+                               <img src="${user.imageHoldingCitizenship}"
                                     alt="Holding Citizenship" class="w-full h-full object-cover" />
                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
                                  <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
-                                         onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}', 'Holding Citizenship')">
+                                         onclick="openDocumentPreview('${user.imageHoldingCitizenship}', 'Holding Citizenship')">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -442,7 +442,7 @@
                              <div class="flex items-center justify-between text-sm">
                                <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
                                <div class="flex items-center">
-                                 <a href="${pageContext.request.contextPath}/uploads/${user.imageHoldingCitizenship}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                 <a href="${user.imageHoldingCitizenship}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                    </svg>
@@ -468,11 +468,11 @@
                                <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
                              </div>
                              <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                               <img src="${pageContext.request.contextPath}/uploads/${user.thumbPrint}"
+                               <img src="${user.thumbPrint}"
                                     alt="Thumbprint" class="w-full h-full object-cover" />
                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
                                  <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
-                                         onclick="openDocumentPreview('${pageContext.request.contextPath}/uploads/${user.thumbPrint}', 'Thumbprint')">
+                                         onclick="openDocumentPreview('${user.thumbPrint}', 'Thumbprint')">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -484,7 +484,7 @@
                              <div class="flex items-center justify-between text-sm">
                                <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
                                <div class="flex items-center">
-                                 <a href="${pageContext.request.contextPath}/uploads/${user.thumbPrint}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                 <a href="${user.thumbPrint}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                    </svg>

@@ -74,7 +74,7 @@
             >
               <img
                 id="profile-image"
-                src="/uploads/${candidate.profileImage}"
+                src="${candidate.profileImage}"
                 alt="Candidate Profile"
                 class="w-full h-full object-cover object-center"
               />

@@ -760,6 +760,12 @@ public class ElectionDao {
 	    candidate.setPartyId(rs.getInt("party_id"));
 	    candidate.setBio(rs.getString("bio"));
 	    candidate.setProfileImage(rs.getString("profile_image"));
+		candidate.setAddress(rs.getString("address"));
+		candidate.setManifesto(rs.getString("manifesto"));
+		candidate.setHighestEducation(rs.getString("highest_education"));
+		candidate.setIsIndependent(rs.getBoolean("is_independent"));
+		candidate.setDob(rs.getDate("dob"));
+		candidate.setGender(rs.getString("gender"));
 	    return candidate;
 	}
 

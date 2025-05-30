@@ -1,26 +1,26 @@
 package com.voteSphere.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
-
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.voteSphere.config.AppConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class ImgUploadUtil {
-
 	private static final Logger logger = LogManager.getLogger(ImgUploadUtil.class);
-	private static final String IMAGE_BASE_UPLOAD_DIR = getAbsoluteUploadPath(AppConfig.get("IMAGE_BASE_UPLOAD_DIR"));
 
-	// Helper method to convert ~/ path to absolute path
 	private static String getAbsoluteUploadPath(String configPath) {
 		if (configPath.startsWith("~/")) {
 			String homeDir = System.getProperty("user.home");
@@ -29,38 +29,54 @@ public class ImgUploadUtil {
 		return configPath;
 	}
 
-	public static String saveUploadedImage(Part filePart, String subfolder) throws IOException {
+	public static String saveUploadedImageToCloudinary(Part filePart, String subfolder) throws IOException {
 		if (filePart == null || filePart.getSize() == 0) {
 			logger.warn("No file uploaded or empty file for subfolder: {}", subfolder);
 			throw new IOException("No file uploaded or empty file");
 		}
 
-		Path uploadPath = Paths.get(IMAGE_BASE_UPLOAD_DIR, subfolder.toUpperCase()).normalize().toAbsolutePath();
-		Files.createDirectories(uploadPath);
+		// Create a temporary file to ensure the stream is properly handled
+		Path tempFile = null;
+		try {
+			Cloudinary cloudinary = CloudinaryUtil.getInstance();
 
-		String fileName = generateUniqueFilename(filePart.getSubmittedFileName());
-		Path filePath = uploadPath.resolve(fileName);
+			// Generate a unique filename
+			String originalFileName = filePart.getSubmittedFileName();
+			String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+			String uniqueName = UUID.randomUUID().toString() + extension.toLowerCase();
 
-		try (InputStream fileContent = filePart.getInputStream()) {
-			Files.copy(fileContent, filePath, StandardCopyOption.REPLACE_EXISTING);
-			logger.info("Image saved successfully: {}", filePath);
-		} catch (IOException e) {
-			logger.error("Error while saving image to path: {}", filePath, e);
-			throw e;
+			// Create a temporary file
+			tempFile = Files.createTempFile("cloudinary-upload-", extension);
+			try (InputStream input = filePart.getInputStream()) {
+				Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+			}
+
+			// Prepare upload options
+			Map<String, Object> uploadOptions = new HashMap<>();
+			uploadOptions.put("public_id", uniqueName);
+			if (!subfolder.isEmpty()) {
+				uploadOptions.put("folder", subfolder);
+			}
+
+			// Upload the temporary file
+			Map<?, ?> uploadResult = cloudinary.uploader().upload(tempFile.toFile(), uploadOptions);
+			String secureUrl = (String) uploadResult.get("secure_url");
+			logger.info("Image uploaded successfully to Cloudinary: {}", secureUrl);
+			return secureUrl;
+
+		} catch (Exception e) {
+			logger.error( "Error while uploading image to Cloudinary", e);
+			throw new IOException("Failed to upload image to Cloudinary: " + e.getMessage(), e);
+		} finally {
+			// Clean up the temporary file
+			if (tempFile != null) {
+				try {
+					Files.deleteIfExists(tempFile);
+				} catch (IOException e) {
+					logger.warn("Failed to delete temporary file: {}", tempFile, e);
+				}
+			}
 		}
-
-		return subfolder.isEmpty() ? fileName : subfolder + "/" + fileName;
-	}
-
-	private static String generateUniqueFilename(String originalFileName) {
-		String extension = "";
-		int dotIndex = originalFileName.lastIndexOf('.');
-		if (dotIndex > 0) {
-			extension = originalFileName.substring(dotIndex);
-		}
-		String uniqueName = UUID.randomUUID().toString() + extension.toLowerCase();
-		logger.debug("Generated unique filename: {}", uniqueName);
-		return uniqueName;
 	}
 
 	public static String processImageUpload(HttpServletRequest request, String formFieldName, String errorAttributeName,
@@ -87,7 +103,7 @@ public class ImgUploadUtil {
 				return null;
 			}
 
-			String savedPath = ImgUploadUtil.saveUploadedImage(imagePart, uploadDirectory);
+			String savedPath = saveUploadedImageToCloudinary(imagePart, uploadDirectory);
 			logger.info("Image uploaded successfully for field: {}. Saved at: {}", formFieldName, savedPath);
 			return savedPath;
 

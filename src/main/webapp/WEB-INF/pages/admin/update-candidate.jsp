@@ -162,7 +162,7 @@
 
               <c:choose>
                 <c:when test="${not empty candidate.profileImage}">
-                  <img src="/uploads/${candidate.profileImage}"
+                  <img src="${candidate.profileImage}"
                        id="profileImagePreview"
                        alt="Image Preview"
                        class="w-32 h-32 object-cover rounded-md border border-gray-300 mx-auto"

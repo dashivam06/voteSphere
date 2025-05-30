@@ -351,8 +351,11 @@ background-position
 						class="relative mx-auto w-full rounded-lg lg:max-w-sm animate-float">
 						<div class="relative block w-full rounded-lg overflow-hidden">
 
-								<img class="w-full" src="<c:url value='/uploads/vote.png' />" alt="Vote Image -I">
-
+							<img
+									src="/resources/vote.png"
+									alt="Vote Image"
+									class="w-full"
+							/>
 						</div>
 					</div>
 				</div>

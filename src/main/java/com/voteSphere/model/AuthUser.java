@@ -43,7 +43,6 @@ public class AuthUser {
 	public String getProfileImageFromUser()
 	{
 		String profileImagePath =  UserService.getUserById(userId).getProfileImage();
-		System.out.println(profileImagePath);
 		return profileImagePath;
 	}
 

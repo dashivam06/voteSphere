@@ -230,7 +230,7 @@
             var safeParty = candidate.partyName ? candidate.partyName : "Independent";
             var safeVotes = candidate.voteCount ? candidate.voteCount : 0;
             var safePct = candidate.percentage ? candidate.percentage.toFixed(1) : "0.0";
-            var safeImage = candidate.partyImage ? "/uploads/" + candidate.partyImage : "https://placehold.co/400x800";
+            var safeImage = candidate.partyImage ? + candidate.partyImage : "https://placehold.co/400x800";
 
             // Color palette for first 10 parties (text color + background color)
             var partyColors = [

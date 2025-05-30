@@ -80,38 +80,38 @@ if (user != null) {
 					<div>
 						<span class="font-medium text-gray-700">Profile Image:</span> <a
 							target="_blank"
-							href="${pageContext.request.contextPath}/images/<%=user.getProfileImage()%>"
+							href="<%=user.getProfileImage()%>"
 							class="text-primary-600 underline">View</a>
 					</div>
 					<div>
 						<span class="font-medium text-gray-700">Image Holding
 							Citizenship:</span> <a target="_blank"
-							href="${pageContext.request.contextPath}/images/<%= user.getImageHoldingCitizenship() %>"
+							href="<%= user.getImageHoldingCitizenship() %>"
 							class="text-primary-600 underline">View</a>
 					</div>
 					<div>
 						<span class="font-medium text-gray-700">Voter Card Front:</span> <a
 							target="_blank"
-							href="${pageContext.request.contextPath}/images/<%=user.getVoterCardFront()%>"
+							href="<%=user.getVoterCardFront()%>"
 							class="text-primary-600 underline">View</a>
 					</div>
 
 					<div>
 						<span class="font-medium text-gray-700">Citizenship Front:</span>
 						<a target="_blank"
-							href="${pageContext.request.contextPath}/images/<%=user.getCitizenshipFront()%>"
+							href="<%=user.getCitizenshipFront()%>"
 							class="text-primary-600 underline">View</a>
 					</div>
 					<div>
 						<span class="font-medium text-gray-700">Citizenship Back:</span> <a
 							target="_blank"
-							href="${pageContext.request.contextPath}/images/<%=user.getCitizenshipBack()%>"
+							href="<%=user.getCitizenshipBack()%>"
 							class="text-primary-600 underline">View</a>
 					</div>
 					<div>
 						<span class="font-medium text-gray-700">Thumb Print:</span> <a
 							target="_blank"
-							href="${pageContext.request.contextPath}/images/<%=user.getThumbPrint()%>"
+							href="<%=user.getThumbPrint()%>"
 							class="text-primary-600 underline">View</a>
 					</div>
 					<div>

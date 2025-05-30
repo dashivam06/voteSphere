@@ -128,7 +128,7 @@
 
               <c:choose>
                 <c:when test="${not empty party.symbolImage}">
-                  <img src="/uploads/${party.symbolImage}" alt="Symbol Image" class="w-32 h-32 object-cover border mb-2" />
+                  <img src="${party.symbolImage}" alt="Symbol Image" class="w-32 h-32 object-cover border mb-2" />
                 </c:when>
                 <c:otherwise>
                   <img src="https://placehold.co/600x400" alt="Placeholder Symbol" class="w-32 h-32 object-cover border mb-2" />
@@ -148,7 +148,7 @@
 
               <c:choose>
                 <c:when test="${not empty party.coverImage}">
-                  <img src="/uploads/${party.coverImage}" alt="Cover Image" class="w-32 h-32 object-cover border mb-2" />
+                  <img src="${party.coverImage}" alt="Cover Image" class="w-32 h-32 object-cover border mb-2" />
                 </c:when>
                 <c:otherwise>
                   <img src="https://placehold.co/600x400" alt="Placeholder Cover" class="w-32 h-32 object-cover border mb-2" />

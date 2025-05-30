@@ -78,7 +78,7 @@
                 <div class="h-64 w-full bg-gray-200">
                     <img
                             id="cover_image"
-                            src="/uploads/${election.coverImage}"
+                            src="${election.coverImage}"
                             alt="Election Cover"
                             class="w-full h-full object-cover"
                     />
@@ -225,7 +225,7 @@
                                 <div class="h-16 w-16 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
                                     <c:choose>
                                         <c:when test="${not empty candidate.profileImage}">
-                                            <img src="/uploads/${candidate.profileImage}"
+                                            <img src="${candidate.profileImage}"
                                                  alt="${candidate.partyName}"
                                                  class="w-full h-full object-cover" />
                                         </c:when>

@@ -32,7 +32,6 @@ public class RegisterServlet extends HttpServlet {
 			while (parameterNames.hasMoreElements()) {
 			    String paramName = parameterNames.nextElement();
 			    String paramValue = request.getParameter(paramName);
-			    System.out.println("Parameter Name: " + paramName + ", Value: " + paramValue);
 			}
 
 			if (user) {

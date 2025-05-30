@@ -1,5 +1,4 @@
 <%@ page import="com.voteSphere.model.AuthUser" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -70,7 +69,7 @@
                       class="h-32 w-32 rounded-full overflow-hidden bg-gray-200 border-4 border-white shadow"
               >
                 <img
-                        src="/uploads/${user.profileImage}"
+                        src="${user.profileImage}"
                         alt="Profile"
                         class="w-[120px] aspect-square rounded-full object-cover"
                 />
@@ -414,7 +413,7 @@
               <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-2">
                 <c:choose>
                   <c:when test="${not empty user.citizenshipFront}">
-                    <img src="/uploads/${user.citizenshipFront}"
+                    <img src="${user.citizenshipFront}"
                          alt="Citizenship Front"
                          class="max-h-full object-contain"
                          onerror="this.onerror=null;this.src='https://placehold.co/600x400?text=Image+Not+Found'">
@@ -440,7 +439,7 @@
                       class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-2"
               >
                 <img
-                        src="/uploads/${user.citizenshipBack}"
+                        src="${user.citizenshipBack}"
                         alt="Citizenship Back"
                         class="max-h-full object-contain"
                 />
@@ -461,7 +460,7 @@
                       class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-2"
               >
                 <img
-                        src="/uploads/${user.voterCardFront}"
+                        src="${user.voterCardFront}"
                         alt="Voter ID Front"
                         class="max-h-full object-contain"
                 />
@@ -480,7 +479,7 @@
                       class="aspect-square max-w-[200px] mx-auto bg-gray-100 rounded-lg flex items-center justify-center mb-2"
               >
                 <img
-                        src="/uploads/${user.thumbPrint}"
+                        src="${user.thumbPrint}"
                         alt="Thumbprint"
                         class="max-h-full object-contain"
                 />
@@ -501,7 +500,7 @@
                       class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center mb-2"
               >
                 <img
-                        src="/uploads/${user.imageHoldingCitizenship}"
+                        src="${user.imageHoldingCitizenship}"
                         alt="Person holding Citizenship"
                         class="max-h-full object-contain"
                 />
@@ -548,7 +547,7 @@
                     <div class="flex items-center">
                       <div class="flex-shrink-0 h-10 w-10">
                         <img class="h-10 w-10 rounded-full"
-                             src="/uploads/${history.electionImageUrl}"
+                             src="${history.electionImageUrl}"
                              alt="${history.electionName}"
                              onerror="this.onerror=null;this.src='https://placehold.co/100x100'"/>
                       </div>

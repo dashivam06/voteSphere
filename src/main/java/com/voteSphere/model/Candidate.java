@@ -6,6 +6,9 @@ import com.voteSphere.util.ValidationUtil;
 import jakarta.servlet.http.Part;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneOffset;
 import  java.util.*;
 
 public class Candidate {
@@ -185,6 +188,11 @@ public class Candidate {
 		Election election = ElectionService.getElectionById(electionId);
 		return (election != null) ? election.getName() : "";
 	}
+
+	public String age() {
+		return String.valueOf(Period.between(this.dob.toLocalDate(), LocalDate.now(ZoneOffset.UTC)).getYears());
+	}
+
 
 	public  String getName()
 	{

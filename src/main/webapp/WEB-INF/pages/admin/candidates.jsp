@@ -144,7 +144,7 @@
                                       <div class="flex items-center">
                                           <div class="h-10 w-10 flex-shrink-0">
                                               <img class="h-10 w-10 rounded-full object-cover"
-                                                   src="/images/${candidate.profileImage != null ? candidate.profileImage : 'https://placehold.co/100x100'}"
+                                                   src="${candidate.profileImage != null ? candidate.profileImage : 'https://placehold.co/100x100'}"
                                                    alt="Candidate Image" />
                                           </div>
                                           <div class="ml-4">

@@ -161,7 +161,7 @@
                                                                                                    <tr>
                                                                                                        <!-- Voter Info -->
                                                                                                        <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-4">
-                                                                                                           <img src="/images/${voter.profileImage}" alt="Profile" class="h-10 w-10 rounded-full">
+                                                                                                           <img src="${voter.profileImage}" alt="Profile" class="h-10 w-10 rounded-full">
                                                                                                            <div>
                                                                                                                <div class="text-sm font-medium text-gray-900">${voter.firstName} ${voter.lastName}</div>
                                                                                                                <div class="text-xs text-gray-500">${voter.email}</div>

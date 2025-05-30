@@ -153,7 +153,7 @@
                                                 <div class="flex items-center">
                                                     <div class="h-10 w-10 flex-shrink-0">
                                                         <img class="h-10 w-10 rounded object-cover"
-                                                            src="${pageContext.request.contextPath}/images/${not empty election.coverImage ? election.coverImage : 'election-default.png'}"
+                                                            src="${not empty election.coverImage ? election.coverImage : 'election-default.png'}"
                                                             alt="${election.name} image" />
                                                     </div>
                                                     <div class="ml-4">

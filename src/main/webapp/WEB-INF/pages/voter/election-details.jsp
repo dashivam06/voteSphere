@@ -90,16 +90,16 @@
                 <div class="h-64 bg-gray-200 relative">
                     <img
                             id="election-cover"
-                            src="/uploads/${election.coverImage}"
+                            src="${election.coverImage}"
                             alt="Election Cover"
                             class="w-full h-full object-cover"
                     />
                     <div class="absolute top-4 right-4">
                         <c:choose>
-                            <c:when test="${election.status == 'UPCOMING'}">
+                            <c:when test="${fn:toUpperCase(election.status) == 'UPCOMING'}">
                                 <span class="px-3 py-1 bg-yellow-500 text-white text-sm font-semibold rounded-full">Upcoming</span>
                             </c:when>
-                            <c:when test="${election.status == 'ACTIVE'}">
+                            <c:when test="${fn:toUpperCase(election.status) == 'ONGOING'}">
                                 <span class="px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-full">Active</span>
                             </c:when>
                             <c:otherwise>
@@ -145,7 +145,7 @@
                     <!-- Election Action Button -->
                     <div class="flex justify-center">
                         <c:choose>
-                            <c:when test="${election.status == 'UPCOMING'}">
+                            <c:when test="${fn:toUpperCase(election.status) == 'UPCOMING'}">
                                 <div class="text-center">
                                     <p class="text-gray-600 mb-3">
                                         This election is not yet active. You can vote when it starts.
@@ -158,7 +158,7 @@
                                     </button>
                                 </div>
                             </c:when>
-                            <c:when test="${election.status == 'ACTIVE'}">
+                            <c:when test="${fn:toUpperCase(election.status) == 'ONGOING'}">
                                 <div class="text-center">
                                     <p class="text-green-600 mb-3">
                                         This election is currently active. Cast your vote now!
@@ -192,47 +192,57 @@
             <!-- Candidates Section -->
             <div class="mb-8">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">Candidates</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <c:forEach var="candidate" items="${candidates}">
-                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                            <div class="h-48 bg-gray-100">
-                                <img
-                                        src="/uploads/${candidate.profileImage}"
-                                        alt="${candidate.fname} ${candidate.lname}"
-                                        class="w-full h-full object-cover object-center"
-                                        onerror="this.src='${pageContext.request.contextPath}/images/default-profile.jpg'"
-                                />
-                            </div>
-                            <div class="p-4">
-                                <div class="flex items-center mb-2">
-                                    <h4 class="font-semibold text-gray-800">${candidate.fname} ${candidate.lname}</h4>
-                                    <c:if test="${not candidate.isIndependent}">
-                                        <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                                ${candidate.partyName}
-                                        </span>
-                                    </c:if>
-                                    <c:if test="${candidate.isIndependent}">
-                                        <span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-800 text-xs rounded-full">
-                                            Independent
-                                        </span>
-                                    </c:if>
+                <c:choose>
+                    <c:when test="${not empty candidates}">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <c:forEach var="candidate" items="${candidates}">
+                                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                                    <div class="h-48 bg-gray-100">
+                                        <img
+                                                src="${candidate.profileImage}"
+                                                alt="${candidate.fname} ${candidate.lname}"
+                                                class="w-full h-full object-cover object-center"
+                                                onerror="this.onerror=null;this.src='https://placehold.co/100x100'"
+                                        />
+                                    </div>
+                                    <div class="p-4">
+                                        <div class="flex items-center mb-2">
+                                            <h4 class="font-semibold text-gray-800">${candidate.fname} ${candidate.lname}</h4>
+                                            <c:if test="${not candidate.isIndependent}">
+                                    <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                            ${candidate.partyName}
+                                    </span>
+                                            </c:if>
+                                            <c:if test="${candidate.isIndependent}">
+                                    <span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-800 text-xs rounded-full">
+                                        Independent
+                                    </span>
+                                            </c:if>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mb-4">
+                                                ${fn:length(candidate.bio) > 100 ? fn:substring(candidate.bio, 0, 100) : candidate.bio}...
+                                        </p>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs text-gray-500">Candidate #${candidate.candidateId}</span>
+                                            <button
+                                                    class="text-primary-600 hover:text-primary-800 text-sm font-medium"
+                                                    onclick="showCandidateModal('${candidate.candidateId}')"
+                                            >
+                                                View Profile
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="text-sm text-gray-600 mb-4">
-                                        ${candidate.bio.substring(0, Math.min(candidate.bio.length(), 100))}...
-                                </p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs text-gray-500">Candidate #${candidate.candidateId}</span>
-                                    <button
-                                            class="text-primary-600 hover:text-primary-800 text-sm font-medium"
-                                            onclick="showCandidateModal('${candidate.candidateId}')"
-                                    >
-                                        View Profile
-                                    </button>
-                                </div>
-                            </div>
+                            </c:forEach>
                         </div>
-                    </c:forEach>
-                </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+                            <p class="text-gray-600">No candidates available at this time.</p>
+                            <p class="text-sm text-gray-500 mt-2">Please check back later for updates.</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- Information Section -->
@@ -322,7 +332,7 @@
                             src=""
                             alt="Candidate"
                             class="w-full h-auto rounded-lg"
-                            onerror="this.src='${pageContext.request.contextPath}/images/default-profile.jpg'"
+                            onerror="this.src='https://placehold.co/100x100'"
                     />
                 </div>
                 <div class="w-full md:w-2/3">
@@ -331,16 +341,16 @@
                         <p id="modal-party" class="font-medium"></p>
                     </div>
                     <div class="mb-3">
-                        <span class="text-sm text-gray-500">Experience</span>
-                        <p id="modal-experience" class="font-medium"></p>
+                        <span class="text-sm text-gray-500">Address</span>
+                        <p id="modal-address" class="font-medium"></p>
                     </div>
                     <div class="mb-3">
                         <span class="text-sm text-gray-500">Education</span>
                         <p id="modal-education" class="font-medium"></p>
                     </div>
                     <div class="mb-3">
-                        <span class="text-sm text-gray-500">Age</span>
-                        <p id="modal-age" class="font-medium"></p>
+                        <span class="text-sm text-gray-500">Birth Year</span>
+                        <p id="modal-age" class="font-medium"> ${candidate.dob}</p>
                     </div>
                 </div>
             </div>
@@ -359,10 +369,15 @@
 </div>
 
 <script>
-    // Candidate modal functions
     function showCandidateModal(candidateId) {
-        // In a real application, you might fetch this via AJAX
-        // For this example, we'll use the data from the JSP
+        // Reset modal content first
+        document.getElementById("modal-candidate-name").textContent = "";
+        document.getElementById("modal-party").textContent = "";
+        document.getElementById("modal-education").textContent = "";
+        document.getElementById("modal-age").textContent = "";
+        document.getElementById("modal-bio").textContent = "";
+        document.getElementById("modal-manifesto").textContent = "";
+        document.getElementById("modal-candidate-image").src = "";
 
         // Find the candidate in the candidates array
         <c:forEach var="candidate" items="${candidates}">
@@ -373,18 +388,31 @@
                 "${candidate.isIndependent ? 'Independent' : candidate.partyName}";
             document.getElementById("modal-education").textContent =
                 "${candidate.highestEducation}";
+            const dobString = "${candidate.dob}";
+            const age = calculateAge(dobString);
+            document.getElementById("modal-address").textContent =
+                "${candidate.address}";
 
-            // Calculate age from DOB
-            const dob = new Date("${candidate.dob}");
-            const age = new Date().getFullYear() - dob.getFullYear();
-            document.getElementById("modal-age").textContent = age + " years";
+
+            // Calculate age from DOB - fixed calculation
+            try {
+
+                const dob = new Date("${candidate.dob}"); // Make sure this is a valid date string like "2000-05-20"
+                const age = new Date().getFullYear() - dob.getFullYear();
+                console.log(${candidate.dob})
+
+                document.getElementById("modal-age").textContent = ${candidate.dob} + " AD";
+            } catch (e) {
+                console.error("Error calculating age:", e);
+                document.getElementById("modal-age").textContent = "Unknown";
+            }
 
             document.getElementById("modal-bio").textContent =
                 "${candidate.bio}";
             document.getElementById("modal-manifesto").textContent =
                 "${candidate.manifesto}";
             document.getElementById("modal-candidate-image").src =
-                "${pageContext.request.contextPath}/images/${candidate.profileImage}";
+                "${candidate.profileImage}";
         }
         </c:forEach>
 
@@ -395,6 +423,19 @@
         document.getElementById("candidate-modal").classList.add("hidden");
     }
 
+    function calculateAge(dobString) {
+        const dob = new Date(dobString); // parse "yyyy-MM-dd"
+        const today = new Date();
+
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        return age;
+    }
     // Update election status based on current time
     document.addEventListener("DOMContentLoaded", function() {
         const electionDate = new Date("${election.date}");

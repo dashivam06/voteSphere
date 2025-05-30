@@ -72,7 +72,7 @@
     <c:when test="${not empty party.coverImage}">
         <img
             id="cover-image"
-            src="/uploads/${party.coverImage}"
+            src="${party.coverImage}"
             alt="Party Cover Image"
             class="w-full h-full object-cover object-center"
         />
@@ -99,7 +99,7 @@
                <c:when test="${not empty party.symbolImage}">
                    <img
                        id="symbol-image"
-                       src="/uploads/${party.symbolImage}"
+                       src="${party.symbolImage}"
                        alt="party Symbol"
                        class="w-full h-full object-cover object-center"
                    />
@@ -183,7 +183,7 @@
                                      <div class="flex items-center">
                                          <div class="h-10 w-10 flex-shrink-0 rounded-full overflow-hidden">
                                              <img
-                                                 src="${not empty candidate.profileImage ? pageContext.request.contextPath.concat('/uploads/').concat(candidate.profileImage) : 'https://placehold.co/100x100'}"
+                                                 src="${not empty candidate.profileImage ? pageContext.request.contextPath.concat('').concat(candidate.profileImage) : 'https://placehold.co/100x100'}"
                                                  alt="Candidate"
                                                  class="h-full w-full object-cover"
                                              />

@@ -47,9 +47,7 @@ public class EsewaCallbackServlet extends HttpServlet {
             }
             Donation previouseDonation = DonationDao.getDonationByTransactionId(String.valueOf(request.getAttribute("transactionId")));
             previouseDonation.setStatus("COMPLETED");
-            System.out.println(previouseDonation);
             DonationService.updateDonationById(previouseDonation.getDonationId(),previouseDonation);
-            System.out.println("jhgfhghghfghf");
             request.getRequestDispatcher("/WEB-INF/pages/esewa-payment-received.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,9 +111,6 @@ public class EsewaCallbackServlet extends HttpServlet {
 //    private void validateCallbackData(EsewaCallbackData callbackData, HttpServletRequest request, HttpServletResponse response)
 //            throws ServletException, IOException {
 //
-//
-//        System.out.println(callbackData.toString());
-//        System.out.println(callbackData.getSignature().equals(response));
 //
 //
 ////        if (!callbackData.isSignatureValid()) {

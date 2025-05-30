@@ -14,6 +14,9 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
     />
+    <!-- Tailwind CDN link -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -99,7 +102,7 @@
                                 <div class="election-card bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md" data-status="active" data-name="${fn:toLowerCase(election.name)}">
                                     <!-- Election Image -->
                                     <div class="h-40 bg-gray-200 relative">
-                                        <img src="/uploads/${not empty election.coverImage ? election.coverImage : 'https://placehold.co/800x400'}"
+                                        <img src="${not empty election.coverImage ? election.coverImage : 'https://placehold.co/800x400'}"
                                              alt="${election.name}"
                                              class="w-full h-full object-cover"
                                              onerror="this.onerror=null;this.src='https://placehold.co/800x400?text=Election'">
@@ -182,7 +185,7 @@
                                 <div class="election-card bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md" data-status="upcoming" data-name="${fn:toLowerCase(election.name)}">
                                     <!-- Election Image -->
                                     <div class="h-40 bg-gray-200 relative">
-                                        <img src="/uploads/${not empty election.coverImage ? election.coverImage : 'https://placehold.co/800x400'}"
+                                        <img src="${not empty election.coverImage ? election.coverImage : 'https://placehold.co/800x400'}"
                                              alt="${election.name}"
                                              class="w-full h-full object-cover"
                                              onerror="this.onerror=null;this.src='https://placehold.co/800x400?text=Election'">
@@ -265,7 +268,7 @@
                                 <div class="election-card bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:shadow-md" data-status="past" data-name="${fn:toLowerCase(election.name)}">
                                     <!-- Election Image -->
                                     <div class="h-40 bg-gray-200 relative">
-                                        <img src="/uploads/${not empty election.coverImage ? election.coverImage : 'https://placehold.co/800x400'}"
+                                        <img src="${not empty election.coverImage ? election.coverImage : 'https://placehold.co/800x400'}"
                                              alt="${election.name}"
                                              class="w-full h-full object-cover"
                                              onerror="this.onerror=null;this.src='https://placehold.co/800x400?text=Election'">

@@ -214,7 +214,7 @@
 
                 <div class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors duration-200 hover-scale">
                     <div class="flex items-center mb-3">
-                        <img src="/uploads/${election.coverImage}"
+                        <img src="${election.coverImage}"
                              alt="${election.name}"
                              class="w-12 h-12 rounded-lg object-cover"
                              onerror="this.onerror=null;this.src='https://placehold.co/100x100'"/>
@@ -284,7 +284,7 @@
                     </div>
                     <div class="mt-3">
 
-                                <a href="/election/${election.id}"
+                                <a href="${pageContext.request.contextPath}/election/view/${election.electionId}"
                                    class="bg-primary-600 text-white text-sm px-3 py-1.5 rounded hover:bg-primary-700 transition-colors duration-200 inline-block">
                                     View Details
                                 </a>

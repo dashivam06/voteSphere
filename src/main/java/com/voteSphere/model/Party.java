@@ -120,7 +120,6 @@ public class Party
 									(p.getFounderName() != null ? p.getFounderName() : "")
 					).toLowerCase();
 
-					System.out.println(data);
 					for (String word : words) {
 						if (!data.contains(word)) {
 							return false;

@@ -119,7 +119,7 @@
                                 <div class="flex items-center">
                                     <div class="h-10 w-10 flex-shrink-0">
                                         <img class="h-10 w-10 rounded-full"
-                                            src="${pageContext.request.contextPath}/images/${not empty donation.profileImage ? donation.profileImage : 'default-profile.png'}"
+                                            src="${not empty donation.profileImage ? donation.profileImage : 'default-profile.png'}"
                                             alt="${donation.userFullName}" />
                                     </div>
                                     <div class="ml-4">
