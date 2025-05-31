@@ -12,6 +12,8 @@ RUN rm -rf webapps/*
 # ✅ Copy WAR to Tomcat's ROOT.war (Railway serves from /)
 COPY --from=build /app/target/voteSphere.war webapps/ROOT.war
 
+RUN cd webapps && jar xf ROOT.war
+
 # 🐛 Debug info - Print working directory and contents
 RUN echo "🧭 Current directory:" && pwd && \
     echo "📂 Contents:" && ls -la && \
