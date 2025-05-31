@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VoteSphere - Add Candidate</title>
     <link rel="stylesheet" href="../../../../../../../../Downloads/Frontend%2010/styles/global.css" />
+    <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"

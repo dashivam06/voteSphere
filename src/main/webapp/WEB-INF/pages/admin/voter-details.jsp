@@ -1,7 +1,6 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
@@ -12,6 +11,8 @@
   <title>VoteSphere - Account Request Details</title>
   <link rel="stylesheet" href="../styles/global.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script>
     tailwind.config = {

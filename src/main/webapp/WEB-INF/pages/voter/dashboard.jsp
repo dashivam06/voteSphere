@@ -11,6 +11,8 @@
 <title>VoteSphere - Voter Dashboard</title>
 <link rel="stylesheet" href="../styles/global.css" />
 <script src="https://cdn.tailwindcss.com"></script>
+	<link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+
 	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 	<link
