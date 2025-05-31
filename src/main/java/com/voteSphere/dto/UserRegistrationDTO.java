@@ -9,9 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
+
 public class UserRegistrationDTO {
 
     // Simple form fields
@@ -59,5 +57,139 @@ public class UserRegistrationDTO {
         this.thumbPrint = request.getPart("thumb_print");
     }
 
+    public String getVoterId() {
+        return voterId;
+    }
 
+    public void setVoterId(String voterId) {
+        this.voterId = voterId;
+    }
+
+    public Part getVoterCardFront() {
+        return voterCardFront;
+    }
+
+    public void setVoterCardFront(Part voterCardFront) {
+        this.voterCardFront = voterCardFront;
+    }
+
+    public Part getThumbPrint() {
+        return thumbPrint;
+    }
+
+    public void setThumbPrint(Part thumbPrint) {
+        this.thumbPrint = thumbPrint;
+    }
+
+    public String getTemporaryAddress() {
+        return temporaryAddress;
+    }
+
+    public void setTemporaryAddress(String temporaryAddress) {
+        this.temporaryAddress = temporaryAddress;
+    }
+
+    public Part getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(Part profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPermanentAddress() {
+        return permanentAddress;
+    }
+
+    public void setPermanentAddress(String permanentAddress) {
+        this.permanentAddress = permanentAddress;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Part getImageHoldingCitizenship() {
+        return imageHoldingCitizenship;
+    }
+
+    public void setImageHoldingCitizenship(Part imageHoldingCitizenship) {
+        this.imageHoldingCitizenship = imageHoldingCitizenship;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public Part getCitizenshipFront() {
+        return citizenshipFront;
+    }
+
+    public void setCitizenshipFront(Part citizenshipFront) {
+        this.citizenshipFront = citizenshipFront;
+    }
+
+    public Part getCitizenshipBack() {
+        return citizenshipBack;
+    }
+
+    public void setCitizenshipBack(Part citizenshipBack) {
+        this.citizenshipBack = citizenshipBack;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 }
