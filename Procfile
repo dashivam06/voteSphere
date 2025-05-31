@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/dependency/webapp-runner.jar target/voteSphere.war
+web: java -Dserver.port=${PORT} -jar target/dependency/webapp-runner.jar --enable-naming --port ${PORT} target/voteSphere.war
