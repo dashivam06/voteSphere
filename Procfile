@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/voteSphere.war
+web: java -Dserver.port=$PORT -jar target/dependency/webapp-runner.jar target/voteSphere.war

@@ -199,13 +199,14 @@
         <version>3.3.1</version> <!-- Use the latest stable version -->
       </plugin>
 
+      <!-- Ensure webapp-runner is copied during package phase -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.6.0</version>
         <executions>
           <execution>
-            <id>copy-webapp-runner</id>
+            <id>copy-dependencies</id>
             <phase>package</phase>
             <goals>
               <goal>copy</goal>
@@ -217,11 +218,23 @@
                   <artifactId>webapp-runner</artifactId>
                   <version>9.0.71.0</version>
                   <destFileName>webapp-runner.jar</destFileName>
+                  <outputDirectory>target/dependency</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <!-- Make sure the WAR is built correctly -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.2</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <warName>voteSphere</warName>
+        </configuration>
       </plugin>
     </plugins>
   </build>
