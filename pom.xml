@@ -125,8 +125,7 @@
     <dependency>
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
-      <version>RELEASE</version>
-      <scope>compile</scope>
+      <version>26.0.2</version>
     </dependency>
 
 
@@ -181,8 +180,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.10.1</version> <!-- Ensure you're using a newer version -->
         <configuration>
-          <source>21</source>   <!-- Set to 21 for Java 21 -->
-          <target>21</target>   <!-- Set to 21 for Java 21 -->
+          <source>17</source>   <!-- Set to 21 for Java 21 -->
+          <target>17</target>   <!-- Set to 21 for Java 21 -->
         </configuration>
       </plugin>
 
