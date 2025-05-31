@@ -1,26 +1,23 @@
-# 🏗️ Build stage using Maven
-FROM maven:3.8.7-eclipse-temurin-17 AS build
+# Build stage
+FROM maven:3.8.6-openjdk-17 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# 🚀 Runtime stage using Tomcat
-FROM tomcat:10.1.24-jdk17-temurin
-WORKDIR /usr/local/tomcat
-RUN rm -rf webapps/*
+# Runtime stage
+FROM tomcat:10.1.24-jdk17
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# ✅ Copy WAR to Tomcat's ROOT.war (Railway serves from /)
-COPY --from=build /app/target/voteSphere.war webapps/ROOT.war
+# Copy application and resources
+COPY --from=build /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=build /app/src/main/resources/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/
 
-# 🛠️ Set environment variable for Railway
-ENV CATALINA_OPTS="-Dserver.port=${PORT}"
+# Environment configuration
+ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
+                   -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
+                   -Dserver.port=\$PORT \
+                   -Dspring.config.additional-location=file:/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/"
 
-# ❤️ Health check to verify app is alive
-HEALTHCHECK --interval=30s --timeout=5s \
-  CMD curl -f http://localhost:${PORT}/ || exit 1
-
-# 🔓 Expose Railway's provided port
-EXPOSE ${PORT}
-
-# 🚀 Start Tomcat
-CMD ["catalina.sh", "run"]
+EXPOSE 8080
+CMD sed -i "s/port=\"8080\"/port=\"\$PORT\"/" /usr/local/tomcat/conf/server.xml && \
+    catalina.sh run
