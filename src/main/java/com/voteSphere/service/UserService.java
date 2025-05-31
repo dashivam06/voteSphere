@@ -36,25 +36,24 @@ public class UserService {
 		String permanentAddress = request.getParameter("permanent_address");
 		String temporaryAddress = request.getParameter("temporary_address");
 
-		String appRealPath = request.getServletContext().getRealPath("");
 		long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 		// Process profile image upload
 		String profileImage = ImgUploadUtil.processImageUpload(request, "profile_image", "profile_image_error",
-				"user-profile", appRealPath, maxImageSize);
+				"user-profile",  maxImageSize);
 
 		// Process document images
 		String imageHoldingCitizenship = ImgUploadUtil.processImageUpload(request, "image_holding_citizenship",
-				"image_holding_citizenship_error", "user-docs", appRealPath, maxImageSize);
+				"image_holding_citizenship_error", "user-docs",  maxImageSize);
 		String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front",
-				"voter_card_front_error", "user-docs", appRealPath, maxImageSize);
+				"voter_card_front_error", "user-docs",  maxImageSize);
 
 		String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front",
-				"citizenship_front_error", "user-docs", appRealPath, maxImageSize);
+				"citizenship_front_error", "user-docs",  maxImageSize);
 		String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back",
-				"citizenship_back_error", "user-docs", appRealPath, maxImageSize);
+				"citizenship_back_error", "user-docs",  maxImageSize);
 		String thumbPrint = ImgUploadUtil.processImageUpload(request, "thumb_print", "thumb_print_error",
-				"user-docs", appRealPath, maxImageSize);
+				"user-docs",  maxImageSize);
 
 		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null
 				|| citizenshipFront == null || citizenshipBack == null || thumbPrint == null) {
@@ -430,12 +429,11 @@ public class UserService {
 
 
 
-		String appRealPath = request.getServletContext().getRealPath("");
 		long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 		// Process profile image upload
 		String profileImage = ImgUploadUtil.processImageUpload(request, "profile_image", "profile_image_error",
-				"user-profile", appRealPath, maxImageSize);
+				"user-profile",  maxImageSize);
 
 
 		if (hasErrors) {

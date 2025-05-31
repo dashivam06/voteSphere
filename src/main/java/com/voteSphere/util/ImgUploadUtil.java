@@ -17,6 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class ImgUploadUtil {
 	private static final Logger logger = LogManager.getLogger(ImgUploadUtil.class);
@@ -80,7 +81,7 @@ public class ImgUploadUtil {
 	}
 
 	public static String processImageUpload(HttpServletRequest request, String formFieldName, String errorAttributeName,
-											String uploadDirectory, String appRealPath, long maxFileSizeInBytes) {
+											String uploadDirectory, long maxFileSizeInBytes) {
 		try {
 			Part imagePart = request.getPart(formFieldName);
 
@@ -114,4 +115,115 @@ public class ImgUploadUtil {
 			return null;
 		}
 	}
+
+	public static CompletableFuture<String> saveUploadedImageToCloudinaryAsync(Part filePart, String subfolder) {
+		return CompletableFuture.supplyAsync(() -> {
+			if (filePart == null || filePart.getSize() == 0) {
+				logger.warn("No file uploaded or empty file for subfolder: {}", subfolder);
+				throw new RuntimeException("No file uploaded or empty file");
+			}
+
+			Path tempFile = null;
+			try {
+				Cloudinary cloudinary = CloudinaryUtil.getInstance();
+				String originalFileName = filePart.getSubmittedFileName();
+				String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+				String uniqueName = UUID.randomUUID().toString() + extension.toLowerCase();
+
+				tempFile = Files.createTempFile("cloudinary-upload-", extension);
+				try (InputStream input = filePart.getInputStream()) {
+					Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+				}
+
+				Map<String, Object> uploadOptions = new HashMap<>();
+				uploadOptions.put("public_id", uniqueName);
+				if (!subfolder.isEmpty()) {
+					uploadOptions.put("folder", subfolder);
+				}
+
+				Map<?, ?> uploadResult = cloudinary.uploader().upload(tempFile.toFile(), uploadOptions);
+				String secureUrl = (String) uploadResult.get("secure_url");
+				logger.info("Image uploaded successfully to Cloudinary: {}", secureUrl);
+				return secureUrl;
+			} catch (Exception e) {
+				logger.error("Error while uploading image to Cloudinary", e);
+				throw new RuntimeException("Failed to upload image to Cloudinary: " + e.getMessage(), e);
+			} finally {
+				if (tempFile != null) {
+					try {
+						Files.deleteIfExists(tempFile);
+					} catch (IOException e) {
+						logger.warn("Failed to delete temporary file: {}", tempFile, e);
+					}
+				}
+			}
+		});
+	}
+
+
+	public static CompletableFuture<String> processImageUploadAsync(HttpServletRequest request,
+																	String formFieldName, String errorAttributeName,
+																	String uploadDirectory,
+																	long maxFileSizeInBytes) {
+		try {
+			Part imagePart = request.getPart(formFieldName);
+			// Delegate to shared method, passing request for setting attributes on error
+			return processImageUploadAsync(imagePart, request, errorAttributeName, uploadDirectory, maxFileSizeInBytes);
+		} catch (Exception e) {
+			logger.error("Error getting part from request for field: {}", formFieldName, e);
+			request.setAttribute(errorAttributeName, "Failed to get uploaded file: " + e.getMessage());
+			return CompletableFuture.completedFuture(null);
+		}
+	}
+
+
+	public static CompletableFuture<String> processImageUploadAsync(Part imagePart,
+																	String uploadDirectory,
+																	long maxFileSizeInBytes) {
+
+		return processImageUploadAsync(imagePart, null, "error", uploadDirectory, maxFileSizeInBytes);
+	}
+
+
+	private static CompletableFuture<String> processImageUploadAsync(Part imagePart,
+																	 HttpServletRequest request,
+																	 String errorAttributeName,
+																	 String uploadDirectory,
+																	 long maxFileSizeInBytes) {
+		return CompletableFuture.supplyAsync(() -> {
+			try {
+				if (imagePart == null || imagePart.getSize() == 0) {
+					logger.warn("No image uploaded");
+					if (request != null) request.setAttribute(errorAttributeName, "Please upload an image.");
+					return null;
+				}
+
+				if (!ValidationUtil.isValidImageExtension(imagePart)) {
+					logger.warn("Invalid image extension");
+					if (request != null) request.setAttribute(errorAttributeName, "Image must be jpg, jpeg, png, or gif.");
+					return null;
+				}
+
+				if (imagePart.getSize() > maxFileSizeInBytes) {
+					logger.warn("Image too large. Size: {} bytes", imagePart.getSize());
+					if (request != null)
+						request.setAttribute(errorAttributeName,
+								"Image size must be less than " + (maxFileSizeInBytes / (1024 * 1024)) + "MB.");
+					return null;
+				}
+
+				String savedPath = saveUploadedImageToCloudinaryAsync(imagePart, uploadDirectory).get();
+				logger.info("Image uploaded successfully. Saved at: {}", savedPath);
+				return savedPath;
+			} catch (Exception e) {
+				logger.error("Error during image upload", e);
+				if (request != null) {
+					request.setAttribute(errorAttributeName, "Error while uploading image: " + e.getMessage());
+					request.removeAttribute(errorAttributeName);
+				}
+				return null;
+			}
+		});
+	}
+
 }

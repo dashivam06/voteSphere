@@ -34,12 +34,11 @@ public class ElectionService {
 		String endTimeStr = request.getParameter("end_time")+":00";
 
 
-		String appRealPath = request.getServletContext().getRealPath("");
 		long maxImageSize = 2 * 1024 * 1024;
 
 		// Process cover image
 		String coverImageName = ImgUploadUtil.processImageUpload(request, "cover_image", "cover_image_error",
-				"election-cover-image", appRealPath, maxImageSize);
+				"election-cover-image",  maxImageSize);
 		if (coverImageName == null) {
 			hasErrors = true;
 			logger.warn("Validation failed: Cover image is missing.");
@@ -239,13 +238,12 @@ public class ElectionService {
 		}
 		
 		
-		 // Set up paths and max file size for image uploads
-	    String appRealPath = request.getServletContext().getRealPath("");
+
 	    long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 	    // Process profile image upload (if present)
 	    String coverImage = ImgUploadUtil.processImageUpload(request, "cover_image", "election_cover_image_error",
-	            "election_cover_image", appRealPath, maxImageSize);
+	            "election_cover_image",  maxImageSize);
 
 
 // If there are validation errors, return false

@@ -64,7 +64,7 @@ public class ValidationUtil {
 
 	// 6. Validate if a number is of 10 digits and starts with 98
 	public static boolean isValidPhoneNumber(String number) {
-		return number != null && number.matches("^98\\d{8}$");
+		return number != null && number.matches("^(\\+977[-\\s]?)?98\\d{8}$");
 	}
 
 	// 7. Validate if a password is composed of at least 1 capital letter, 1 number,

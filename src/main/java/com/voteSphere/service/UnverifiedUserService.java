@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.voteSphere.dto.UserRegistrationDTO;
 import com.voteSphere.model.AuthUser;
 import com.voteSphere.util.ImgUploadUtil;
 import com.voteSphere.util.SessionUtil;
@@ -24,170 +26,87 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UnverifiedUserService {
 
 	private static final Logger logger = LogManager.getLogger(UnverifiedUserService.class);
+	public static CompletableFuture<Boolean> registerUnverifiedUserAsync(UserRegistrationDTO dto) {
+		return CompletableFuture.supplyAsync(() -> {
+			try {
 
-	public static boolean registerUnverifiedUser(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		boolean hasErrors = false;
+				long maxImageSize = 2 * 1024 * 1024; // 2MB
 
-		// Extract parameters from request
-		String firstName = request.getParameter("first_name");
-		String lastName = request.getParameter("last_name");
-		String voterId = request.getParameter("voter_id");
-		String email = request.getParameter("notification_email");
-		String phoneNumber = request.getParameter("phone_number");
-		String password = request.getParameter("password");
-		String confirmPassword = request.getParameter("confirm_password");
-		String dob = request.getParameter("dob");
-		String gender = request.getParameter("gender");
-		String permanentAddress = request.getParameter("permanent_address");
-		String temporaryAddress = request.getParameter("temporary_address");
+				// Upload images asynchronously, assuming ImgUploadUtil can accept Part directly
+				CompletableFuture<String> profileImageFuture = ImgUploadUtil.processImageUploadAsync(
+						dto.getProfileImage(), "unverified-user-profile",  maxImageSize);
 
-		String appRealPath = request.getServletContext().getRealPath("");
-		long maxImageSize = 2 * 1024 * 1024; // 2MB
+				CompletableFuture<String> imageHoldingCitizenshipFuture = ImgUploadUtil.processImageUploadAsync(
+						dto.getImageHoldingCitizenship(), "unverified-user-docs",  maxImageSize);
 
-		// Process profile image upload
-		String profileImage = ImgUploadUtil.processImageUpload(request, "profile_image", "profile_image_error",
-				"unverified-user-profile", appRealPath, maxImageSize);
+				CompletableFuture<String> voterCardFrontFuture = ImgUploadUtil.processImageUploadAsync(
+						dto.getVoterCardFront(), "unverified-user-docs",  maxImageSize);
 
-		// Process document images
-		String imageHoldingCitizenship = ImgUploadUtil.processImageUpload(request, "image_holding_citizenship",
-				"image_holding_citizenship_error", "unverified-user-docs", appRealPath, maxImageSize);
-		String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front",
-				"voter_card_front_error", "unverified-user-docs", appRealPath, maxImageSize);
+				CompletableFuture<String> citizenshipFrontFuture = ImgUploadUtil.processImageUploadAsync(
+						dto.getCitizenshipFront(), "unverified-user-docs",  maxImageSize);
 
-		String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front",
-				"citizenship_front_error", "unverified-user-docs", appRealPath, maxImageSize);
-		String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back",
-				"citizenship_back_error", "unverified-user-docs", appRealPath, maxImageSize);
-		String thumbPrint = ImgUploadUtil.processImageUpload(request, "thumb_print", "thumb_print_error",
-				"unverified-user-docs", appRealPath, maxImageSize);
+				CompletableFuture<String> citizenshipBackFuture = ImgUploadUtil.processImageUploadAsync(
+						dto.getCitizenshipBack(), "unverified-user-docs",  maxImageSize);
 
-		if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null
-				|| citizenshipFront == null || citizenshipBack == null || thumbPrint == null) {
-			hasErrors = true;
-			logger.warn("One or more required document images are missing or failed to upload.");
+				CompletableFuture<String> thumbPrintFuture = ImgUploadUtil.processImageUploadAsync(
+						dto.getThumbPrint(), "unverified-user-docs",  maxImageSize);
 
-		}
+				// Wait for all uploads
+				CompletableFuture.allOf(
+						profileImageFuture,
+						imageHoldingCitizenshipFuture,
+						voterCardFrontFuture,
+						citizenshipFrontFuture,
+						citizenshipBackFuture,
+						thumbPrintFuture
+				).join();
 
-		// Field validations
-		if (ValidationUtil.isNullOrEmpty(firstName)) {
-			logger.warn("Validation failed: First name is empty.");
-			request.setAttribute("firstName_error", "First name is required.");
-			hasErrors = true;
-		} else if (!ValidationUtil.isAlphabetic(firstName)) {
-			logger.warn("Validation failed: First name contains non-alphabetic characters.");
-			request.setAttribute("firstName_error", "First name must contain only letters.");
-			hasErrors = true;
-		}
+				// Retrieve image paths
+				String profileImage = profileImageFuture.get();
+				String imageHoldingCitizenship = imageHoldingCitizenshipFuture.get();
+				String voterCardFront = voterCardFrontFuture.get();
+				String citizenshipFront = citizenshipFrontFuture.get();
+				String citizenshipBack = citizenshipBackFuture.get();
+				String thumbPrint = thumbPrintFuture.get();
 
-		if (ValidationUtil.isNullOrEmpty(lastName)) {
-			logger.warn("Validation failed: Last name is empty.");
-			request.setAttribute("lastName_error", "Last name is required.");
-			hasErrors = true;
-		} else if (!ValidationUtil.isAlphabetic(lastName)) {
-			logger.warn("Validation failed: Last name contains non-alphabetic characters.");
-			request.setAttribute("lastName_error", "Last name must contain only letters.");
-			hasErrors = true;
-		}
+				// If any image failed
+				if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null ||
+						citizenshipFront == null || citizenshipBack == null || thumbPrint == null) {
+					// Log and return false, no request attributes set
+					logger.warn("One or more required document images failed to upload.");
+					return false;
+				}
 
-		if (ValidationUtil.isNullOrEmpty(voterId)) {
-			logger.warn("Validation failed: Voter ID is empty.");
-			request.setAttribute("voterId_error", "Voter ID is required.");
-			hasErrors = true;
-		}
+				// Hash password directly from DTO (assuming it's validated on frontend)
+				String hashedPassword = BCrypt.withDefaults().hashToString(12, dto.getPassword().toCharArray());
 
-		if (ValidationUtil.isNullOrEmpty(email)) {
-			logger.warn("Validation failed: Email is empty.");
-			request.setAttribute("email_error", "Email is required.");
-			hasErrors = true;
-		} else if (!ValidationUtil.isValidEmail(email)) {
-			logger.warn("Validation failed: Invalid email format - {}", email);
-			request.setAttribute("email_error", "Please enter a valid email address.");
-			hasErrors = true;
-		}
+				UnverifiedUser newUser = new UnverifiedUser(
+						dto.getFirstName(),
+						dto.getLastName(),
+						dto.getVoterId(),
+						dto.getEmail(),
+						profileImage,
+						dto.getPhoneNumber(),
+						imageHoldingCitizenship,
+						voterCardFront,
+						citizenshipFront,
+						citizenshipBack,
+						thumbPrint,
+						hashedPassword,
+						Timestamp.valueOf(dto.getDob() + " 00:00:00"),
+						dto.getGender(),
+						dto.getPermanentAddress(),
+						dto.getTemporaryAddress()
+				);
 
-		if (ValidationUtil.isNullOrEmpty(phoneNumber)) {
-			logger.warn("Validation failed: Phone number is empty.");
-			request.setAttribute("phoneNumber_error", "Phone number is required.");
-			hasErrors = true;
-		} else if (!ValidationUtil.isValidPhoneNumber(phoneNumber)) {
-			logger.warn("Validation failed: Invalid phone number - {}", phoneNumber);
-			request.setAttribute("phoneNumber_error", "Please enter a valid phone number.");
-			hasErrors = true;
-		}
+				return UnverifiedUserDao.createUnverifiedUser(newUser);
 
-		if (ValidationUtil.isNullOrEmpty(dob)) {
-			logger.warn("Validation failed: Date of birth is empty.");
-			request.setAttribute("dob_error", "Date of birth is required.");
-			hasErrors = true;
-		}
-
-		if (ValidationUtil.isNullOrEmpty(gender)) {
-			logger.warn("Validation failed: Gender is empty.");
-			request.setAttribute("gender_error", "Gender is required.");
-			hasErrors = true;
-		}
-
-		if (ValidationUtil.isNullOrEmpty(permanentAddress)) {
-			logger.warn("Validation failed: Permanent address is empty.");
-			request.setAttribute("permanentAddress_error", "Permanent address is required.");
-			hasErrors = true;
-		}
-
-		if (ValidationUtil.isNullOrEmpty(password)) {
-			logger.warn("Validation failed: Password is empty.");
-			request.setAttribute("password_error", "Password is required.");
-			hasErrors = true;
-		} else if (!ValidationUtil.isValidPassword(password)) {
-			logger.warn("Validation failed: Password does not meet strength requirements.");
-			request.setAttribute("password_error",
-					"Password must be at least 8 characters with uppercase, lowercase, and numbers.");
-			hasErrors = true;
-		}
-
-
-		// Validate confirm password
-		if (ValidationUtil.isNullOrEmpty(confirmPassword)) {
-			logger.warn("Validation failed: Confirm Password is empty.");
-			request.setAttribute("confirmPassword_error", "Confirm password is required.");
-			hasErrors = true;
-		}
-
-		// Check if passwords match
-		if (!ValidationUtil.isNullOrEmpty(password) && !password.equals(confirmPassword)) {
-			logger.warn("Validation failed: Passwords do not match.");
-			request.setAttribute("passwordMatch_error", "Passwords do not match.");
-			hasErrors = true;
-		}
-
-
-
-		if (hasErrors) {
-			logger.info("User registration aborted due to validation errors.");
-			return false;
-		}
-
-		try {
-
-			String hashedPassword = BCrypt.withDefaults().hashToString(12, password.toCharArray());
-
-			// Create unverified user object
-			UnverifiedUser newUser = new UnverifiedUser(firstName, lastName, voterId, email, profileImage, phoneNumber,
-					imageHoldingCitizenship, voterCardFront, citizenshipFront, citizenshipBack,
-					thumbPrint, hashedPassword, Timestamp.valueOf(dob + " 00:00:00"), gender, permanentAddress,
-					temporaryAddress);
-
-
-			return UnverifiedUserDao.createUnverifiedUser(newUser);
-		} catch (DataAccessException dae) {
-			logger.error("Failed to register unverified user: " + dae.getMessage(), dae);
-			request.setAttribute("registration_error", dae.getUserMessage());
-			return false;
-		} catch (Exception e) {
-			logger.error("Unexpected error occurred while registering unverified user", e);
-			request.setAttribute("registration_error", "An unexpected error occurred. Please try again.");
-			return false;
-		}
+			} catch (Exception e) {
+				logger.error("Error during user registration", e);
+				// No request.setAttribute here, just return false
+				return false;
+			}
+		});
 	}
 
 	public static UnverifiedUser getUnverifiedUserById(HttpServletRequest request, HttpServletResponse response,
@@ -352,26 +271,24 @@ public class UnverifiedUserService {
 			hasErrors = true;
 		}
 
-	    // Set up paths and max file size for image uploads
-	    String appRealPath = request.getServletContext().getRealPath("");
 	    long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 	    // Process profile image upload (if present)
 	    String profileImage = ImgUploadUtil.processImageUpload(request, "profile_image", "profile_image_error",
-	            "unverified-user-profile", appRealPath, maxImageSize);
+	            "unverified-user-profile",  maxImageSize);
 
 	    // Process document images (if present)
 	    String imageHoldingCitizenship = ImgUploadUtil.processImageUpload(request, "image_holding_citizenship",
-	            "image_holding_citizenship_error", "unverified-user-docs", appRealPath, maxImageSize);
+	            "image_holding_citizenship_error", "unverified-user-docs",  maxImageSize);
 	    String voterCardFront = ImgUploadUtil.processImageUpload(request, "voter_card_front", "voter_card_front_error",
-	            "unverified-user-docs", appRealPath, maxImageSize);
+	            "unverified-user-docs",  maxImageSize);
 
 	    String citizenshipFront = ImgUploadUtil.processImageUpload(request, "citizenship_front", "citizenship_front_error",
-	            "unverified-user-docs", appRealPath, maxImageSize);
+	            "unverified-user-docs",  maxImageSize);
 	    String citizenshipBack = ImgUploadUtil.processImageUpload(request, "citizenship_back", "citizenship_back_error",
-	            "unverified-user-docs", appRealPath, maxImageSize);
+	            "unverified-user-docs",  maxImageSize);
 	    String thumbPrint = ImgUploadUtil.processImageUpload(request, "thumb_print", "thumb_print_error",
-	            "unverified-user-docs", appRealPath, maxImageSize);
+	            "unverified-user-docs",  maxImageSize);
 
 	    // Check if any image upload failed or is missing
 	    if (profileImage == null || imageHoldingCitizenship == null || voterCardFront == null

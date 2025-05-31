@@ -35,11 +35,10 @@ public class CandidateService {
         String partyIdStr = request.getParameter("party_id");
         String electionIdStr = request.getParameter("election_id");
 
-        String appRealPath = request.getServletContext().getRealPath("");
         long maxImageSize = 2 * 1024 * 1024;
 
         String profileImageName = ImgUploadUtil.processImageUpload(request, "candidate_profile_image", "candidate_profile_image_error",
-                "candidate-profile-image", appRealPath, maxImageSize);
+                "candidate-profile-image", maxImageSize);
         if (profileImageName == null) {
             hasErrors = true;
         }
@@ -261,8 +260,7 @@ public class CandidateService {
         }
 
         try {
-            // Set up paths and max file size for image uploads
-            String appRealPath = request.getServletContext().getRealPath("");
+
             long maxImageSize = 2 * 1024 * 1024; // 2MB
 
             profileImage = ImgUploadUtil.processImageUpload(
@@ -270,7 +268,6 @@ public class CandidateService {
                     "candidate_profile_image",
                     "candidate_profile_image_error",
                     "candidate-profile-image",
-                    appRealPath,
                     maxImageSize
             );
 

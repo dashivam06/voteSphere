@@ -2,7 +2,9 @@ package com.voteSphere.controller;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.concurrent.CompletableFuture;
 
+import com.voteSphere.dto.UserRegistrationDTO;
 import com.voteSphere.model.AuthUser;
 import com.voteSphere.service.UnverifiedUserService;
 
@@ -13,6 +15,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @WebServlet("/register")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, // 1 MB
@@ -21,31 +25,40 @@ import jakarta.servlet.http.HttpServletResponse;
 public class RegisterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger  = LogManager.getLogger(RegisterServlet.class);
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		try {
-			boolean user = UnverifiedUserService.registerUnverifiedUser(request, response);
-			Enumeration<String> parameterNames = request.getParameterNames();
+		UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO(request);
 
-			while (parameterNames.hasMoreElements()) {
-			    String paramName = parameterNames.nextElement();
-			    String paramValue = request.getParameter(paramName);
+		System.out.println(userRegistrationDTO.toString());
+
+
+		// Start the asynchronous registration process
+		CompletableFuture<Boolean> registrationFuture =
+				UnverifiedUserService.registerUnverifiedUserAsync(userRegistrationDTO);
+
+		// Handle the completion of the registration
+		registrationFuture.whenComplete((success, ex) -> {
+			try {
+				if (ex != null) {
+					// Handle any exceptions that occurred during registration
+					logger.error("Registration failed", ex);
+
+					return;
+				}
+
+
+
+			} catch (Exception e) {
+				logger.error("Error during request forwarding", e);
+
 			}
-
-			if (user) {
-				request.getRequestDispatcher("/WEB-INF/pages/voter/application-received.jsp")
+		});
+		request.getRequestDispatcher("/WEB-INF/pages/voter/application-received.jsp")
 				.forward(request, response);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			request.setAttribute("error", "Registration failed.");
-			request.getRequestDispatcher("/WEB-INF/pages/register.jsp").forward(request, response);
-		}
-
 	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

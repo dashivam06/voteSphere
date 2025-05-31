@@ -29,19 +29,18 @@ public class PartyService {
 		String founderName = request.getParameter("founder_name");
 		String description = request.getParameter("description");
 
-		String appRealPath = request.getServletContext().getRealPath("");
 		long maxImageSize = 2 * 1024 * 1024;
 
 		// Process symbol image
 		String symbolImageName = ImgUploadUtil.processImageUpload(request, "symbol_image", "symbol_image_error",
-				"party-symbol-image", appRealPath, maxImageSize);
+				"party-symbol-image",  maxImageSize);
 		if (symbolImageName == null) {
 			hasErrors = true;
 		}
 
 		// Process cover image
 		String coverImageName = ImgUploadUtil.processImageUpload(request, "cover_image", "cover_image_error",
-				"party-cover-image", appRealPath, maxImageSize);
+				"party-cover-image",  maxImageSize);
 
 		if (coverImageName == null) {
 			hasErrors = true;
@@ -244,15 +243,14 @@ public class PartyService {
 		}
 
 
-		String appRealPath = request.getServletContext().getRealPath("");
 		long maxImageSize = 2 * 1024 * 1024; // 2MB
 
 		// 2. Upload new images if present
 		String symbolImage = ImgUploadUtil.processImageUpload(
-				request, "symbol_image", "symbol_image_error", "party-symbols", appRealPath, maxImageSize);
+				request, "symbol_image", "symbol_image_error", "party-symbols", maxImageSize);
 
 		String coverImage = ImgUploadUtil.processImageUpload(
-				request, "cover_image", "cover_image_error", "party-covers", appRealPath, maxImageSize);
+				request, "cover_image", "cover_image_error", "party-covers", maxImageSize);
 
 		// 3. Fallback to old images if not re-uploaded
 		if (symbolImage == null) {
