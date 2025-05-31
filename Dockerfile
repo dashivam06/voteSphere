@@ -24,4 +24,9 @@ ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar 
                    -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
                    -Dserver.port=\$PORT"
 EXPOSE $PORT
-ENTRYPOINT ["./entrypoint.sh"]
+RUN echo $'#!/bin/sh\n\
+sed -i "s/port=\"8080\"/port=\"$PORT\"/" conf/server.xml\n\
+catalina.sh run\n' > entrypoint.sh && \
+    chmod +x entrypoint.sh
+RUN printf '#!/bin/sh\nsed -i "s/port=\\"8080\\"/port=\\"$PORT\\"/" conf/server.xml\nexec catalina.sh run\n' > entrypoint.sh && \
+    chmod +x entrypoint.sh
