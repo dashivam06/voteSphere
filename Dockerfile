@@ -1,18 +1,28 @@
-# ========== Stage 1: Build the WAR file ==========
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
-
+# Build stage
+FROM maven:3.8.6-openjdk-17 AS build
 WORKDIR /app
-
-COPY pom.xml .
-COPY src ./src
-
+COPY . .
 RUN mvn clean package -DskipTests
 
-# ========== Stage 2: Run with Tomcat ==========
-FROM tomcat:10.1-jdk17
-
+# Runtime stage
+FROM tomcat:10.1.41-jdk17
 RUN rm -rf /usr/local/tomcat/webapps/*
-COPY --from=builder /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
 
-EXPOSE 8080
-CMD ["catalina.sh", "run"]
+# Railway-specific changes:
+# 1. Use PORT environment variable
+# 2. Add health check support
+# 3. Configure for Railway's proxy
+
+COPY --from=build /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
+
+# Environment configuration
+ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
+                   -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
+                   -Dserver.port=$PORT"
+
+# Railway automatically sets $PORT (usually 8080, but don't hardcode)
+EXPOSE $PORT
+
+# Modified CMD for Railway:
+CMD sed -i "s/port=\"8080\"/port=\"$PORT\"/" /usr/local/tomcat/conf/server.xml && \
+    catalina.sh run
