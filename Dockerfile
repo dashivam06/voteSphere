@@ -1,35 +1,27 @@
-# 🏗️ Build stage using Maven
+# Build stage
 FROM maven:3.8.7-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# 🚀 Runtime stage using Tomcat
+# Runtime stage
 FROM tomcat:10.1.24-jdk17-temurin
 WORKDIR /usr/local/tomcat
 RUN rm -rf webapps/*
 
-# ✅ Copy WAR to Tomcat's ROOT.war (Railway serves from /)
+# Copy WAR and ensure proper permissions
 COPY --from=build /app/target/voteSphere.war webapps/ROOT.war
+RUN chmod -R 755 webapps/
 
-# 🐛 Debug info - Print working directory and contents
-RUN echo "🧭 Current directory:" && pwd && \
-    echo "📂 Contents:" && ls -la && \
-    echo "📂 webapps contents:" && ls -la webapps/
+# Create entrypoint script
+RUN echo $'#!/bin/sh\n\
+sed -i "s/port=\"8080\"/port=\"$PORT\"/" conf/server.xml\n\
+catalina.sh run\n' > entrypoint.sh && \
+    chmod +x entrypoint.sh
 
-
-# 🛠️ Set environment variable for Railway
-ENV CATALINA_OPTS="-Dserver.port=${PORT}"
-
-# ❤️ Health check to verify app is alive
-HEALTHCHECK --interval=30s --timeout=5s \
-  CMD curl -f http://localhost:${PORT}/ || exit 1
-
-# 🔓 Expose Railway's provided port
-EXPOSE ${PORT}
-
-# 🚀 Start Tomcat
-#CMD ["catalina.sh", "run"]
-COPY entrypoint.sh /usr/local/tomcat/entrypoint.sh
-RUN chmod +x /usr/local/tomcat/entrypoint.sh
-CMD ["/usr/local/tomcat/entrypoint.sh"]
+# Environment configuration
+ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
+                   -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
+                   -Dserver.port=\$PORT"
+EXPOSE $PORT
+ENTRYPOINT ["./entrypoint.sh"]
