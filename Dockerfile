@@ -8,21 +8,21 @@ RUN mvn clean package -DskipTests
 FROM tomcat:10.1.40-jdk17
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Railway-specific changes:
-# 1. Use PORT environment variable
-# 2. Add health check support
-# 3. Configure for Railway's proxy
-
+# Copy the built WAR file (renamed to ROOT.war for root context)
 COPY --from=build /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
 
-# Environment configuration
+# Environment configuration for Railway
 ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
                    -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
                    -Dserver.port=$PORT"
 
-# Railway automatically sets $PORT (usually 8080, but don't hardcode)
+# Health check (recommended for Railway)
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:$PORT/ || exit 1
+
+# Railway automatically sets $PORT (usually 8080)
 EXPOSE $PORT
 
-# Modified CMD for Railway:
+# Configure and start Tomcat
 CMD sed -i "s/port=\"8080\"/port=\"$PORT\"/" /usr/local/tomcat/conf/server.xml && \
     catalina.sh run
