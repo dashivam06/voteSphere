@@ -1,11 +1,11 @@
 # Build stage
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.8.6-jdk-17 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM maven:3.9.2-openjdk-17
+FROM tomcat:10.1.40-jdk17
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 # Railway-specific changes:
