@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM tomcat:10.1-jdk17
+FROM maven:3.9.2-openjdk-17
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 # Railway-specific changes:
