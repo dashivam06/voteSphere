@@ -14,14 +14,13 @@ COPY --from=build /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
 # Environment configuration
 ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
                    -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
-                   -Dserver.port=$PORT"
+                   -Dserver.port=${PORT}"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl -f http://localhost:$PORT/ || exit 1
+  CMD curl -f http://localhost:${PORT}/ || exit 1
 
-EXPOSE $PORT
+EXPOSE ${PORT}
 
 # Configure and start Tomcat
-CMD sed -i "s/port=\"8080\"/port=\"$PORT\"/" /usr/local/tomcat/conf/server.xml && \
-    catalina.sh run
+CMD ["catalina.sh", "run"]
