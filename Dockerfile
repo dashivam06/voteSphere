@@ -1,32 +1,32 @@
 # Build stage
-FROM maven:3.8.7-eclipse-temurin-17 AS build
+FROM --platform=linux/amd64 maven:3.8.7-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
+# Ensure properties file is copied during build
+RUN mkdir -p src/main/resources && \
+    test -f src/main/resources/application.properties || \
+    echo "Creating default properties" > src/main/resources/application.properties
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM tomcat:10.1.24-jdk17-temurin
-WORKDIR /usr/local/tomcat
-RUN rm -rf webapps/*
+FROM --platform=linux/amd64 tomcat:10.1.24-jdk17-temurin
+RUN rm -rf /usr/local/tomcat/webapps/ROOT*
 
-# Copy WAR and ensure proper permissions
-COPY --from=build /app/target/voteSphere.war webapps/ROOT.war
-RUN chmod -R 755 webapps/
-
-# Create entrypoint script
-RUN echo $'#!/bin/sh\n\
-sed -i "s/port=\"8080\"/port=\"$PORT\"/" conf/server.xml\n\
-catalina.sh run\n' > entrypoint.sh && \
-    chmod +x entrypoint.sh
+# Copy WAR file
+COPY --from=build /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
 
 # Environment configuration
-ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
-                   -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
-                   -Dserver.port=\$PORT"
-EXPOSE $PORT
-RUN echo $'#!/bin/sh\n\
-sed -i "s/port=\"8080\"/port=\"$PORT\"/" conf/server.xml\n\
-catalina.sh run\n' > entrypoint.sh && \
-    chmod +x entrypoint.sh
-RUN printf '#!/bin/sh\nsed -i "s/port=\\"8080\\"/port=\\"$PORT\\"/" conf/server.xml\nexec catalina.sh run\n' > entrypoint.sh && \
-    chmod +x entrypoint.sh
+ENV CATALINA_OPTS="-Dserver.port=8080 -Dspring.config.location=classpath:/,file:/usr/local/tomcat/conf/"
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
+
+# Copy properties file to external location (if needed)
+RUN mkdir -p /usr/local/tomcat/conf && \
+    touch /usr/local/tomcat/conf/application.properties
+
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/ || exit 1
+
+CMD ["catalina.sh", "run"]
