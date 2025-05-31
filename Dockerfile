@@ -5,7 +5,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Runtime stage
-FROM tomcat:10.1.24-jdk17
+FROM tomcat:10.1.24-jdk17-temurin
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 # Copy application and resources
