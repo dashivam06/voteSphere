@@ -1,26 +1,25 @@
-# Build stage
-FROM maven:3.8.6-jdk-17 AS build
+# Build stage - using verified Maven image
+FROM maven:3.8.7-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Runtime stage
-FROM tomcat:10.1.40-jdk17
+# Runtime stage - using verified Tomcat image
+FROM tomcat:10.1.24-jdk17-temurin
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy the built WAR file (renamed to ROOT.war for root context)
+# Railway-specific configuration
 COPY --from=build /app/target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
 
-# Environment configuration for Railway
+# Environment configuration
 ENV CATALINA_OPTS="-Dorg.apache.catalina.startup.ContextConfig.jarsToSkip=*.jar \
                    -Dorg.apache.catalina.startup.TldConfig.jarsToSkip=*.jar \
                    -Dserver.port=$PORT"
 
-# Health check (recommended for Railway)
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:$PORT/ || exit 1
 
-# Railway automatically sets $PORT (usually 8080)
 EXPOSE $PORT
 
 # Configure and start Tomcat
