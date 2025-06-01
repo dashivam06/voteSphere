@@ -31,7 +31,7 @@ ENV JAVA_OPTS="-Xmx512m -Xms256m"
 # Only copy the file if it exists – workaround
 # Optional copy without error is NOT directly supported by Docker, so you must ensure the file exists.
 # Option 1: just copy, but make sure the file exists locally
-COPY config/application.properties /usr/local/tomcat/conf/
+COPY src/main/resources/application.properties /usr/local/tomcat/conf/
 
 
 EXPOSE 8080
