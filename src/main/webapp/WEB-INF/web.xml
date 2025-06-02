@@ -6,8 +6,6 @@
 
   <display-name>VoteSphere</display-name>
 
-
-
   <error-page>
     <error-code>403</error-code>
     <location>/WEB-INF/pages/error/access-denied.jsp</location>
