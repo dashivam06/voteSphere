@@ -5,7 +5,7 @@ FROM tomcat:10.1.24-jdk17-temurin
 RUN rm -rf /usr/local/tomcat/webapps/ROOT*
 
 # Copy your WAR file directly (replace with your actual WAR file path)
-COPY target/voteSphere.war /usr/local/tomcat/webapps/ROOT.war
+COPY voteSphere.war /usr/local/tomcat/webapps/ROOT.war
 
 # Environment configuration for Railway
 ENV CATALINA_OPTS="-Dserver.port=${PORT:-8080} -Dspring.config.location=file:/usr/local/tomcat/conf/"
