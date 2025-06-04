@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="ne_NP" />
 <fmt:setLocale value="en_US" />
+<%@ include file="loader.jsp" %>
+
 
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

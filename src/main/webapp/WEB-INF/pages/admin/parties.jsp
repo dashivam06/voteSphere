@@ -3,6 +3,8 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.List"%>
+<%@ include file="loader.jsp" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
