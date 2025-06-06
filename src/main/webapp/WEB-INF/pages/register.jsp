@@ -259,6 +259,43 @@
         animation: slideRight 0.5s forwards;
       }
 
+      function
+
+      validateTerms
+      (
+      )
+      {
+        const terms = document . getElementById('terms')
+      ;
+        const validationSummary = document . getElementById('validation-summary-step4')
+      ;
+        const validationList = document . getElementById('validation-list-step4')
+      ;
+
+        if (! terms . checked
+      )
+      {
+      validationList.innerHTML
+
+      =
+      '<li>You must agree to the Terms and Conditions</li>'
+      ;
+      validationSummary.classList.
+
+      add
+      (
+      'visible'
+      )
+      ;
+      }
+      else {
+        validationSummary.classList.
+
+      remove('visible');
+      }
+
+      }
+
       @keyframes slideLeft {
         0% {
           opacity: 1;
@@ -517,6 +554,11 @@
         font-size: 0.875rem;
         margin-top: 4px;
         display: none;
+        padding: 8px;
+        border-radius: 4px;
+        background-color: #fee2e2;
+        border: 1px solid #fecaca;
+        white-space: pre-line;
       }
 
       .error-message.visible {
@@ -695,6 +737,9 @@
                     name="dob"
                     required
                     class="form-input"
+                    max="2007-06-06"
+                    min="1915-06-06"
+                    onblur="validateFormField('dob')"
                   />
                 </div>
               </div>
@@ -764,11 +809,12 @@
                     >Confirm Password</label
                   >
                   <input
-                    type="password"
-                    id="confirm_password"
-                    name="confirm_password"
-                    required
-                    class="form-input"
+                          type="password"
+                          id="confirm_password"
+                          name="confirm_password"
+                          required
+                          class="form-input"
+                          onblur="validatePasswordMatch(this, [])"
                   />
                 </div>
               </div>
@@ -787,8 +833,7 @@
 
               <!-- Validation Summary -->
               <div class="validation-summary" id="validation-summary-step1">
-                <strong>Please correct the following errors:</strong>
-                <ul id="validation-list-step1"></ul>
+
               </div>
             </div>
 
@@ -841,8 +886,6 @@
 
               <!-- Validation Summary -->
               <div class="validation-summary" id="validation-summary-step2">
-                <strong>Please correct the following errors:</strong>
-                <ul id="validation-list-step2"></ul>
               </div>
             </div>
 
@@ -858,7 +901,8 @@
                   <input
                     type="file"
                     id="profile_image"
-                    name="profile_image"
+                    name="profile_im
+                    age"
                     accept="image/*"
                     required
                     class="form-input"
@@ -927,8 +971,8 @@
 
               <!-- Validation Summary -->
               <div class="validation-summary" id="validation-summary-step3">
-                <strong>Please correct the following errors:</strong>
                 <ul id="validation-list-step3"></ul>
+
               </div>
             </div>
 
@@ -998,6 +1042,7 @@
                   name="terms"
                   required
                   class="form-checkbox"
+                  onchange="validateTerms()"
                 />
                 <label for="terms" class="form-check-label">
                   I agree to the
@@ -1025,8 +1070,9 @@
 
               <!-- Validation Summary -->
               <div class="validation-summary" id="validation-summary-step4">
-                <strong>Please correct the following errors:</strong>
-                <ul id="validation-list-step4"></ul>
+                <ul id="validation-list-step4">
+                  <li>You must agree to the Terms and Conditions</li>
+                </ul>
               </div>
             </div>
           </form>
@@ -1045,10 +1091,20 @@
     </footer>
 
     <script>
+      const maxFileSize = 1.5 * 1024 * 1024; // 1.5MB in bytes
+
       function nextStep(currentStep, nextStep) {
-        // Validate current step
+        // Validate current step and files if on step 3
         if (!validateStep(currentStep)) {
           return false;
+        }
+
+        if (currentStep === 3) {
+          if (!validateFileField('profile_image', 'Profile Image is required') ||
+                  !validateFileField('image_holding_citizenship', 'Image Holding Citizenship is required') ||
+                  !validateFileField('thumb_print', 'Thumb Print is required')) {
+            return false;
+          }
         }
 
         // Apply slide-out animation to current step
@@ -1093,6 +1149,12 @@
           `validation-list-step${stepNumber}`
         );
         const errors = [];
+
+        // Validate passwords if on current step is 1
+        if (stepNumber === 1) {
+          validatePassword(document.getElementById('password').value);
+          validatePasswordMatch(document.getElementById('confirm_password'), errors);
+        }
 
         // Step 1 validation
         if (stepNumber === 1) {
@@ -1147,48 +1209,61 @@
 
         // Step 3 validation
         else if (stepNumber === 3) {
-          validateFileField(
+          const isProfileImageValid = validateFileField(
             "profile_image",
             "Profile Image is required",
             errors
           );
-          validateFileField(
-            "image_holding_citizenship",
+          const isHoldingCitizenshipValid = validateFileField(
+            "image_holding_citizenship", 
             "Image Holding Citizenship is required",
             errors
           );
-          validateFileField("thumb_print", "Thumb Print is required", errors);
+          const isThumbPrintValid = validateFileField(
+            "thumb_print",
+            "Thumb Print is required", 
+            errors
+          );
+
+          if (!isProfileImageValid || !isHoldingCitizenshipValid || !isThumbPrintValid) {
+            return false;
+          }
         }
 
         // Step 4 validation
         else if (stepNumber === 4) {
-          validateFileField(
-            "voter_card_front",
-            "Voter Card Front is required",
-            errors
+          const isVoterCardValid = validateFileField(
+                  "voter_card_front",
+                  "Voter Card Front is required",
+                  errors
           );
-          validateFileField(
-            "citizenship_front",
-            "Citizenship Front is required",
-            errors
+          const isCitizenshipFrontValid = validateFileField(
+                  "citizenship_front",
+                  "Citizenship Front is required",
+                  errors
           );
-          validateFileField(
-            "citizenship_back",
-            "Citizenship Back is required",
-            errors
+          const isCitizenshipBackValid = validateFileField(
+                  "citizenship_back",
+                  "Citizenship Back is required",
+                  errors
           );
 
           // Check terms checkbox
           const terms = document.getElementById("terms");
           if (!terms.checked) {
             errors.push("You must agree to the Terms and Conditions");
+            const validationSummary = document.getElementById('validation-summary-step4');
+            const validationList = document.getElementById('validation-list-step4');
+            validationList.innerHTML = '<li>You must agree to the Terms and Conditions</li>';
+            validationSummary.classList.add('visible');
           }
 
-          // If no errors and this is the final step, submit the form
-          if (errors.length === 0) {
+          // If all validations pass, allow form submission  
+          if (errors.length === 0 && isVoterCardValid && isCitizenshipFrontValid && isCitizenshipBackValid && terms.checked) {
             document.getElementById("registrationForm").submit();
             return true;
           }
+          return false;
         }
 
         // If there are errors, show them
@@ -1220,17 +1295,205 @@
 
       function validateField(fieldId, errorMessage, errors) {
         const field = document.getElementById(fieldId);
+        const errorDiv = document.getElementById(`${fieldId}-error`) || createErrorDiv(fieldId);
+
         if (!field.value.trim()) {
           errors.push(errorMessage);
+          field.classList.add("error");
+          errorDiv.textContent = errorMessage;
+          errorDiv.classList.add("visible");
+        } else {
+          field.classList.remove("error");
+          errorDiv.classList.remove("visible");
+
+          // Check password match when confirm password field is validated
+          if (fieldId === 'confirm_password') {
+            const password = document.getElementById('password');
+            if (field.value !== password.value) {
+              errors.push('Passwords do not match');
+              field.classList.add("error");
+              errorDiv.textContent = 'Passwords do not match';
+              errorDiv.classList.add("visible");
+            }
+          }
+        }
+      }
+
+      // Add event listeners to all form fields
+      document.addEventListener('DOMContentLoaded', function () {
+        const formFields = document.querySelectorAll('input:not([type="file"]), textarea');
+        const fileFields = document.querySelectorAll('input[type="file"]');
+
+        formFields.forEach(field => {
+          if (field.id === 'password') {
+            field.addEventListener('blur', function () {
+              validatePassword(this.value);
+            });
+          } else if (field.id === 'confirm_password') {
+            field.addEventListener('blur', function () {
+              validatePasswordMatch(this, []);
+            });
+          }
+        });
+
+        fileFields.forEach(field => {
+          field.addEventListener('change', function () {
+            validateFileField(this.id, "", []);
+            validateFormField(this.id);
+          });
+        });
+
+        // Add blur event listener for password field
+        document.getElementById('password').addEventListener('blur', function () {
+          validatePassword(this.value);
+        });
+      });
+
+      function validateFormField(fieldId) {
+        const errors = [];
+        validateField(fieldId, `${fieldId.split('_').join(' ')} is required`, errors);
+
+        // Additional validation for specific fields
+        if (fieldId === 'email') {
+          validateEmail(document.getElementById(fieldId), errors);
+        } else if (fieldId === 'confirm_password') {
+          validatePasswordMatch(document.getElementById(fieldId), errors);
+        } else if (fieldId === 'dob') {
+          validateDateOfBirth(document.getElementById(fieldId), errors);
+        }
+      }
+
+      function validateDateOfBirth(field, errors) {
+        const dob = new Date(field.value);
+        const today = new Date();
+        const age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())
+                ? age - 1
+                : age;
+
+        const errorDiv = document.getElementById('dob-error') || createErrorDiv('dob');
+        if (actualAge < 18) {
+          errors.push('You must be at least 18 years old to register');
+          field.classList.add("error");
+          errorDiv.textContent = 'You must be at least 18 years old to register';
+          errorDiv.classList.add('visible');
+        } else if (actualAge > 110) {
+          errors.push('Please enter a valid date of birth');
+          field.classList.add("error");
+          errorDiv.textContent = 'Please enter a valid date of birth';
+          errorDiv.classList.add('visible');
+        } else if (actualAge > 110) {
+          errors.push('Please enter a valid date of birth');
+          field.classList.add("error");
+          errorDiv.textContent = 'Please enter a valid date of birth';
+          errorDiv.classList.add('visible');
+        } else {
+          field.classList.remove("error");
+          errorDiv.classList.remove('visible');
+        }
+      }
+
+      function validatePassword(password) {
+        const errors = [];
+        if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+          errors.push("Password must be at least 8 characters and include an uppercase letter, lowercase letter, number, and special character (!@#$%^&*).");
+          const passwordField = document.getElementById('password');
+          if (passwordField) {
+            passwordField.classList.add('error');
+            const errorDiv = document.getElementById('password-error') || createErrorDiv('password');
+            errorDiv.textContent = errors[0];
+            errorDiv.classList.add('visible');
+          }
+        } else {
+          const passwordField = document.getElementById('password');
+          if (passwordField) {
+            passwordField.classList.remove('error');
+            const errorDiv = document.getElementById('password-error');
+            if (errorDiv) {
+              errorDiv.classList.remove('visible');
+            }
+          }
+        }
+        return errors;
+      }
+      function createErrorDiv(fieldId) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.id = `${fieldId}-error`;
+        const field = document.getElementById(fieldId);
+        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+        return errorDiv;
+      }
+
+      function validateEmail(field, errors) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(field.value)) {
+          errors.push('Please enter a valid email address');
+          field.classList.add("error");
+        }
+      }
+
+      function validatePasswordMatch(field, errors) {
+        const password = document.getElementById('password');
+        if (field.value !== password.value) {
+          errors.push('Passwords do not match');
           field.classList.add("error");
         }
       }
 
       function validateFileField(fieldId, errorMessage, errors) {
         const field = document.getElementById(fieldId);
+        const preview = document.getElementById(`${fieldId}_preview`);
+
         if (!field.files || field.files.length === 0) {
-          errors.push(errorMessage);
+          if (errors) errors.push(errorMessage || 'Please select a file');
           field.classList.add("error");
+          showFileError(fieldId, errorMessage || 'Please select a file');
+          if (preview) preview.innerHTML = "";
+          return false;
+        }
+
+        const file = field.files[0];
+        const maxSize = 1.5 * 1024 * 1024; // 1.5MB in bytes
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+        if (!allowedTypes.includes(file.type)) {
+          field.classList.add("error");
+          showFileError(fieldId, 'Please upload only JPG, JPEG or PNG images');
+          if (preview) preview.innerHTML = "";
+          return false;
+        }
+
+        if (file.size > maxSize) {
+          field.classList.add("error");
+          showFileError(fieldId, `File size exceeds 1.5MB limit (Current: ${(file.size/1024/1024).toFixed(2)}MB)`);
+          if (preview) preview.innerHTML = "";
+          return false;
+        }
+
+        field.classList.remove("error");
+        clearFileError(fieldId);
+        return true;
+      }
+
+      function showFileError(fieldId, message) {
+        clearFileError(fieldId);
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message visible';
+        const fieldName = fieldId.split('_')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        errorDiv.innerHTML = `${fieldName} - ${message}`;
+        errorDiv.id = `${fieldId}-error`;
+        const field = document.getElementById(fieldId);
+        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+      }
+
+      function clearFileError(fieldId) {
+        const existingError = document.getElementById(`${fieldId}-error`);
+        if (existingError) {
+          existingError.remove();
         }
       }
 
@@ -1283,15 +1546,25 @@
 
       function previewImage(input, previewId) {
         const preview = document.getElementById(previewId);
-        if (input.files && input.files[0]) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 100%; height: auto;">`;
-          };
-          reader.readAsDataURL(input.files[0]);
-        } else {
-          preview.innerHTML = "";
+        const errorDiv = document.getElementById(`${input.id}-error`) || createErrorDiv(input.id);
+
+        if (!input.files || !input.files[0]) {
+          preview.innerHTML = '';
+          return;
         }
+
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'image-preview';
+          preview.innerHTML = '';
+          preview.appendChild(img);
+        };
+
+        reader.readAsDataURL(file);
       }
     </script>
   </body>

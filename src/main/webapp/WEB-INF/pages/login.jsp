@@ -9,7 +9,7 @@
 	href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
 	rel="stylesheet" />
 
-	<link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon"/>
 
 	<script>
 	tailwind.config = {
@@ -142,15 +142,15 @@
 				<h2 class="mt-6 text-3xl font-extrabold text-gray-800">Sign in
 					to your account</h2>
 				<p class="mt-2 text-sm text-gray-600">
-					Or <a href="/register"
-						class="font-medium text-primary-700 hover:text-primary-800">
+					Or <a href="${pageContext.request.contextPath}/register"
+						  class="font-medium text-primary-700 hover:text-primary-800">
 						register for a new account </a>
 				</p>
 			</div>
 
 
 			<div class="mt-8 bg-white py-8 px-6 shadow-lg rounded-lg">
-				<form id="loginForm" class="space-y-6" action="<%=request.getContextPath()%>/login" method="post">
+				<form id="loginForm" class="space-y-6" action="${pageContext.request.contextPath}/login" method="post">
 				<div>
 						<label for="userId"
 							class="block text-sm font-medium text-gray-700"> Voter ID
@@ -178,19 +178,8 @@
 							class="block text-sm font-medium text-gray-700"> Password
 						</label>
 						<div class="mt-1 relative rounded-md shadow-sm">
-							<div
-								class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-								<svg xmlns="http://www.w3.org/2000/svg"
-									class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
-									stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-										stroke-width="2"
-										d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-							</div>
 							<div class="relative">
-								<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-									<svg xmlns="http://www.w3.org/2000/svg"
+							<svg xmlns="http://www.w3.org/2000/svg"
 										 class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
 										 stroke="currentColor">
 										<path stroke-linecap="round" stroke-linejoin="round"
@@ -253,7 +242,7 @@
 										stroke-width="2"
 										d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
-							</span>Sign in
+							</span> Sign in
 						</button>
 					</div>
 				</form>
@@ -304,7 +293,6 @@
 			}
 		}, 3000);
 	</script>
-<% } %>
 
 </body>
 </html>
