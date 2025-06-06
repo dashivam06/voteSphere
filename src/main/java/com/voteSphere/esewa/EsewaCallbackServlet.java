@@ -1,6 +1,7 @@
 package com.voteSphere.esewa;
 
 import com.voteSphere.service.DonationService;
+import com.voteSphere.util.SessionUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -88,7 +89,10 @@ public class EsewaCallbackServlet extends HttpServlet {
 
             // Set common attributes
             request.setAttribute("transactionId", transactionId);
+            request.setAttribute("amount", amount);
+            request.setAttribute("productCode", productCode);
             request.setAttribute("status", isSuccess ? "success" : "failure");
+            request.setAttribute("fullName", SessionUtil.getUserValueFromSession(request,AuthUser::getFullName));
 
             // Forward to appropriate view
             String destinationPage = isSuccess

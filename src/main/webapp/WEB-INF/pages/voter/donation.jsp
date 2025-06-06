@@ -1,4 +1,6 @@
-<%@ include file="../loader-animation.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,6 +76,8 @@
     </style>
 </head>
 <body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+<%@ include file="../loader-animation.jsp" %>
+
 <!-- Include sidebar -->
 <%@ include file="sidebar.jsp" %>
 <!-- Main Content -->

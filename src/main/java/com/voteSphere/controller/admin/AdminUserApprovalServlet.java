@@ -3,6 +3,7 @@ package com.voteSphere.controller.admin;
 import java.io.IOException;
 import java.util.List;
 
+import com.voteSphere.util.SessionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -149,7 +150,7 @@ public class AdminUserApprovalServlet extends HttpServlet {
 		// Send approval email asynchronously
 		try {
 			ServletContext context = request.getServletContext();
-			String baseUrl = MailUtil.getBaseUrl(request);
+			String baseUrl = SessionUtil.getBaseUrl(request);
 			MailUtil.sendEmailVerificationAsync(
 					context,
 					baseUrl,
@@ -197,7 +198,7 @@ public class AdminUserApprovalServlet extends HttpServlet {
 		// Send rejection email asynchronously
 		try {
 			ServletContext context = request.getServletContext();
-			String baseUrl = MailUtil.getBaseUrl(request);
+			String baseUrl = SessionUtil.getBaseUrl(request);
 			MailUtil.sendKycFailedEmailAsync(
 					context,
 					baseUrl,

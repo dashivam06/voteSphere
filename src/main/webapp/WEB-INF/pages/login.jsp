@@ -1,4 +1,3 @@
-<%@ include file="loader-animation.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,13 +105,13 @@
 					</a>
 				</div>
 				<nav class="hidden md:flex space-x-8">
-					<a href="/voteSphere#features"
+					<a href="/#features"
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">Features</a>
-					<a href="/voteSphere#how-it-works"
+					<a href="/#how-it-works"
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">How
-						It Works</a> <a href="/voteSphere#faqs"
+						It Works</a> <a href="/#faqs"
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">FAQs</a>
-					<a href="/voteSphere#contact"
+					<a href="/#contact"
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">Contact</a>
 				</nav>
 				<div class="flex items-center">
@@ -149,9 +148,10 @@
 				</p>
 			</div>
 
+
 			<div class="mt-8 bg-white py-8 px-6 shadow-lg rounded-lg">
-				<form id="loginForm" class="space-y-6" action="login" method="post" action="/login">
-					<div>
+				<form id="loginForm" class="space-y-6" action="<%=request.getContextPath()%>/login" method="post">
+				<div>
 						<label for="userId"
 							class="block text-sm font-medium text-gray-700"> Voter ID
 						</label>
@@ -188,10 +188,41 @@
 										d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
 							</div>
-							<input type="password" id="password" name="password" required
-								autocomplete="current-password"
-								placeholder="Enter your password"
-								class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400 text-sm" />
+							<div class="relative">
+								<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+									<svg xmlns="http://www.w3.org/2000/svg"
+										 class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+										 stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round"
+											  stroke-width="2"
+											  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+									</svg>
+								</div>
+								<input type="password" id="password" name="password" required
+									   autocomplete="current-password"
+									   placeholder="Enter your password"
+									   class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400 text-sm"/>
+								<button type="button" onclick="togglePasswordVisibility()"
+										class="absolute inset-y-0 right-0 pr-3 flex items-center">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
+										 viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+									</svg>
+								</button>
+							</div>
+							<script>
+								function togglePasswordVisibility() {
+									const passwordInput = document.getElementById('password');
+									if (passwordInput.type === 'password') {
+										passwordInput.type = 'text';
+									} else {
+										passwordInput.type = 'password';
+									}
+								}
+							</script>
 						</div>
 						<p class="mt-1 text-sm text-red-600 hidden" id="passwordError"></p>
 					</div>
@@ -222,7 +253,7 @@
 										stroke-width="2"
 										d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
-							</span> <a href="<%=request.getContextPath() + "/login"%>">Sign in</a>
+							</span>Sign in
 						</button>
 					</div>
 				</form>
@@ -240,43 +271,40 @@
 		</div>
 	</footer>
 
-	<!-- <script>
-      function validateForm() {
-        let isValid = true;
-        const userId = document.getElementById("userId").value;
-        const password = document.getElementById("password").value;
 
-        // Reset error messages
-        document.getElementById("userIdError").classList.add("hidden");
-        document.getElementById("passwordError").classList.add("hidden");
+	<% if (request.getAttribute("error") != null) { %>
+	<div class="fixed top-20 right-4 z-50 opacity-0 animate-[fadeIn_0.3s_ease-in-out_forwards]">
+		<div class="bg-white rounded-lg shadow-lg border-l-4 border-primary-600">
+			<div class="p-4">
+				<div class="flex items-center">
+					<div class="flex-shrink-0">
+						<svg class="h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24"
+							 stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+								  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+						</svg>
+					</div>
+					<div class="ml-3">
+						<p class="text-sm text-primary-900 font-medium">
+							<%= request.getAttribute("error") %>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        // Validate user ID
-        if (userId.trim() === "") {
-          document.getElementById("userIdError").textContent =
-            "User ID is required";
-          document.getElementById("userIdError").classList.remove("hidden");
-          isValid = false;
-        }
+	<script>
+		setTimeout(() => {
+			const errorDiv = document.querySelector('.fixed.top-20');
+			if (errorDiv) {
+				errorDiv.style.opacity = '0';
+				errorDiv.style.transition = 'opacity 0.3s ease-in-out';
+				setTimeout(() => errorDiv.remove(), 300);
+			}
+		}, 3000);
+	</script>
+<% } %>
 
-        // Validate password
-        if (password.trim() === "") {
-          document.getElementById("passwordError").textContent =
-            "Password is required";
-          document.getElementById("passwordError").classList.remove("hidden");
-          isValid = false;
-        }
-
-        if (isValid) {
-          // Form is valid - you would normally submit the form here
-          // or handle authentication via AJAX
-          console.log("Form submitted:", { userId, password });
-
-          // For demonstration purposes - replace with actual authentication
-          alert("Login data submitted");
-        }
-
-        return false; // Prevent actual form submission for this example
-      }
-    </script> -->
 </body>
 </html>

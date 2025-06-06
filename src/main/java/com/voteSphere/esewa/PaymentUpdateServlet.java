@@ -3,12 +3,14 @@ package com.voteSphere.esewa;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.voteSphere.model.AuthUser;
+import com.voteSphere.util.MailUtil;
 import com.voteSphere.util.SessionUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+
 
 @WebServlet("/payment-update-servlet")
 public class PaymentUpdateServlet extends HttpServlet {
@@ -30,8 +32,9 @@ public class PaymentUpdateServlet extends HttpServlet {
             return;
         }
 
+        String baseUrl = SessionUtil.getBaseUrl(request);
 
-        EsewaPaymentRequest pr = new EsewaPaymentRequest(amountStr);
+        EsewaPaymentRequest pr = new EsewaPaymentRequest(amountStr,baseUrl);
 
 
         response.setContentType("application/json");
@@ -40,7 +43,6 @@ public class PaymentUpdateServlet extends HttpServlet {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(pr);
 
-        SessionUtil.getUserValueFromSession(request, AuthUser::getFname);
 
         response.getWriter().write(json);
     }

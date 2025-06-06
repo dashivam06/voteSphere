@@ -146,4 +146,12 @@ public class SessionUtil {
 		}
 		return null;
     }
+
+	public static String getBaseUrl(HttpServletRequest request) {
+		return request.getScheme() + "://" +
+				request.getServerName() + ":" +
+				request.getServerPort() +
+				request.getContextPath() + "/";
+	}
+
 }

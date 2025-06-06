@@ -31,8 +31,8 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String voterId = request.getParameter("voter_id");
-		String password = request.getParameter("password");
+		String voterId = request.getParameter("voter_id").trim();
+		String password = request.getParameter("password").trim();
 		logger.info("User logged in: Progress");
 
 
@@ -110,7 +110,6 @@ public class LoginServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		logger.error("LoginServlet doGet");
 		request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
 	}
 	

@@ -9,6 +9,7 @@ import java.util.List;
 import com.voteSphere.config.AppConfig;
 import com.voteSphere.model.Candidate;
 import com.voteSphere.service.CandidateService;
+import com.voteSphere.util.SessionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -201,7 +202,9 @@ public class AdminElectionServlet extends HttpServlet {
         request.setAttribute("candidates", candidateList);
         if(election.getStatus().equals("Ongoing"))
         {
-            String webSocketUrl = AppConfig.get("LIVE_VOTE_COUNT_WS_URL");
+            String baseUrl = SessionUtil.getBaseUrl(request);
+            String webSocketUrl = baseUrl + "election-results/"+electionId;
+
             request.setAttribute("wsUrl",webSocketUrl);
             request.getRequestDispatcher("/WEB-INF/pages/admin/live-election.jsp").forward(request, response);
             logger.info("Successfully viewed live election count for  ID: {}", electionId);

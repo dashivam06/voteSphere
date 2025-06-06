@@ -16,15 +16,15 @@ public class EsewaPaymentRequest {
     private String totalAmount;
     
     // Constructor, getters, and setters
-    public EsewaPaymentRequest(String amount) {
+    public EsewaPaymentRequest(String amount, String baseUrl) {
 		this.amount = String.valueOf(Double.parseDouble(amount));
         this.taxAmount = calculateTax(amount);
         this.productServiceCharge = "0";
         this.productDeliveryCharge = "0";
         this.transactionUuid = generateTransactionId();
         this.productCode = "EPAYTEST";
-        this.successUrl = AppConfig.get("BASE_URL")+ "/esewa-callback/success";
-        this.failureUrl = AppConfig.get("BASE_URL")+ AppConfig.get("FAILURE_CALLBACK_URL");
+        this.successUrl = baseUrl+ "esewa-callback/success";
+        this.failureUrl = baseUrl+ "esewa-callback/failure";
         this.signedFieldNames = "total_amount,transaction_uuid,product_code";
         this.totalAmount = calculateTotalAmount();
         this.signature = generateSignature();

@@ -200,12 +200,6 @@ public class MailUtil {
         });
     }
     
-    public static String getBaseUrl(HttpServletRequest request) {
-        return request.getScheme() + "://" +
-               request.getServerName() + ":" +
-               request.getServerPort() +
-               request.getContextPath() + "/";
-    }
-	
+
     
 }

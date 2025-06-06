@@ -6,6 +6,7 @@ import com.voteSphere.model.AuthUser;
 import com.voteSphere.model.Donation;
 import com.voteSphere.service.DonationService;
 import com.voteSphere.util.CookieUtil;
+import com.voteSphere.util.MailUtil;
 import com.voteSphere.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,8 +33,10 @@ public class EsewaPaymentServlet extends HttpServlet {
                 return;
             }
 
+            String baseUrl = SessionUtil.getBaseUrl(request);
+
             // Create payment request
-            EsewaPaymentRequest paymentRequest = new EsewaPaymentRequest(amount);
+            EsewaPaymentRequest paymentRequest = new EsewaPaymentRequest(amount,baseUrl);
 
             // Get user ID from session
             Integer userId = SessionUtil.getUserValueFromSession(request, AuthUser::getUserId);
@@ -73,4 +76,6 @@ public class EsewaPaymentServlet extends HttpServlet {
             throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/pages/voter/donation.jsp").forward(request, response);
     }
+
+
 }

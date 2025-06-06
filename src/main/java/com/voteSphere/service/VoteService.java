@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.voteSphere.util.SessionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -129,7 +130,7 @@ public class VoteService {
 				String time = ValidationUtil.convertTimeStampToHrAndMinsOnly(newVote.getVotedAt());
 		        
 				if (votePushed) {
-					 String baseUrl = MailUtil.getBaseUrl(request);
+					 String baseUrl = SessionUtil.getBaseUrl(request);
 			         MailUtil.sendVoteSubmissionResponseAsync(request.getServletContext(),
 			        		 		baseUrl,
 			        		 		user.getVoterId(),

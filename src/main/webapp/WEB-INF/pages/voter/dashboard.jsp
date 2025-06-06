@@ -399,10 +399,7 @@
 									d="M18 2.0845
                     a 15.9155 15.9155 0 0 1 0 31.831
                     a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text x="18" y="20.35"
-									class="text-3xl font-bold text-gray-800" text-anchor="middle">
-                    100%
-                  </text>
+                 
                 </svg>
 							<div class="absolute inset-0 flex items-center justify-center">
 								<svg xmlns="http://www.w3.org/2000/svg"
