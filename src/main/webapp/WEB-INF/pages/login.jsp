@@ -9,7 +9,7 @@
 	href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
 	rel="stylesheet" />
 
-	<link rel="icon" href="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon"/>
+	<link rel="icon" href="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon" />
 
 	<script>
 	tailwind.config = {
@@ -105,7 +105,7 @@
 					</a>
 				</div>
 				<nav class="hidden md:flex space-x-8">
-					<a href="/#features"
+					<a href="${pageContext.request.contextPath}/#features"
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">Features</a>
 					<a href="/#how-it-works"
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">How
@@ -115,9 +115,9 @@
 						class="text-gray-600 hover:text-primary-600 px-3 py-2 text-sm font-medium transition-colors duration-300 hover:scale-105 transform">Contact</a>
 				</nav>
 				<div class="flex items-center">
-					<a href="login"
+											<a href="${pageContext.request.contextPath}/login"
 						class="hidden md:inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">
-						Log in </a> <a href="/register"
+						Log in </a> <a href="${pageContext.request.contextPath}/register"
 						class="ml-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-white hover:bg-gray-50 border-primary-600 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1">
 						Register </a>
 					<button type="button"
@@ -143,7 +143,7 @@
 					to your account</h2>
 				<p class="mt-2 text-sm text-gray-600">
 					Or <a href="${pageContext.request.contextPath}/register"
-						  class="font-medium text-primary-700 hover:text-primary-800">
+						class="font-medium text-primary-700 hover:text-primary-800">
 						register for a new account </a>
 				</p>
 			</div>
@@ -151,7 +151,7 @@
 
 			<div class="mt-8 bg-white py-8 px-6 shadow-lg rounded-lg">
 				<form id="loginForm" class="space-y-6" action="${pageContext.request.contextPath}/login" method="post">
-				<div>
+					<div>
 						<label for="userId"
 							class="block text-sm font-medium text-gray-700"> Voter ID
 						</label>
@@ -179,7 +179,8 @@
 						</label>
 						<div class="mt-1 relative rounded-md shadow-sm">
 							<div class="relative">
-							<svg xmlns="http://www.w3.org/2000/svg"
+								<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+									<svg xmlns="http://www.w3.org/2000/svg"
 										 class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
 										 stroke="currentColor">
 										<path stroke-linecap="round" stroke-linejoin="round"
@@ -254,7 +255,7 @@
 	<footer class="bg-white border-t border-gray-200 py-8">
 		<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="text-center text-gray-500 text-sm">
-				<p>&copy; 2023 VoteSphere. All rights reserved.</p>
+				<p>&copy; 2025 VoteSphere. All rights reserved.</p>
 				<p class="mt-2">Secure online voting system</p>
 			</div>
 		</div>

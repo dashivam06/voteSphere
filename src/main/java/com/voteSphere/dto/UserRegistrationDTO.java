@@ -192,4 +192,27 @@ public class UserRegistrationDTO {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
+    @Override
+    public String toString() {
+        return "UserRegistrationDTO{" +
+                "citizenshipBack=" + citizenshipBack +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", voterId='" + voterId + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", dob='" + dob + '\'' +
+                ", gender='" + gender + '\'' +
+                ", permanentAddress='" + permanentAddress + '\'' +
+                ", temporaryAddress='" + temporaryAddress + '\'' +
+                ", profileImage=" + profileImage +
+                ", imageHoldingCitizenship=" + imageHoldingCitizenship +
+                ", voterCardFront=" + voterCardFront +
+                ", citizenshipFront=" + citizenshipFront +
+                ", thumbPrint=" + thumbPrint +
+                '}';
+    }
 }

@@ -901,12 +901,11 @@
                   <input
                     type="file"
                     id="profile_image"
-                    name="profile_im
-                    age"
+                    name="profile_image"
                     accept="image/*"
                     required
                     class="form-input"
-                    onchange="previewImage(this, 'profile_image_preview')"
+                    onchange="validateFileField('profile_image', 'Profile Image is required', []); previewImage(this, 'profile_image_preview')"
                   />
                   <p class="form-hint">Upload a clear photo of yourself</p>
                   <div class="image-preview" id="profile_image_preview"></div>
@@ -923,7 +922,7 @@
                     accept="image/*"
                     required
                     class="form-input"
-                    onchange="previewImage(this, 'holding_citizenship_preview')"
+                    onchange="validateFileField('image_holding_citizenship', 'Image Holding Citizenship is required', []); previewImage(this, 'holding_citizenship_preview')"
                   />
                   <p class="form-hint">
                     Upload a photo of yourself holding your citizenship document
@@ -944,7 +943,7 @@
                   accept="image/*"
                   required
                   class="form-input"
-                  onchange="previewImage(this, 'thumb_print_preview')"
+                  onchange="validateFileField('thumb_print', 'Thumb Print is required', []); previewImage(this, 'thumb_print_preview')"
                 />
                 <p class="form-hint">
                   Upload a clear image of your thumb print
@@ -991,7 +990,7 @@
                   accept="image/*"
                   required
                   class="form-input"
-                  onchange="previewImage(this, 'voter_card_front_preview')"
+                  onchange="validateFileField('voter_card_front', 'Voter Card Front is required', []); previewImage(this, 'voter_card_front_preview')"
                 />
                 <div class="image-preview" id="voter_card_front_preview"></div>
               </div>
@@ -1008,7 +1007,7 @@
                     accept="image/*"
                     required
                     class="form-input"
-                    onchange="previewImage(this, 'citizenship_front_preview')"
+                    onchange="validateFileField('citizenship_front', 'Citizenship Front is required', []); previewImage(this, 'citizenship_front_preview')"
                   />
                   <div
                     class="image-preview"
@@ -1026,7 +1025,7 @@
                     accept="image/*"
                     required
                     class="form-input"
-                    onchange="previewImage(this, 'citizenship_back_preview')"
+                    onchange="validateFileField('citizenship_back', 'Citizenship Back is required', []); previewImage(this, 'citizenship_back_preview')"
                   />
                   <div
                     class="image-preview"
@@ -1099,10 +1098,13 @@
           return false;
         }
 
+        // Validate files for step 3
         if (currentStep === 3) {
-          if (!validateFileField('profile_image', 'Profile Image is required') ||
-                  !validateFileField('image_holding_citizenship', 'Image Holding Citizenship is required') ||
-                  !validateFileField('thumb_print', 'Thumb Print is required')) {
+          const profileValid = validateFileField('profile_image', 'Profile Image is required', []);
+          const citizenshipValid = validateFileField('image_holding_citizenship', 'Image Holding Citizenship is required', []);
+          const thumbprintValid = validateFileField('thumb_print', 'Thumb Print is required', []);
+
+          if (!profileValid || !citizenshipValid || !thumbprintValid) {
             return false;
           }
         }
@@ -1338,7 +1340,10 @@
 
         fileFields.forEach(field => {
           field.addEventListener('change', function () {
-            validateFileField(this.id, "", []);
+            const fieldName = field.id.split('_').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+            validateFileField(this.id, `${fieldName} is required`, []);
             validateFormField(this.id);
           });
         });
@@ -1418,11 +1423,14 @@
         return errors;
       }
       function createErrorDiv(fieldId) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.id = `${fieldId}-error`;
-        const field = document.getElementById(fieldId);
-        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+        let errorDiv = document.getElementById(`${fieldId}-error`);
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.className = 'error-message';
+          errorDiv.id = `${fieldId}-error`;
+          const field = document.getElementById(fieldId);
+          field.parentNode.insertBefore(errorDiv, field.nextSibling);
+        }
         return errorDiv;
       }
 
@@ -1447,16 +1455,15 @@
         const preview = document.getElementById(`${fieldId}_preview`);
 
         if (!field.files || field.files.length === 0) {
-          if (errors) errors.push(errorMessage || 'Please select a file');
           field.classList.add("error");
-          showFileError(fieldId, errorMessage || 'Please select a file');
+          showFileError(fieldId, errorMessage);
           if (preview) preview.innerHTML = "";
           return false;
         }
 
         const file = field.files[0];
-        const maxSize = 1.5 * 1024 * 1024; // 1.5MB in bytes
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        const maxSize = 1.5 * 1024 * 1024; // 1.5MB
 
         if (!allowedTypes.includes(file.type)) {
           field.classList.add("error");
@@ -1467,7 +1474,9 @@
 
         if (file.size > maxSize) {
           field.classList.add("error");
-          showFileError(fieldId, `File size exceeds 1.5MB limit (Current: ${(file.size/1024/1024).toFixed(2)}MB)`);
+          const maxSizeStr = convertSizeToString(maxSize);
+          const currentSize = convertSizeToString(file.size);
+          showFileError(fieldId, `File size exceeds ${maxSizeStr} limit. Current Size: ${currentSize}. Please upload a file less than ${maxSizeStr}.`);
           if (preview) preview.innerHTML = "";
           return false;
         }
@@ -1477,17 +1486,19 @@
         return true;
       }
 
+
       function showFileError(fieldId, message) {
         clearFileError(fieldId);
         const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message visible';
+        errorDiv.className = 'error-message';
         const fieldName = fieldId.split('_')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
-        errorDiv.innerHTML = `${fieldName} - ${message}`;
+        errorDiv.textContent = message;
         errorDiv.id = `${fieldId}-error`;
         const field = document.getElementById(fieldId);
         field.parentNode.insertBefore(errorDiv, field.nextSibling);
+        setTimeout(() => errorDiv.classList.add('visible'), 10);
       }
 
       function clearFileError(fieldId) {
@@ -1546,10 +1557,10 @@
 
       function previewImage(input, previewId) {
         const preview = document.getElementById(previewId);
-        const errorDiv = document.getElementById(`${input.id}-error`) || createErrorDiv(input.id);
+
+        preview.innerHTML = '';
 
         if (!input.files || !input.files[0]) {
-          preview.innerHTML = '';
           return;
         }
 
@@ -1559,13 +1570,22 @@
         reader.onload = function (e) {
           const img = document.createElement('img');
           img.src = e.target.result;
-          img.className = 'image-preview';
-          preview.innerHTML = '';
+          img.style.maxWidth = '150px';
+          img.style.height = 'auto';
           preview.appendChild(img);
         };
-
+      
         reader.readAsDataURL(file);
+      }
+
+      function convertSizeToString(bytes) {
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        if (bytes === 0) return '0 Byte';
+        const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
       }
     </script>
   </body>
+</html>
+</body>
 </html>

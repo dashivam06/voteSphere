@@ -358,58 +358,7 @@
                        </div>
                      </div>
 
-                     <!-- Voter Card -->
-                     <div class="mb-8">
-                       <h3 class="text-md font-medium text-gray-700 mb-4 flex items-center">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                         </svg>
-                         Voter ID Card
-                       </h3>
-                       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <!-- Voter Card Front -->
-                         <c:if test="${not empty user.voterCardFront}">
-                           <div class="document-card p-4">
-                             <div class="flex items-center justify-between mb-3">
-                               <h3 class="font-medium text-gray-700">Voter Card Front</h3>
-                               <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
-                             </div>
-                             <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
-                               <img src="${user.voterCardFront}"
-                                    alt="Voter Card Front" class="w-full h-full object-cover" />
-                               <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
-                                 <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
-                                         onclick="openDocumentPreview('${user.voterCardFront}', 'Voter Card Front')">
-                                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                   </svg>
-                                   View Full Size
-                                 </button>
-                               </div>
-                             </div>
-                             <div class="flex items-center justify-between text-sm">
-                               <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
-                               <div class="flex items-center">
-                                 <a href="${user.voterCardFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
-                                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                   </svg>
-                                 </a>
-                                 <div class="tooltip">
-                                   <button class="text-gray-500 hover:text-gray-700" title="More Info">
-                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                     </svg>
-                                   </button>
-                                   <span class="tooltip-text">Document verified by system on <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
-                                 </div>
-                               </div>
-                             </div>
-                           </div>
-                         </c:if>
-                       </div>
-                     </div>
+
 
                      <!-- Additional Documents -->
                      <div class="mb-8">
@@ -498,6 +447,61 @@
                                      </svg>
                                    </button>
                                    <span class="tooltip-text">Document verified by admin on <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
+                                 </div>
+                               </div>
+                             </div>
+                           </div>
+                         </c:if>
+                       </div>
+                     </div>
+
+
+
+                     <!-- Voter Card -->
+                     <div class="mb-8">
+                       <h3 class="text-md font-medium text-gray-700 mb-4 flex items-center">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                         </svg>
+                         Voter ID Card
+                       </h3>
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <!-- Voter Card Front -->
+                         <c:if test="${not empty user.voterCardFront}">
+                           <div class="document-card p-4">
+                             <div class="flex items-center justify-between mb-3">
+                               <h3 class="font-medium text-gray-700">Voter Card Front</h3>
+                               <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Verified</span>
+                             </div>
+                             <div class="relative aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3">
+                               <img src="${user.voterCardFront}"
+                                    alt="Voter Card Front" class="w-full h-full object-cover" />
+                               <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity">
+                                 <button class="bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-100"
+                                         onclick="openDocumentPreview('${user.voterCardFront}', 'Voter Card Front')">
+                                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                   </svg>
+                                   View Full Size
+                                 </button>
+                               </div>
+                             </div>
+                             <div class="flex items-center justify-between text-sm">
+                               <span class="text-gray-500">Uploaded: <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
+                               <div class="flex items-center">
+                                 <a href="${user.voterCardFront}" download class="text-primary-600 hover:text-primary-800 mr-3" title="Download">
+                                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                   </svg>
+                                 </a>
+                                 <div class="tooltip">
+                                   <button class="text-gray-500 hover:text-gray-700" title="More Info">
+                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                     </svg>
+                                   </button>
+                                   <span class="tooltip-text">Document verified by system on <fmt:formatDate value="${user.createdAt}" pattern="yyyy-MM-dd" /></span>
                                  </div>
                                </div>
                              </div>
