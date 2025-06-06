@@ -693,6 +693,8 @@
                     name="first_name"
                     required
                     class="form-input"
+                    onfocus="clearValidationMessages(1)"
+                    onInput="clearValidationMessages(1)"
                   />
                 </div>
                 <div class="form-group">
@@ -703,6 +705,8 @@
                     name="last_name"
                     required
                     class="form-input"
+                    onfocus="clearValidationMessages(1)"
+                    onInput="clearValidationMessages(1)"
                   />
                 </div>
               </div>
@@ -715,6 +719,8 @@
                   name="voter_id"
                   required
                   class="form-input"
+                  onfocus="clearValidationMessages(1)"
+                  onInput="clearValidationMessages(1)"
                 />
               </div>
 
@@ -768,6 +774,8 @@
                         name="gender"
                         value="male"
                         checked
+                        onfocus="clearValidationMessages(1)"
+                        onInput="clearValidationMessages(1)"
                       />
                       <label for="gender_male">Male</label>
                     </div>

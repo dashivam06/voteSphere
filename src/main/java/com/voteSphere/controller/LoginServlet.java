@@ -57,6 +57,7 @@ public class LoginServlet extends HttpServlet {
 
 			if (authUser == null) {
 				logger.info("Login failed: Incorrect password for Voter ID: " + voterId);
+				request.setAttribute("voter_id", voterId);
 				request.setAttribute("error", "Invalid Voter ID or password");
 				request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
 				return;
