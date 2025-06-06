@@ -1,7 +1,6 @@
 package com.voteSphere.esewa;
 
 import com.voteSphere.service.DonationService;
-import com.voteSphere.util.CookieUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -15,45 +14,103 @@ import com.voteSphere.dao.DonationDao;
 import com.voteSphere.model.AuthUser;
 import com.voteSphere.model.Donation;
 
-@WebServlet("/esewa-callback")
+@WebServlet("/esewa-callback/*")
 public class EsewaCallbackServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LogManager.getLogger(EsewaCallbackServlet.class);
 
     private final ObjectMapper objectMapper = new ObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        String pathInfo = request.getPathInfo();
+        boolean isSuccess = pathInfo != null && pathInfo.contains("success");
+
         try {
-            logger.info("Esewa callback servlet triggered");
+            logger.info("Esewa callback servlet triggered for {} case", isSuccess ? "success" : "failure");
 
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    switch (cookie.getName()) {
-                        case "esewaTotalAmount":
-                            request.setAttribute("amount", cookie.getValue());
-                            break;
-                        case "esewaTransactionUuid":
-                            request.setAttribute("transactionId", cookie.getValue());
-                            break;
-                        case "esewaProductCode":
-                            request.setAttribute("productCode", cookie.getValue());
-                            break;
-                    }
-                }
+            // Validate session exists
+            if (session == null) {
+                logger.error("No session found for eSewa callback");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid session");
+                return;
             }
-            Donation previouseDonation = DonationDao.getDonationByTransactionId(String.valueOf(request.getAttribute("transactionId")));
-            previouseDonation.setStatus("COMPLETED");
-            DonationService.updateDonationById(previouseDonation.getDonationId(),previouseDonation);
-            request.getRequestDispatcher("/WEB-INF/pages/esewa-payment-received.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
+            // Extract values from session
+            String amount = (String) session.getAttribute("esewaTotalAmount");
+            String transactionId = (String) session.getAttribute("esewaTransactionUuid");
+            String productCode = (String) session.getAttribute("esewaProductCode");
+
+            // Validate required parameters
+            if (transactionId == null || transactionId.isEmpty()) {
+                logger.error("Missing transaction ID in session");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing transaction data");
+                return;
+            }
+
+            // Process donation based on success/failure
+            Donation donation = DonationDao.getDonationByTransactionId(transactionId);
+
+            if (donation == null) {
+                logger.error("No donation found for transaction ID: {}", transactionId);
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Transaction not found");
+                return;
+            }
+
+            if (isSuccess) {
+                // Success case processing
+                donation.setStatus("COMPLETED");
+                if (amount != null) {
+                    request.setAttribute("amount", amount);
+                }
+                if (productCode != null) {
+                    request.setAttribute("productCode", productCode);
+                }
+
+                logger.info("Updating donation status to COMPLETED for transaction: {}", transactionId);
+            } else {
+                // Failure case processing
+                donation.setStatus("FAILED");
+                logger.warn("Updating donation status to FAILED for transaction: {}", transactionId);
+            }
+
+            // Update donation record
+            boolean updateSuccess = DonationService.updateDonationById(donation.getDonationId(), donation);
+
+            if (!updateSuccess) {
+                logger.error("Failed to update donation status for transaction: {}", transactionId);
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to update transaction");
+                return;
+            }
+
+            // Set common attributes
+            request.setAttribute("transactionId", transactionId);
+            request.setAttribute("status", isSuccess ? "success" : "failure");
+
+            // Forward to appropriate view
+            String destinationPage = isSuccess
+                    ? "/WEB-INF/pages/esewa-payment-received.jsp"
+                    : "/WEB-INF/pages/esewa-payment-failed.jsp";
+
+            request.getRequestDispatcher(destinationPage).forward(request, response);
+
+        } catch (Exception e) {
+            logger.error("Error processing eSewa callback: {}", e.getMessage(), e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Processing error");
+        } finally {
+            // Clean up session attributes if needed
+            if (session != null && isSuccess) {
+                session.removeAttribute("esewaTotalAmount");
+                session.removeAttribute("esewaTransactionUuid");
+                session.removeAttribute("esewaProductCode");
+            }
+        }
+
+    }
+}
 //    private void processPaymentCallback(HttpServletRequest request, HttpServletResponse response)
 //            throws IOException, ServletException {
 //        String encodedData = validateAndGetDataParameter(request, response);
@@ -320,4 +377,3 @@ public class EsewaCallbackServlet extends HttpServlet {
 //            500
 //        );
 //    }
-}

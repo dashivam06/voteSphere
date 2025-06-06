@@ -1,4 +1,7 @@
 package com.voteSphere.esewa;
+
+import com.voteSphere.config.AppConfig;
+
 public class EsewaPaymentRequest {
     private String amount;
     private String taxAmount;
@@ -14,14 +17,14 @@ public class EsewaPaymentRequest {
     
     // Constructor, getters, and setters
     public EsewaPaymentRequest(String amount) {
-        this.amount = String.valueOf(Double.parseDouble(amount));
+		this.amount = String.valueOf(Double.parseDouble(amount));
         this.taxAmount = calculateTax(amount);
         this.productServiceCharge = "0";
         this.productDeliveryCharge = "0";
         this.transactionUuid = generateTransactionId();
         this.productCode = "EPAYTEST";
-        this.successUrl = "http://localhost:80/esewa-callback";
-        this.failureUrl = "https://developer.esewa.com.np/failure";
+        this.successUrl = AppConfig.get("BASE_URL")+ "/esewa-callback/success";
+        this.failureUrl = AppConfig.get("BASE_URL")+ AppConfig.get("FAILURE_CALLBACK_URL");
         this.signedFieldNames = "total_amount,transaction_uuid,product_code";
         this.totalAmount = calculateTotalAmount();
         this.signature = generateSignature();

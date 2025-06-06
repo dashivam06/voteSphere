@@ -3,7 +3,7 @@
 <fmt:formatDate value="${election.startTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="startDateJs" />
 <fmt:formatDate value="${election.endTime}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="endDateJs" />
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ include file="loader.jsp" %>
+<%@ include file="../loader-animation.jsp" %>
 
 <%@ page isELIgnored="false" %>
 <!DOCTYPE html>

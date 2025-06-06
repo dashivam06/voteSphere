@@ -23,7 +23,7 @@ public class CookieUtil {
 	}
 
 	public static void addUserRoleCookie(HttpServletResponse response, String role) {
-        CookieUtil.addCookie(response, CookieUtil.createCookie("user_role", role, 24 * 60 * 60));
+        CookieUtil.addCookie(response, CookieUtil.createCookie("user_role", role,   24 * 60 * 60));
     }
 
     public static void addLoginTimeCookie(HttpServletResponse response) {

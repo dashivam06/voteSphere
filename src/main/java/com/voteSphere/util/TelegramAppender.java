@@ -15,21 +15,27 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.random.RandomGenerator;
 
 @Plugin(name = "TelegramAppender", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
 public class TelegramAppender extends AbstractAppender {
 
     private final String botToken;
     private final String chatId;
+    private final ExecutorService executor ;
+
 
     protected TelegramAppender(String name, Filter filter, Layout<? extends Serializable> layout,
                                boolean ignoreExceptions, String botToken, String chatId) {
         super(name, filter, layout, ignoreExceptions);
         this.botToken = botToken;
         this.chatId = chatId;
+        this.executor = Executors.newSingleThreadExecutor();
+
     }
 
     @PluginFactory
@@ -39,6 +45,7 @@ public class TelegramAppender extends AbstractAppender {
             @PluginAttribute("chatId") String chatId,
             @PluginElement("Layout") Layout<? extends Serializable> layout,
             @PluginElement("Filter") final Filter filter) {
+
 
         if (name == null) {
             LOGGER.error("No name provided for TelegramAppender");
@@ -70,7 +77,6 @@ public class TelegramAppender extends AbstractAppender {
         }
     }
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
     private void sendMessage(String message) {
         executor.submit(() -> {

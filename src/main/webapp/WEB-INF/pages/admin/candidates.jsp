@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="loader.jsp" %>
+<%@ include file="../loader-animation.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -127,97 +127,94 @@
 
 
                 <!-- Candidates Table -->
-              <!-- Dynamic Candidates Table -->
-              <div class="overflow-x-auto">
-                  <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
-                          <tr>
-                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
-                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
-                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Election</th>
-                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-                              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                          </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                          <c:forEach var="candidate" items="${candidates}">
-                              <tr>
-                                  <!-- Candidate Info -->
-                                  <td class="px-6 py-4 whitespace-nowrap">
-                                      <div class="flex items-center">
-                                          <div class="h-10 w-10 flex-shrink-0">
-                                              <img class="h-10 w-10 rounded-full object-cover"
-                                                   src="${candidate.profileImage != null ? candidate.profileImage : 'https://placehold.co/100x100'}"
-                                                   alt="Candidate Image" />
-                                          </div>
-                                          <div class="ml-4">
-                                              <div class="text-sm font-medium text-gray-900">
-                                                  ${candidate.fname} ${candidate.lname}
-                                              </div>
-                                              <div class="text-sm text-gray-500">
-                                                  ID: ${candidate.candidateId}
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </td>
+                <div class="overflow-x-auto rounded-lg shadow">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Election</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        <c:choose>
+                            <c:when test="${not empty candidates}">
+                                <c:forEach var="candidate" items="${candidates}">
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <!-- Candidate Info -->
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="h-10 w-10 flex-shrink-0">
+                                                    <img class="h-10 w-10 rounded-full object-cover"
+                                                         src="${candidate.profileImage != null ? candidate.profileImage : 'https://placehold.co/100x100'}"
+                                                         alt="Candidate Image" />
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">
+                                                            ${candidate.fname} ${candidate.lname}
+                                                    </div>
+                                                    <div class="text-sm text-gray-500">
+                                                        ID: ${candidate.candidateId}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
 
-                                  <!-- Party -->
-                                  <td class="px-6 py-4 whitespace-nowrap">
-                                      <div class="text-sm text-gray-900">
-                                          <c:choose>
-                                              <c:when test="${candidate.isIndependent}">
-                                                  -
-                                              </c:when>
-                                              <c:otherwise>
-                                                  ${candidate.getPartyName()}
-                                              </c:otherwise>
-                                          </c:choose>
-                                      </div>
-                                  </td>
+                                        <!-- Party -->
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <c:choose>
+                                                <c:when test="${candidate.isIndependent}">-</c:when>
+                                                <c:otherwise>${candidate.getPartyName()}</c:otherwise>
+                                            </c:choose>
+                                        </td>
 
-                                  <!-- Election -->
-                                  <td class="px-6 py-4 whitespace-nowrap">
-                                      <div class="text-sm text-gray-900">${candidate.getElectionName()}</div>
-                                  </td>
+                                        <!-- Election -->
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                ${candidate.getElectionName()}
+                                        </td>
 
-                                  <!-- Address -->
-                                  <td class="px-6 py-4 whitespace-nowrap">
-                                      <div class="text-sm text-gray-900">${candidate.address}</div>
-                                  </td>
+                                        <!-- Address -->
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                ${candidate.address}
+                                        </td>
 
-                                  <!-- Actions -->
-                                  <td class="px-6  py-4 whitespace-nowrap text-sm font-medium">
-                                      <div class="flex space-x-3">
-                                              <a href="${pageContext.request.contextPath}/admin/candidate/view/${candidate.candidateId}"
+                                        <!-- Actions -->
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div class="flex space-x-3">
+                                                <a href="${pageContext.request.contextPath}/admin/candidate/view/${candidate.candidateId}"
+                                                   class="text-primary-600 hover:text-primary-900">View</a>
+
+                                                <a href="${pageContext.request.contextPath}/admin/candidate/update/${candidate.candidateId}"
+                                                   class="text-yellow-600 hover:text-yellow-900">Edit</a>
+
+                                                <form action="${pageContext.request.contextPath}/admin/candidate/delete/${candidate.candidateId}"
+                                                      method="POST"
+                                                      class="inline"
+                                                      onsubmit="return confirm('Are you sure you want to delete this candidate?');">
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <tr>
+                                    <td colspan="5" class="px-6 pb-3 pt-5 text-center text-sm text-gray-500">
+                                        No candidates found. <a href="${pageContext.request.contextPath}/admin/candidate/new"
+                                                                class="text-primary-600 hover:text-primary-900">Add a new candidate</a> to get started.
+                                    </td>
+                                </tr>
+                            </c:otherwise>
+                        </c:choose>
+                        </tbody>
+                    </table>
+                </div>
 
 
-                                                                                                                                                                          <button  class="text-primary-600 hover:text-primary-900">View</button>
-
-                                                                                                                                        </form>
-
-                                                                                                                                                                             <a href="${pageContext.request.contextPath}/admin/candidate/update/${candidate.candidateId}"
-
-
-                                          <button class="text-yellow-600 hover:text-yellow-900 ">Edit</button>
-
-                                          <form action="${pageContext.request.contextPath}/admin/candidate/delete/${candidate.candidateId}"
-                                                                                                    method="POST"
-                                                                                                    class="inline"
-                                                                                                    onsubmit="return confirm('Are you sure you want to delete this candidate?');">
-
-                                                                                                  <button type="submit" class="text-red-600 hover:text-red-900">
-                                                                                                      Delete
-                                                                                                  </button>
-                                                                                                  </form>
-                                      </div>
-                                  </td>
-                              </tr>
-                          </c:forEach>
-                      </tbody>
-                  </table>
-              </div>
-
-			</div>
+            </div>
 		</div>
 	</div>
 

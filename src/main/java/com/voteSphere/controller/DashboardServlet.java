@@ -19,9 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/dashboard")
-public class DashboardServlet extends HttpServlet {
+public class DashboardServlet extends HttpServlet  {
     private static final long serialVersionUID = 1L;
-    
     private static final String ADMIN_DASHBOARD = "/WEB-INF/pages/admin/dashboard.jsp";
     private static final String VOTER_DASHBOARD = "/WEB-INF/pages/voter/dashboard.jsp";
     private static final String LOGIN_PAGE = "/login";
@@ -29,9 +28,9 @@ public class DashboardServlet extends HttpServlet {
     private static final String ROLE_USER = "voter";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String userRole = SessionUtil.getUserValueFromSession(request, AuthUser::getRole);
 
         // If no authenticated user or role is found
@@ -92,7 +91,7 @@ public class DashboardServlet extends HttpServlet {
     }
 
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
     }

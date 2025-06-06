@@ -41,14 +41,14 @@ public class DBConnectionManager {
 			String errorMsg = "Connection failed to " + URL;
 			logger.error(errorMsg, e);
 
-			// Handle specific connection errors
-			if (e.getErrorCode() == 1045) { // Access denied
-				throw new DatabaseException(errorMsg, "Invalid database credentials", e);
-			} else if (e.getErrorCode() == 1049) { // Unknown database
-				throw new DatabaseException(errorMsg, "Database does not exist", e);
-			} else {
-				throw new DatabaseException(errorMsg, "Cannot connect to database", e);
+			switch (e.getSQLState()) {
+				case "28P01" -> throw new DatabaseException(errorMsg, "Invalid database credentials", e);
+				case "3D000" -> throw new DatabaseException(errorMsg, "Database does not exist", e);
+				case "08001" -> throw new DatabaseException(errorMsg, "Unable to connect to database server", e);
+				case "08006" -> throw new DatabaseException(errorMsg, "Connection refused - database may not be running", e);
+				default -> throw new DatabaseException(errorMsg, "Cannot connect to database", e);
 			}
+
 		}
 	}
 }

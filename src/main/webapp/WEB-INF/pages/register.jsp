@@ -1,3 +1,4 @@
+<%@ include file="loader-animation.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>

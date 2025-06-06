@@ -1,4 +1,4 @@
-<%@ include file="loader.jsp" %>
+<%@ include file="../loader-animation.jsp" %>
 
 <!DOCTYPE html>
 <html lang="en">

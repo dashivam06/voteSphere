@@ -24,7 +24,7 @@ public class DatabaseInitializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info("Starting database schema initialization...");
+        logger.info("Starting database schema - Creating Database Tables");
 
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(SCHEMA_FILE_PATH)) {
             if (inputStream == null) {
@@ -43,6 +43,8 @@ public class DatabaseInitializer implements ServletContextListener {
     private void executeSqlStatements(String sql) {
         // Split by semicolon followed by newline to avoid splitting within statements
         String[] statements = sql.split(";(\\r)?\\n");
+
+        long startTime = System.currentTimeMillis();
 
         try (Connection connection = DBConnectionManager.establishConnection();
              Statement statement = connection.createStatement()) {
@@ -63,7 +65,9 @@ public class DatabaseInitializer implements ServletContextListener {
                 }
             }
             connection.commit();
-            logger.info("Database schema executed successfully");
+            long statementTime = System.currentTimeMillis() - startTime;
+
+            logger.info("Database schema executed successfully. Time taken: {} ms", statementTime);
 
         } catch (SQLException e) {
             logger.error("Database error during schema execution", e);

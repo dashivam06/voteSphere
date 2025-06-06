@@ -3,7 +3,7 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.List"%>
-<%@ include file="loader.jsp" %>
+<%@ include file="../loader-animation.jsp" %>
 
 
 <!DOCTYPE html>

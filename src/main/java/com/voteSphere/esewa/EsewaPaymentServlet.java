@@ -47,14 +47,12 @@ public class EsewaPaymentServlet extends HttpServlet {
                     "INITIATED"
             ));
 
-            // Set cookies (optional)
-            Cookie esewaTotalAmountCookie = new Cookie("esewaTotalAmount", paymentRequest.getAmount());
-            Cookie transactionUuidCookie = new Cookie("esewaTransactionUuid", paymentRequest.getTransactionUuid());
-            Cookie productCodeCookie = new Cookie("esewaProductCode", paymentRequest.getProductCode());
 
-            CookieUtil.addCookie(response, esewaTotalAmountCookie);
-            CookieUtil.addCookie(response, transactionUuidCookie);
-            CookieUtil.addCookie(response, productCodeCookie);
+            HttpSession session = request.getSession(false);
+            session.setAttribute("esewaTotalAmount", paymentRequest.getAmount());
+            session.setAttribute("esewaTransactionUuid", paymentRequest.getTransactionUuid());
+            session.setAttribute("esewaProductCode", paymentRequest.getProductCode());
+
 
             // Return JSON response
             response.setContentType("application/json");

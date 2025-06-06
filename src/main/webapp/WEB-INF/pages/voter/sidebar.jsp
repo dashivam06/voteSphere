@@ -1,4 +1,5 @@
 <%@ page import="com.voteSphere.model.AuthUser" %>
+<%@ include file="../loader-animation.jsp" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>

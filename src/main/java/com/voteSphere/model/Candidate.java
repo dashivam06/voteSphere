@@ -3,8 +3,6 @@ package com.voteSphere.model;
 import com.voteSphere.service.ElectionService;
 import com.voteSphere.service.PartyService;
 import com.voteSphere.util.ValidationUtil;
-import jakarta.servlet.http.Part;
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
