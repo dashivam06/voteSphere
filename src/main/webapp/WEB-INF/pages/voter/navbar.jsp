@@ -72,8 +72,8 @@
   }
 
   .profile-image {
-    height: 3rem;
-    width: 3rem;
+    height: 2.8rem;
+    width: 2.8rem;
     border-radius: 50%;
     object-fit: cover;
   }

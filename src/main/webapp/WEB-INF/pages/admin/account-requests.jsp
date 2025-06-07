@@ -53,7 +53,7 @@ if (user != null) {
 	<div
 		class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
 		<%@ include file="navbar.jsp"%>
-		<div class="p-8 overflow-y-auto">
+		<div class="p-8 overflow-y-auto  overflow-y-auto h-screen">
 			<div class="bg-white rounded-lg shadow-md p-6 mx-auto">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Account Request
@@ -184,41 +184,41 @@ List<UnverifiedUser> unverifiedUsers = (List<UnverifiedUser>) request.getAttribu
 		class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
 		<%@ include file="navbar.jsp"%>
 
-		<div class="p-8 overflow-y-auto">
+		<div >
 			<div class="bg-white rounded-lg shadow-md p-6">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Account Requests</h1>
 				</div>
-				<div class="overflow-x-auto">
-					<table class="min-w-full divide-y divide-gray-200">
-						<thead class="bg-gray-50">
+				<div class="overflow-x-auto max-h-[80vh] overflow-y-auto">
+					<table class="min-w-full divide-y divide-gray-200 p-10  ">
+						<thead class="bg-gray-50 sticky top-0 z-10">
 							<tr>
 								<th scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+									class="px-6 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
 								<th scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+									class="px-6 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
 								<th scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Voter
+									class="px-6 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Voter
 									ID</th>
 								<th scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+									class="px-6 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
 								<th scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+									class="px-6 py-5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
 							</tr>
 						</thead>
-						<tbody class="bg-white divide-y divide-gray-200">
+						<tbody class="bg-white divide-y divide-gray-200  overflow-y-auto">
 							<%
 							if (unverifiedUsers != null && !unverifiedUsers.isEmpty()) {
 								for (UnverifiedUser unverifiedUser : unverifiedUsers) {
 							%>
 							<tr>
-								<td class="px-6 py-4 whitespace-nowrap"><%=unverifiedUser.getFirstName()%>
+								<td class="px-6  whitespace-nowrap"><%=unverifiedUser.getFirstName()%>
 									<%=unverifiedUser.getLastName()%></td>
-								<td class="px-6 py-4 whitespace-nowrap"><%=unverifiedUser.getNotificationEmail()%>
+								<td class="px-6 py-5 whitespace-nowrap"><%=unverifiedUser.getNotificationEmail()%>
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap"><%=unverifiedUser.getVoterId()%>
+								<td class="px-6 py-5 whitespace-nowrap"><%=unverifiedUser.getVoterId()%>
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap">
+								<td class="px-6 py-5 whitespace-nowrap">
 									<%
 									if (unverifiedUser.getIsVerified()) {
 									%> <span
@@ -231,7 +231,7 @@ List<UnverifiedUser> unverifiedUsers = (List<UnverifiedUser>) request.getAttribu
  }
  %>
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+								<td class="px-6 py-5 whitespace-nowrap text-sm font-medium">
 									<a
 									href="/admin/user-approval/view/<%=unverifiedUser.getUnverifiedUserId()%>"
 									class="text-primary-600 hover:text-primary-900 mr-3">View</a>
@@ -242,7 +242,7 @@ List<UnverifiedUser> unverifiedUsers = (List<UnverifiedUser>) request.getAttribu
 							} else {
 							%>
 							<tr>
-								<td colspan="5" class="px-6 py-4 text-center">No unverified
+								<td colspan="5" class="px-6 py-5 text-center">No unverified
 									users found</td>
 							</tr>
 							<%

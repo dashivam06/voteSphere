@@ -97,7 +97,7 @@
 
 
 		<!-- Content Area -->
-		<div class="p-8">
+		<div >
 			<div class="bg-white rounded-lg shadow-md p-6">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Election
@@ -128,9 +128,9 @@
 
 				<!-- Elections Table -->
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                <div class="overflow-x-auto max-h-[80vh] overflow-y-auto">
+                    <table class="min-w-full divide-y divide-gray-200 ">
+                        <thead class="bg-gray-50 sticky top-0 z-10">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Election</th>
@@ -148,7 +148,7 @@
                                     Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-gray-200 overflow-y-auto ">
                             <c:choose>
                                 <c:when test="${not empty elections}">
                                     <c:forEach var="election" items="${elections}">

@@ -1,11 +1,12 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <aside
-	class="bg-white w-64 h-full shadow-md fixed left-0 top-0 transform transition-transform duration-300 ease-in-out z-30 lg:translate-x-0"
-	id="sidebar">
-	<div class="p-4 border-b flex items-center justify-between">
+		class="bg-white w-64 h-full shadow-md fixed left-0 top-0 transform transition-transform duration-300 ease-in-out z-30 lg:translate-x-0 font-['Poppins']"
+		id="sidebar">
+	<div class="p-4 py-6 border-b flex items-center justify-between">
 		<div class="flex items-center">
 			<svg xmlns="http://www.w3.org/2000/svg"
-				class="h-8 w-8 text-primary-600" fill="none" viewBox="0 0 24 24"
-				stroke="currentColor">
+				 class="h-9 w-9 text-primary-600" fill="none" viewBox="0 0 24 24"
+				 stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round"
 					stroke-width="2"
 					d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -14,24 +15,7 @@
 		</div>
 	</div>
 	<div class="py-4">
-		<div class="px-4 mb-6">
-			<div class="flex items-center">
-				<div
-					class="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-					<svg xmlns="http://www.w3.org/2000/svg"
-						class="h-6 w-6 text-primary-600" fill="none" viewBox="0 0 24 24"
-						stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-							stroke-width="2"
-							d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-				</div>
-				<div class="ml-3">
-					<p class="text-sm font-medium text-gray-900">Admin User</p>
-					<p class="text-xs text-gray-500">admin@votesphere.com</p>
-				</div>
-			</div>
-		</div>
+	
 		<nav>
 			<ul>
 				<li class="mb-1"><a href="/dashboard"
@@ -63,8 +47,8 @@
             </svg> Voters
 				</a></li>
 				<li class="mb-1"><a href="/admin/election/"
-					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
+									class="flex items-center px-4 py-3  text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round"
 								stroke-width="2"
@@ -72,7 +56,7 @@
             </svg> Elections
 				</a></li>
 				<li class="mb-1"><a href="/admin/party/"
-					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
+					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50  hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -100,6 +84,17 @@
             </svg> Donations
 				</a></li>
 			</ul>
+			<div class="absolute bottom-0 left-0 w-full p-4">
+				<a href="/logout"
+				   class="flex items-center  px-4 py-3 bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 rounded">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+						 stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+							  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+					</svg>
+					Logout
+				</a>
+			</div>
 		</nav>
 	</div>
 </aside>
