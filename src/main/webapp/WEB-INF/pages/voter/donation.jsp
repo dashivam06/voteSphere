@@ -1,8 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page isELIgnored="false" %>
-<%@ include file="../loader-animation.jsp" %>
-
+<div class="preloader" id="preloader">
+    <%@ include file="../loader-animation.jsp" %>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('preloader').style.display = 'none';
+    });
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>

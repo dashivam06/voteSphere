@@ -1,8 +1,11 @@
 package com.voteSphere.controller.admin;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
+import com.voteSphere.dto.DonationDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,12 +87,14 @@ public class AdminDonationServlet extends HttpServlet {
 
     private void handleListDonations(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        logger.debug("Listing all donations");
-        List<Donation> donations = DonationService.getAllDonations();
+        Instant startTime = Instant.now();
+        logger.debug("Listing all donations." );
+        List<DonationDTO> donations = DonationService.getAllDonationsWithUserInfo();
         request.setAttribute("donations", donations);
         handleDonationStats(request, response);
         request.getRequestDispatcher("/WEB-INF/pages/admin/donations.jsp").forward(request, response);
-        logger.info("Successfully listed {} donations", donations.size());
+        logger.info("Successfully listed {} donations", donations.size() + " End Time : " + Duration.between(startTime, Instant.now()).toSeconds() + " seconds");
+
     }
 
     private void handleViewDonation(HttpServletRequest request, HttpServletResponse response, String donationId)

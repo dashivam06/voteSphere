@@ -47,23 +47,23 @@
     };
   </script>
 </head>
-<body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+<body class="font-sans bg-gray-100 flex h-screen  overflow-hidden">
 <!-- Include sidebar -->
 <%@ include file="sidebar.jsp" %>
 
 <!-- Main Content -->
 <div
-        class="flex-grow flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
+        class="flex-grow flex flex-col  ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
 >
   <!-- Navbar -->
   <%@ include file="navbar.jsp" %>
 
   <!-- Content Area -->
-  <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-100">
+  <div class="flex-1 overflow-y-auto p-4  md:p-8 bg-gray-100 w-full">
     <div class="max-w-5xl mx-auto">
       <!-- Profile Header -->
       <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <div class="flex flex-wrap items-center">
+        <div class="flex flex-wrap items-center ">
           <div
                   class="w-full sm:w-1/4 flex justify-center sm:justify-start mb-4 sm:mb-0"
           >

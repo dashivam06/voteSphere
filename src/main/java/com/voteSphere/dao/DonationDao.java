@@ -9,6 +9,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.voteSphere.dto.DonationDTO;
+import com.voteSphere.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,6 +75,8 @@ public class DonationDao {
         }
     }
 
+
+
     // Method to get all donations
     public static List<Donation> getAllDonations() {
 
@@ -114,6 +118,66 @@ public class DonationDao {
             throw new DataAccessException("Unexpected error while retrieving donations", "Please contact support.", e);
         }
     }
+
+    public static List<DonationDTO> getAllDonationsWithUserInfo() {
+        String sql = "SELECT d.*, u.* FROM donations d JOIN users u ON d.user_id = u.user_id";
+        List<DonationDTO> donationDTOs = new ArrayList<>();
+
+        try (Connection conn = DBConnectionManager.establishConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                // Construct Donation
+                Donation donation = new Donation(
+                        rs.getInt("donation_id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("product_code"),
+                        rs.getString("transaction_uuid"),
+                        rs.getString("status"),
+                        rs.getTimestamp("donation_time")
+                );
+
+                // Construct User
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setVoterId(rs.getString("voter_id"));
+                user.setEmail(rs.getString("notification_email"));
+                user.setProfileImage(rs.getString("profile_image"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                user.setImageHoldingCitizenship(rs.getString("image_holding_citizenship"));
+                user.setVoterCardFront(rs.getString("voter_card_front"));
+                user.setCitizenshipFront(rs.getString("citizenship_front"));
+                user.setCitizenshipBack(rs.getString("citizenship_back"));
+                user.setThumbPrint(rs.getString("thumb_print"));
+                user.setPassword(rs.getString("password"));
+                user.setDob(rs.getTimestamp("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setPermanentAddress(rs.getString("permanent_address"));
+                user.setTemporaryAddress(rs.getString("temporary_address"));
+                user.setRole(rs.getString("role"));
+                user.setIsVerified(rs.getBoolean("is_verified"));
+                user.setEmailVerified(rs.getBoolean("is_email_verified"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+
+                // Combine into DTO
+                donationDTOs.add(new DonationDTO(user, donation));
+            }
+
+            return donationDTOs;
+
+        } catch (SQLException e) {
+            logger.error("SQL error while retrieving donations with user info", e);
+            throw new DataAccessException("Database error while retrieving donations", "Please try again later.", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while retrieving donations with user info", e);
+            throw new DataAccessException("Unexpected error while retrieving donations", "Please contact support.", e);
+        }
+    }
+
 
     // Method to find a donation by ID
     public static Donation findDonationById(int id) {

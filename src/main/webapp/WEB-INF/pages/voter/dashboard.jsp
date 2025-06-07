@@ -96,7 +96,7 @@
     <%@ include file="navbar.jsp" %>
 
 		<!-- Main Content Area -->
-		<main class="flex-1 overflow-y-auto p-4 bg-gray-100">
+		<main class="flex-1 overflow-y-auto p-2 bg-gray-100">
 			<!-- Welcome Banner -->
 			<div class="bg-white rounded-lg shadow-sm p-6 mb-6 animate-fade-in">
 				<div class="flex flex-wrap items-center justify-between">

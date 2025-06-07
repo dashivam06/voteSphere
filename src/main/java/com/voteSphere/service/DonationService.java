@@ -3,6 +3,7 @@ package com.voteSphere.service;
 import java.util.Collections;
 import java.util.List;
 
+import com.voteSphere.dto.DonationDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -143,6 +144,19 @@ public class DonationService {
     public static List<Donation> getAllDonations() {
         try {
             return DonationDao.getAllDonations();
+        } catch (DataAccessException dae) {
+            logger.error("Data access error while fetching all donations: " + dae.getMessage(), dae);
+            return Collections.emptyList();
+        } catch (Exception e) {
+            logger.error("Unexpected error while fetching all donations: " + e.getMessage(), e);
+            return Collections.emptyList();
+        }
+    }
+
+    // Retrieve all donations
+    public static List<DonationDTO> getAllDonationsWithUserInfo() {
+        try {
+            return DonationDao.getAllDonationsWithUserInfo();
         } catch (DataAccessException dae) {
             logger.error("Data access error while fetching all donations: " + dae.getMessage(), dae);
             return Collections.emptyList();

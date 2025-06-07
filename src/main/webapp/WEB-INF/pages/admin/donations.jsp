@@ -4,8 +4,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <fmt:setLocale value="ne_NP"/>
 <fmt:setLocale value="en_US"/>
-<%@ include file="../loader-animation.jsp"%>
 
+<div class="preloader" id="preloader">
+    <%@ include file="../loader-animation.jsp" %>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('preloader').style.display = 'none';
+    });
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +66,7 @@
                 <div class="flex space-x-4">
                     <div class="relative">
                         <form id="searchForm" action="${pageContext.request.contextPath}/admin/donation/search" method="post">
+                            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                             <input type="text" 
                                    name="searchInput" 
                                    id="searchInput" 
@@ -127,40 +135,41 @@
                                             <div class="flex items-center">
                                                 <div class="h-10 w-10 flex-shrink-0">
                                                     <img class="h-10 w-10 rounded-full"
-                                                         src="${not empty donation.profileImage ? donation.profileImage : 'default-profile.png'}"
-                                                         alt="${donation.userFullName}"/>
+                                                         src="${not empty donation.user.profileImage ? donation.user.profileImage : 'default-profile.png'}"
+                                                         alt="${donation.user.fullName}"/>
                                                 </div>
                                                 <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">${donation.userFullName}</div>
-                                                    <div class="text-sm text-gray-500">${donation.userEmail}</div>
+                                                    <div class="text-sm font-medium text-gray-900">${donation.user.fullName}</div>
+                                                    <div class="text-sm text-gray-500">${donation.user.email}</div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                <fmt:formatNumber value="${donation.amount}" type="currency" currencySymbol="Rs "/>
+                                                <fmt:formatNumber value="${donation.donationEntry.amount}" type="currency" currencySymbol="Rs "/>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                <fmt:formatDate value="${donation.donationTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                                                <fmt:formatDate value="${donation.donationEntry.donationTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                                ${donation.status eq 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                                                donation.status eq 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                                ${donation.donationEntry.status eq 'COMPLETED' ? 'bg-green-100 text-green-800' :
+                                                donation.donationEntry.status eq 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
                                                 'bg-red-100 text-red-800'}">
-                                                ${donation.status}
+                                                ${donation.donationEntry.status}
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div class="flex space-x-3">
-                                                <c:if test="${donation.status eq 'COMPLETED'}">
-                                                    <form action="${pageContext.request.contextPath}/admin/donation/refund/${donation.donationId}"
+                                                <c:if test="${donation.donationEntry.status eq 'COMPLETED'}">
+                                                    <form action="${pageContext.request.contextPath}/admin/donation/refund/${donation.donationEntry.donationId}"
                                                           method="post"
                                                           class="inline"
                                                           onsubmit="return confirm('Are you sure you want to refund this donation?');">
+                                                                                                                  <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                                                         <button type="submit" class="text-red-600 hover:text-red-900">Refund</button>
                                                     </form>
                                                 </c:if>
@@ -180,54 +189,13 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination Controls -->
-            <div class="mt-6 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                <div class="flex flex-1 justify-between sm:hidden">
-                    <a href="?page=${currentPage - 1}"
-                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage == 1 ? 'opacity-50 cursor-not-allowed' : ''}">Previous</a>
-                    <a href="?page=${currentPage + 1}"
-                       class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage == totalPages ? 'opacity-50 cursor-not-allowed' : ''}">Next</a>
-                </div>
-                <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                    <div>
-                        <p class="text-sm text-gray-700">
-                            Showing <span class="font-medium">${(currentPage-1)*itemsPerPage + 1}</span> to
-                            <span class="font-medium">${Math.min(currentPage*itemsPerPage, totalItems)}</span> of
-                            <span class="font-medium">${totalItems}</span> results
-                        </p>
-                    </div>
-                    <div>
-                        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                            <a href="?page=${currentPage - 1}"
-                               class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage == 1 ? 'opacity-50 cursor-not-allowed' : ''}">
-                                <span class="sr-only">Previous</span>
-                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                          d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                                          clip-rule="evenodd"/>
-                                </svg>
-                            </a>
-                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-                                Page ${currentPage} of ${totalPages}
-                            </span>
-                            <a href="?page=${currentPage + 1}"
-                               class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${currentPage == totalPages ? 'opacity-50 cursor-not-allowed' : ''}">
-                                <span class="sr-only">Next</span>
-                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd"
-                                          d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                                          clip-rule="evenodd"/>
-                                </svg>
-                            </a>
-                        </nav>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
+        const SEARCH_DELAY = 500;
+        const EMPTY_SEARCH_DELAY = 5000;
+
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const searchForm = document.getElementById('searchForm');
@@ -240,7 +208,7 @@
                 searchInput.selectionStart = searchInput.selectionEnd = searchInput.value.length;
             }
 
-            searchInput.addEventListener('input', function() {
+            searchInput.addEventListener('input', function () {
                 clearTimeout(searchTimeout);
                 clearTimeout(emptyTimer);
 
@@ -255,18 +223,18 @@
                     isEmptyState = false;
                     searchTimeout = setTimeout(() => {
                         searchForm.submit();
-                    }, 500);
+
+                        searchInput.addEventListener('blur', function () {
+                            if (this.value.trim() === '' && isEmptyState) {
+                                setTimeout(() => {
+                                    this.focus();
+                                }, 10);
+                            }
+                        });
+                    });
                 }
             });
 
-            searchInput.addEventListener('blur', function() {
-                if (this.value.trim() === '' && isEmptyState) {
-                    setTimeout(() => {
-                        this.focus();
-                    }, 10);
-                }
-            });
-        });
     </script>
 </body>
 </html>
