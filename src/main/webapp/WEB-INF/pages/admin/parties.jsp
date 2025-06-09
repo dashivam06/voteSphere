@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="../styles/global.css" />
 <script src="https://cdn.tailwindcss.com"></script>
 <link
-	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-	rel="stylesheet" />
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
 <script>
       tailwind.config = {
         theme: {
@@ -38,7 +38,7 @@
               },
             },
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
+                sans: ["Poppins", "sans-serif"],
             },
           },
         },
@@ -85,9 +85,9 @@
 }
 </style>
 </head>
-<body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+<body class="font-poppins bg-gray-100 flex h-screen overflow-hidden">
 
-    <!-- Include sidebar -->
+<!-- Include sidebar -->
     <%@ include file="sidebar.jsp" %>
 
 
@@ -99,8 +99,8 @@
 		<%@ include file="navbar.jsp" %>
 
 		<!-- Content Area -->
-		<div>
-			<div class="bg-white rounded-lg shadow-md p-6 ">
+        <div class="flex-1 overflow-auto">
+        <div class="bg-white rounded-lg shadow-md p-6 ">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Party Management</h1>
 					<div class="flex space-x-4">
@@ -137,8 +137,8 @@
 				</div>
 
 				<!-- Parties Table -->
-				<div class="overflow-x-auto max-h-[80vh] overflow-y-auto">
-					<table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-y-auto max-h-[calc(110vh-340px)] mb-2">
+            <table class="min-w-full divide-y divide-gray-200">
 						<thead class="bg-gray-50 sticky top-0 z-10">
 							<tr>
 								<th

@@ -107,7 +107,7 @@
             </div>
 
             <!-- Donation Form -->
-            <div class="bg-white rounded-lg shadow-sm p-8 animate-slide-up hover-scale">
+            <div class="overflow-y-auto max-h-[calc(117vh-340px)] mb-2">
                 <form id="donationForm" class="space-y-6">
                     <div class="mb-6">
                         <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">

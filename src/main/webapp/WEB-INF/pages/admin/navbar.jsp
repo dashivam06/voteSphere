@@ -1,6 +1,8 @@
+<!-- Import Poppins font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <!-- Navbar Component -->
-<div class="bg-white shadow-sm border-b border-gray-200">
-	<div class="px-6 py-5 flex justify-between items-center">
+<div class="bg-white shadow-sm border-b border-gray-200 font-['Poppins']">
+<div class="px-6 py-5 flex justify-between items-center">
 		<!-- Left side - toggle and title -->
 		<div class="flex items-center">
 			<!-- Mobile menu toggle -->
@@ -14,8 +16,8 @@
 			</button>
 
 			<!-- Page title - dynamic based on current page -->
-			<h2 class="text-xl font-semibold text-gray-800" id="page-title">
-				Dashboard</h2>
+			<h2 class="text-xl font-semibold text-gray-800 font-['Poppins']" id="page-title">
+			Dashboard</h2>
 		</div>
 
 		<!-- Right side - user profile and notifications -->
@@ -56,8 +58,8 @@
 						class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-sm font-medium">
 						AD</div>
 					<div class="hidden md:block text-left">
-						<p class="text-sm font-medium text-gray-800">Admin User</p>
-						<p class="text-xs text-gray-500">admin@votesphere.com</p>
+						<p class="text-sm font-medium text-gray-800 font-['Poppins']">Admin User</p>
+						<p class="text-xs text-gray-500 font-['Poppins']">admin@votesphere.com</p>
 					</div>
 					<svg xmlns="http://www.w3.org/2000/svg"
 						class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"
@@ -70,14 +72,14 @@
 
 				<!-- Dropdown menu, toggle with JS -->
 				<div
-					class="hidden absolute right-0 w-48 mt-2 bg-white rounded-md shadow-lg py-1 z-10"
-					id="user-menu-dropdown">
+						class="hidden absolute right-0 w-48 mt-2 bg-white rounded-md shadow-xl ring-1 ring-black ring-opacity-5 py-1 z-10"
+						id="user-menu-dropdown">
 					<a href="#"
-						class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your
+					   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-['Poppins']">Your
 						Profile</a> <a href="#"
-						class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+									   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-['Poppins']">Settings</a>
 					<a href="/logout"
-						class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign
+					   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-['Poppins']">Sign
 						out</a>
 				</div>
 			</div>

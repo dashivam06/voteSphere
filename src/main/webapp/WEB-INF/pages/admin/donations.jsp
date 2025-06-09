@@ -22,7 +22,7 @@
     
     <link rel="stylesheet" href="../styles/global.css"/>
     <link rel="icon" src="/resources/favicon.ico" type="image/x-icon"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script>
@@ -44,7 +44,7 @@
                         }
                     },
                     fontFamily: {
-                        sans: ["Inter", "sans-serif"]
+                        sans: ["Poppins", "sans-serif"]
                     }
                 }
             }
@@ -57,8 +57,8 @@
     <%@ include file="sidebar.jsp"%>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64  ">
-        <%@ include file="navbar.jsp" %>
+    <div class="flex-1 ml-64 pb-8">
+    <%@ include file="navbar.jsp" %>
 
         <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex justify-between items-center mb-6">
@@ -115,9 +115,9 @@
             </div>
 
             <!-- Donations Table -->
-            <div class="  max-h-[80vh] overflow-y-auto">
-                <table class="min-w-full divide-y">
-                    <thead class="bg-gray-50 sticky top-0 z-10">
+            <div class="max-h-[calc(96vh-380px)] overflow-y-auto pb-8 mt-6">
+                <table class="min-w-full divide-y border">
+                <thead class="bg-gray-50 sticky top-0 z-10">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Donor</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
@@ -231,9 +231,27 @@
                                 }, 10);
                             }
                         });
-                    });
+                    }, SEARCH_DELAY);
                 }
+            )
+                ;
+
+                searchForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.text())
+                        .then(html => {
+                            document.querySelector('tbody').innerHTML = html;
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
             });
+        }
+        });
 
     </script>
 </body>

@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../loader-animation.jsp" %>
 
 
@@ -17,8 +16,8 @@
     <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
 
     <link
-	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-	rel="stylesheet" />
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+            rel="stylesheet" />
 <script>
       tailwind.config = {
         theme: {
@@ -38,7 +37,7 @@
               },
             },
             fontFamily: {
-              sans: ["Inter", "sans-serif"],
+                sans: ["Poppins", "sans-serif"],
             },
           },
         },
@@ -97,8 +96,8 @@
 
 
 		<!-- Content Area -->
-		<div >
-			<div class="bg-white rounded-lg shadow-md p-6">
+        <div class=" overflow-y-auto">
+        <div class="bg-white rounded-lg shadow-md p-6">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Election
 						Management</h1>
@@ -107,16 +106,18 @@
 								<form id="searchForm" action="${pageContext.request.contextPath}/admin/election/search" method="post" >
                             							<input type="text" name="searchInput" id="searchInput" value="${searchInput}" placeholder="Search election..."
                             								class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
-                            							<svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-                            								xmlns="http://www.w3.org/2000/svg" fill="none"
-                            								viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor">
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              stroke-width="2"
+                                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    </svg>							</form>
 
-                            								</form>
-                  <path stroke-linecap="round" stroke-linejoin="round"
-									stroke-width="2"
-									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-						</div>
+                        </div>
 						<a href="/admin/election/add/">
 						<button
 							class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200">
@@ -126,10 +127,10 @@
 
 				</div>
 
-				<!-- Elections Table -->
+            <!-- Elections Table -->
 
-                <div class="overflow-x-auto max-h-[80vh] overflow-y-auto">
-                    <table class="min-w-full divide-y divide-gray-200 ">
+            <div class="overflow-x-auto max-h-[calc(100vh-250px)] overflow-y-auto">
+            <table class="min-w-full divide-y divide-gray-200 ">
                         <thead class="bg-gray-50 sticky top-0 z-10">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
