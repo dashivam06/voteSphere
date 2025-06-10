@@ -50,14 +50,14 @@
 UnverifiedUser user = (UnverifiedUser) request.getAttribute("user");
 if (user != null) {
 %>
-<body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+<body class="font-sans bg-gray-100 flex h-screen overflow-hidden ">
 	<%@ include file="sidebar.jsp"%>
 	<div
-		class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
+		class="flex-1 flex flex-col ml-0  lg:ml-64 transition-all duration-300 ease-in-out">
 		<%@ include file="navbar.jsp"%>
 		<div class="p-8 overflow-y-auto  overflow-y-auto h-screen">
-			<div class="bg-white rounded-lg shadow-md p-6 mx-auto">
-				<div class="flex justify-between items-center mb-6">
+			<div class="bg-white py-2 px-3  rounded-lg shadow-md p-6 mx-auto ">
+				<div class="flex justify-between items-center mb-6 ">
 					<h1 class="text-2xl font-bold text-gray-800">Account Request
 						Details</h1>
 

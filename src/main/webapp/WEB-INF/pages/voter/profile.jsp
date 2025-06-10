@@ -49,7 +49,7 @@
 </head>
 <body class="font-sans bg-gray-100 flex h-screen  overflow-hidden">
 <!-- Include sidebar -->
-<%@ include file="sidebar.jsp" %>
+<%@ include file="sidebar.jsp" %> 
 
 <!-- Main Content -->
 <div
@@ -59,7 +59,7 @@
   <%@ include file="navbar.jsp" %>
 
   <!-- Content Area -->
-  <div class="flex-1 overflow-y-auto p-4  md:p-8 bg-gray-100 w-full">
+  <div class="flex-1 overflow-y-auto py-4  md:py-6 bg-gray-100 w-full">
     <div class="max-w-5xl mx-auto">
       <!-- Profile Header -->
       <div class="bg-white rounded-lg shadow-sm p-6 mb-6">

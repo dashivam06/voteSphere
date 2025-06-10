@@ -20,7 +20,7 @@
     <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
 
     <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
             rel="stylesheet"
     />
     <script>
@@ -42,7 +42,7 @@
                         },
                     },
                     fontFamily: {
-                        sans: ["Inter", "sans-serif"],
+                        sans: ["Poppins", "sans-serif"],
                     },
                     animation: {
                         "fade-in": "fadeIn 0.5s ease-in-out",
@@ -83,7 +83,7 @@
         }
     </style>
 </head>
-<body class="font-sans bg-gray-100 flex h-screen overflow-hidden">
+<body class="font-[Poppins] bg-gray-100 flex h-screen overflow-hidden">
 
 <!-- Include sidebar -->
 <%@ include file="sidebar.jsp" %>
@@ -111,7 +111,7 @@
                 <form id="donationForm" class="space-y-6">
                     <div class="mb-6">
                         <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">
-                            Donation Amount (NRS)
+                        Donation Amount (NRS)
                         </label>
                         <div class="relative mt-1">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

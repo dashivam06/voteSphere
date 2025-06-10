@@ -13,7 +13,7 @@
         class="bg-white w-64 h-full shadow-md fixed left-0 top-0 transform transition-transform duration-300 ease-in-out z-30 lg:translate-x-0 font-['Poppins'] flex flex-col"
         id="sidebar"
 >
-  <div class="p-4 py-7 border-b flex items-center justify-between">
+  <div class="p-4 py-6 border-b flex items-center justify-between">
     <div class="flex items-center">
       <svg
               xmlns="http://www.w3.org/2000/svg"

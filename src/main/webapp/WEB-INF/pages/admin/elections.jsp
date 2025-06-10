@@ -96,7 +96,7 @@
 
 
 		<!-- Content Area -->
-        <div class=" overflow-y-auto">
+        <div class="py-2 px-3  overflow-y-auto">
         <div class="bg-white rounded-lg shadow-md p-6">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Election

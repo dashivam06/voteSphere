@@ -14,6 +14,7 @@
 			<span class="ml-2 text-xl font-bold text-primary-600">VoteSphere</span>
 		</div>
 	</div>
+
 	<div class="py-4">
 	
 		<nav>

@@ -99,7 +99,7 @@
 		<%@ include file="navbar.jsp" %>
 
 		<!-- Content Area -->
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1 overflow-auto py-2 px-3 ">
         <div class="bg-white rounded-lg shadow-md p-6 ">
 				<div class="flex justify-between items-center mb-6">
 					<h1 class="text-2xl font-bold text-gray-800">Party Management</h1>
