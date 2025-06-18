@@ -14,10 +14,9 @@
 
   <title>VoteSphere - Account Request Details</title>
 
-  <link rel="stylesheet" src="/styles/global.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+  <link rel="icon" src="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon" />
 
   <script>
     tailwind.config = {

@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful - VoteSphere</title>
-    <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+    <link rel="icon" src="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

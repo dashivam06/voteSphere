@@ -10,11 +10,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VoteSphere - Live Election Results</title>
-    <link
-            rel="stylesheet"
-            href="${pageContext.request.contextPath}/styles/global.css"
-    />
-    <link rel="icon" src="/resources/favicon.ico" type="image/x-icon" />
+
+    <link rel="icon" src="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link
