@@ -139,14 +139,17 @@ public class AuthenticationFilter implements Filter {
     }
 
     private boolean isPublicUrl(String path) {
-
         path = path.toLowerCase();
-        // Exact matches for root and some paths
-        if ("/".equals(path) || "/login".equals(path) || "/register".equals(path) || "/logout".equals(path)) {
+
+        // Check exact matches in PUBLIC_URLS
+        if (PUBLIC_URLS.contains(path)) {
             return true;
         }
-        // Prefix matches for directories
-        return path.startsWith("/images/") || path.startsWith("/uploads/") || path.startsWith("/mail/");
+
+        // Check if path starts with any public URL prefix (those ending with /)
+        return PUBLIC_URLS.stream()
+                .filter(url -> url.endsWith("/"))
+                .anyMatch(path::startsWith);
     }
 
 
