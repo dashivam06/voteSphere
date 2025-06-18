@@ -51,10 +51,19 @@ public class AdminElectionServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/add/")) {
                 handleAddElectionForm(request, response);
-            }
-            else if (pathInfo.startsWith("/edit/")) {
-                handleUpdateElectionForm(request, response);
-            }else if (pathInfo.startsWith("/handleElectionAction")) {
+           } else if (pathInfo.startsWith("/edit/")) {
+                    // More robust way to extract ID
+                    String electionId = pathInfo.substring(pathInfo.lastIndexOf('/') + 1);
+                    System.out.println("Path Info: " + pathInfo + " | Extracted ID: " + electionId);
+
+                    // Validate the ID is not empty
+                    if (electionId != null && !electionId.isEmpty()) {
+                        request.setAttribute("electionId", electionId);
+                        handleUpdateElectionForm(request, response,electionId);
+                    } else {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid election ID");
+                    }
+                }else if (pathInfo.startsWith("/handleElectionAction")) {
                 handleElectionAction(request, response);
             }
             else {
@@ -68,8 +77,10 @@ public class AdminElectionServlet extends HttpServlet {
         }
     }
 
-    private void handleUpdateElectionForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("Displaying election update form");
+    private void handleUpdateElectionForm(HttpServletRequest request, HttpServletResponse response, String electionId) throws ServletException, IOException {
+        logger.debug("Displaying election update form for election ID: {}", electionId);
+        Election election = ElectionService.getElectionById(Integer.parseInt(electionId));
+        request.setAttribute("election", election);
         request.getRequestDispatcher("/WEB-INF/pages/admin/update-election.jsp").forward(request, response);
         logger.info("Successfully displayed election update form");
     }

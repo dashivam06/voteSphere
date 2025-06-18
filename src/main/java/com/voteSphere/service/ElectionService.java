@@ -173,7 +173,7 @@ public class ElectionService {
 
 		boolean hasErrors = false;
 
-// Election Name validation
+		// Election Name validation
 		if (ValidationUtil.isNullOrEmpty(name)) {
 			logger.warn("Validation failed: Election name is empty.");
 			request.setAttribute("name_error", "Election name is required.");

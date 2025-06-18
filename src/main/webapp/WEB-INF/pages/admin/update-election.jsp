@@ -1,4 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page isELIgnored="false" %>
 <%@ include file="../loader-animation.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -54,9 +59,9 @@
       <div class="p-8 overflow-y-auto">
         <div class="bg-white rounded-lg shadow-md p-6">
           <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Add New Election</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Update ${election.name} </h1>
             <a
-              href="../../../../../../../../Downloads/Frontend%2010/admin/elections.html"
+              href="/admin/election/"
               class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
             >
               Back to List
@@ -64,7 +69,7 @@
           </div>
 
           <!-- Update Election Form -->
-          <form id="addElectionForm" action="/admin/election/edit/" method="post" enctype="multipart/form-data" class="space-y-6" >
+          <form id="addElectionForm" action="/admin/election/update/${election.electionId}" method="post" enctype="multipart/form-data" class="space-y-6" >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700"
@@ -75,6 +80,7 @@
                   name="name"
                   required
                   placeholder="Enter Election Name"
+                  value="${election.name}"
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
               </div>
@@ -88,6 +94,7 @@
                   name="type"
                   required
                   placeholder="Enter Election Type"
+                  value="${election.type}"
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
               </div>
@@ -96,13 +103,66 @@
                 <label class="block text-sm font-medium text-gray-700"
                   >Cover Image</label
                 >
+                
                 <input
                   type="file"
                   accept="image/*"
                   name="cover_image"
+                  id="coverImage"
+                  value="${election.coverImage}"
                   required
+                  onchange="previewImage(this)"
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
+                <div id="imagePreview" class="mt-4 relative">
+                  <img id="preview" src="${election.coverImage}" alt="Preview"
+                       class="w-full max-w-md h-48 object-cover rounded-lg shadow-md"/>
+                  <div id="sizeError" class="hidden">
+                    <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                      <div class="bg-white p-4 rounded-lg shadow-lg max-w-sm mx-4 text-center">
+                        <svg class="w-12 h-12 text-red-500 mx-auto mb-2" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">File Too Large</h3>
+                        <p class="text-gray-600">Please select an image smaller than 2MB</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script>
+                  function previewImage(input) {
+                    const preview = document.getElementById('preview');
+                    const previewContainer = document.getElementById('imagePreview');
+                    const sizeError = document.getElementById('sizeError');
+                    const submitButton = document.querySelector('button[type="submit"]');
+
+                    if (input.files && input.files[0]) {
+                      const fileSize = input.files[0].size / 1024 / 1024; // in MB
+                      if (fileSize > 2) {
+                        sizeError.classList.remove('hidden');
+                        submitButton.disabled = true;
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        input.value = '';
+                        preview.src = '${election.coverImage}';
+                        return;
+                      }
+
+                      sizeError.classList.add('hidden');
+                      submitButton.disabled = false;
+                      submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                      const reader = new FileReader();
+
+                      reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        previewContainer.classList.remove('opacity-0');
+                      }
+
+                      reader.readAsDataURL(input.files[0]);
+                    }
+                  }
+                </script>
               </div>
 
               <div>
@@ -112,6 +172,7 @@
                 <input
                   type="date"
                   name="date"
+                  value="${election.date}"
                   required
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
@@ -124,6 +185,7 @@
                 <input
                   type="time"
                   name="start_time"
+                  value="${election.startTime}"
                   required
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
@@ -136,6 +198,7 @@
                 <input
                   type="time"
                   name="end_time"
+                  value="${election.endTime}"
                   required
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
@@ -144,7 +207,7 @@
 
             <div class="flex justify-end space-x-3">
               <a
-                href="../../../../../../../../Downloads/Frontend%2010/admin/elections.html"
+                href="/admin/election/"
                 class="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
               >
                 Cancel
@@ -153,7 +216,7 @@
                 type="submit"
                 class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
               >
-                Add Election
+                Update Election
               </button>
             </div>
           </form>
