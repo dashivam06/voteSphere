@@ -24,6 +24,7 @@ public class AuthenticationFilter implements Filter {
             "/",
             "/login",
             "/register",
+            "/styles/",
             "/logout",
             "/images/",
             "/uploads/",
