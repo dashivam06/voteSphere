@@ -87,26 +87,29 @@ public class LoginServlet extends HttpServlet {
 	}
 
 
-	
 
-	public static AuthUser authenticate(HttpServletRequest request, HttpServletResponse response, String voterId,
-			String password) throws SQLException {
+	public static AuthUser authenticate(HttpServletRequest request, HttpServletResponse response,
+										String voterId, String password) throws SQLException {
 
+		// 1. Get user by voter ID
 		User user = UserService.getUserByVoterId(request, response, voterId);
 
 		if (user == null) {
-			request.setAttribute("login_error", "Account doesn't exist.");
+			// Use consistent error message format (don't reveal whether user exists)
+			request.setAttribute("login_error", "Invalid credentials");
 			return null;
 		}
 
-		if (BCrypt.verifyer().verify(password.toCharArray(), user.getPassword().toCharArray()).verified) {
+		// 2. Verify password with BCrypt
+		BCrypt.Verifyer verifyer = BCrypt.verifyer(BCrypt.Version.VERSION_2A);
+		BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword().toCharArray());
+		if (result.verified) {
 			return new AuthUser(user);
 		}
-		request.setAttribute("password_login_error", "Password doesn't match.");
-
+		// Use consistent error message format
+		request.setAttribute("login_error", "Invalid credentials");
 		return null;
 	}
-
 	
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -9,6 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>VoteSphere - Login</title>
 <script src="https://cdn.tailwindcss.com"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link
 	href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
 	rel="stylesheet" />
@@ -302,9 +303,8 @@
 	<% } %>
 
 
-
 	<!-- Floating Credentials Panel -->
-	<div class="fixed bottom-4 right-4 z-50">
+	<div class="fixed bottom-4 right-4 z-50 font-poppins">
 		<!-- Main Container -->
 		<div class="bg-white rounded-lg shadow-xl border border-gray-200 w-72 overflow-hidden transition-all duration-300 transform hover:scale-105">
 			<!-- Header -->
@@ -339,7 +339,7 @@
 								class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200"
 								onclick="document.getElementById('userId').value = '23050311'; document.getElementById('password').value = 'ADM@1234'"
 						>
-							<span class="text-gray-600">Voter Id :</span>
+							<span class="text-gray-600">Voter Id:</span>
 							<span class="font-mono text-primary-600">23050311</span>
 						</div>
 						<div
@@ -365,7 +365,7 @@
 								class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200"
 								onclick="document.getElementById('userId').value = '23050396'; document.getElementById('password').value = 'VTR@1234'"
 						>
-							<span class="text-gray-600">Voter Id :</span>
+							<span class="text-gray-600">Voter Id:</span>
 							<span class="font-mono text-primary-600">23050396</span>
 						</div>
 						<div
