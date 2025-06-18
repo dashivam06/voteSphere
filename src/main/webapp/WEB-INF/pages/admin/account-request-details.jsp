@@ -153,7 +153,7 @@
   <!-- Main Content -->
   <div class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
     <!-- Include navbar -->
-    <jsp:include page="navbar.jsp" />
+    <jsp:include page="../navbar.jsp" />
 
     <!-- Content Area -->
     <div class="p-4 md:p-8 overflow-y-auto">

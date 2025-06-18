@@ -88,7 +88,7 @@
 <div
         class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
     <!-- Include navbar -->
-    <%@ include file="navbar.jsp" %>
+    <%@ include file="../navbar.jsp" %>
 
 
     <!-- Content Area -->

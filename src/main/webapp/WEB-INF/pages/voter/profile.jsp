@@ -56,7 +56,7 @@
         class="flex-grow flex flex-col  ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
 >
   <!-- Navbar -->
-  <%@ include file="navbar.jsp" %>
+  <%@ include file="../navbar.jsp" %>
 
   <!-- Content Area -->
   <div class="flex-1 overflow-y-auto py-4  md:py-6 bg-gray-100 w-full">

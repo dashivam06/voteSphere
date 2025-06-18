@@ -28,6 +28,7 @@ public class SessionUtil {
 
 		AuthUser authenticatedUser = new AuthUser(user);
 		session.setAttribute("authenticated_user", authenticatedUser);
+		session.setAttribute("email", user.getEmail());
 		session.setAttribute("created_at", Instant.now());
 		session.setAttribute("last_accessed_at", Instant.now());
 		session.setAttribute("timeout_minutes", INITIAL_SESSION_TIMEOUT_MINUTES);

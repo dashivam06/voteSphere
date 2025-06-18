@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page isELIgnored="false" %>
 <%@ include file="../loader-animation.jsp" %>
@@ -54,7 +53,7 @@
       class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
     >
       <!-- Include navbar -->
-        		<%@ include file="navbar.jsp" %>
+        		<%@ include file="../navbar.jsp" %>
 
       <!-- Content Area -->
       <div class="p-8 overflow-y-auto">

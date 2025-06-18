@@ -53,7 +53,7 @@
 <!-- Main Content -->
 <div class="flex-grow flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
     <!-- Navbar -->
-    <jsp:include page="navbar.jsp" />
+    <jsp:include page="../navbar.jsp" />
 
     <!-- Content Area -->
     <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-100">

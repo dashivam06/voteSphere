@@ -93,7 +93,7 @@
 	<div
 		class="flex-grow flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
 		<!-- Navbar -->
-    <%@ include file="navbar.jsp" %>
+    <%@ include file="../navbar.jsp" %>
 
 		<!-- Main Content Area -->
 		<main class="flex-1 overflow-y-auto p-2 bg-gray-100">

@@ -58,7 +58,7 @@
 
     <!-- Main Content -->
     <div class="flex-1 ml-64 pb-8  ">
-    <%@ include file="navbar.jsp" %>
+    <%@ include file="../navbar.jsp" %>
 
         <div class= " bg-white rounded-lg shadow-md p-6  ">
             <div class="flex justify-between items-center mb-6 ">

@@ -53,7 +53,7 @@
       class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out"
     >
       <!-- Include navbar -->
-          <%@ include file="navbar.jsp" %>
+          <%@ include file="../navbar.jsp" %>
 
       <!-- Content Area -->
       <div class="p-8 overflow-y-auto">
@@ -69,7 +69,7 @@
           </div>
 
           <!-- Update Election Form -->
-          <form id="addElectionForm" action="/admin/election/update/${election.electionId}" method="post" enctype="multipart/form-data" class="space-y-6" >
+          <form id="addElectionForm" action="/admin/election/update/" method="post" enctype="multipart/form-data" class="space-y-6" >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700"
@@ -116,17 +116,18 @@
                 />
                 <div id="imagePreview" class="mt-4 relative">
                   <img id="preview" src="${election.coverImage}" alt="Preview"
-                       class="w-full max-w-md h-48 object-cover rounded-lg shadow-md"/>
-                  <div id="sizeError" class="hidden">
-                    <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
-                      <div class="bg-white p-4 rounded-lg shadow-lg max-w-sm mx-4 text-center">
-                        <svg class="w-12 h-12 text-red-500 mx-auto mb-2" fill="none" stroke="currentColor"
-                             viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                        </svg>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-1">File Too Large</h3>
-                        <p class="text-gray-600">Please select an image smaller than 2MB</p>
+                       class="w-full max-w-md h-48 object-cover rounded-lg shadow-lg"/>
+                  <div id="sizeError" class="hidden absolute inset-0">
+                    <div class="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                      <div class="bg-white p-6 rounded-xl shadow-xl max-w-sm mx-4 text-center transform transition-all duration-300">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                          <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                          </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Image Too Large</h3>
+                        <p class="text-sm text-gray-500 mt-2">Please choose an image smaller than 2MB</p>
                       </div>
                     </div>
                   </div>
@@ -134,29 +135,24 @@
                 <script>
                   function previewImage(input) {
                     const preview = document.getElementById('preview');
-                    const previewContainer = document.getElementById('imagePreview');
                     const sizeError = document.getElementById('sizeError');
                     const submitButton = document.querySelector('button[type="submit"]');
 
                     if (input.files && input.files[0]) {
-                      const fileSize = input.files[0].size / 1024 / 1024; // in MB
-                      if (fileSize > 2) {
-                        sizeError.classList.remove('hidden');
-                        submitButton.disabled = true;
-                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-                        input.value = '';
-                        preview.src = '${election.coverImage}';
-                        return;
-                      }
-
-                      sizeError.classList.add('hidden');
-                      submitButton.disabled = false;
-                      submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
                       const reader = new FileReader();
+                      const fileSize = input.files[0].size / 1024 / 1024; // in MB
 
                       reader.onload = function (e) {
                         preview.src = e.target.result;
-                        previewContainer.classList.remove('opacity-0');
+                        if (fileSize > 2) {
+                          sizeError.classList.remove('hidden');
+                          submitButton.disabled = true;
+                          submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        } else {
+                          sizeError.classList.add('hidden');
+                          submitButton.disabled = false;
+                          submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
                       }
 
                       reader.readAsDataURL(input.files[0]);

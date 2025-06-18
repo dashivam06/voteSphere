@@ -54,7 +54,7 @@ if (user != null) {
 	<%@ include file="sidebar.jsp"%>
 	<div
 		class="flex-1 flex flex-col ml-0  lg:ml-64 transition-all duration-300 ease-in-out">
-		<%@ include file="navbar.jsp"%>
+		<%@ include file="../navbar.jsp"%>
 		<div class="p-8 overflow-y-auto  overflow-y-auto h-screen">
 			<div class="bg-white py-2 px-3  rounded-lg shadow-md p-6 mx-auto ">
 				<div class="flex justify-between items-center mb-6 ">
@@ -184,7 +184,7 @@ List<UnverifiedUser> unverifiedUsers = (List<UnverifiedUser>) request.getAttribu
 	<%@ include file="sidebar.jsp"%>
 	<div
 		class="flex-1 flex flex-col ml-0 lg:ml-64 transition-all duration-300 ease-in-out">
-		<%@ include file="navbar.jsp"%>
+		<%@ include file="../navbar.jsp"%>
 
 		<div class=" overflow-y-auto h-screen pb-12">
 			<div class="bg-white rounded-lg shadow-md p-6 mb-6">

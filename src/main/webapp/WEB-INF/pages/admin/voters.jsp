@@ -104,7 +104,7 @@
 <!-- Main Content -->
 <div class="flex-1 flex flex-col overflow-hidden ml-0 lg:ml-64">
     <!-- Include navbar -->
-    <%@ include file="navbar.jsp" %>
+    <%@ include file="../navbar.jsp" %>
 
     <!-- Content Area -->
     <div class="flex-1 overflow-auto  py-2 px-3 ">
