@@ -1,5 +1,7 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +12,7 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
 	rel="stylesheet" />
-	<link rel="icon" href="${pageContext.request.contextPath}/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="${pageContext.request.contextPath}/resources/favicon.ico" type="image/x-icon">
 
 	<script>
       tailwind.config = {
@@ -354,7 +356,7 @@ background-position
 						<div class="relative block w-full rounded-lg overflow-hidden">
 
 							<img
-									src="/resources/vote.png"
+									src="${pageContext.request.contextPath}/resources/vote.png"
 									alt="Vote Image"
 									class="w-full"
 							/>

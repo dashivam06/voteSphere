@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -298,17 +297,121 @@
 			</div>
 		</div>
 	</div>
-<% } %>
-	<script>
-		setTimeout(() => {
-			const errorDiv = document.querySelector('.fixed.top-20');
-			if (errorDiv) {
-				errorDiv.style.opacity = '0';
-				errorDiv.style.transition = 'opacity 0.3s ease-in-out';
-				setTimeout(() => errorDiv.remove(), 300);
-			}
-		}, 3000);
-	</script>
 
+
+	<% } %>
+
+
+
+	<!-- Floating Credentials Panel -->
+	<div class="fixed bottom-4 right-4 z-50">
+		<!-- Main Container -->
+		<div class="bg-white rounded-lg shadow-xl border border-gray-200 w-72 overflow-hidden transition-all duration-300 transform hover:scale-105">
+			<!-- Header -->
+			<div
+					id="credentialsHeader"
+					class="bg-primary-600 px-4 py-3 flex justify-between items-center cursor-pointer"
+			>
+				<h3 class="text-white font-medium text-sm">Test Credentials</h3>
+				<svg
+						id="toggleIcon"
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-5 w-5 text-white transition-transform duration-300"
+						viewBox="0 0 20 20"
+						fill="currentColor"
+				>
+					<path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+				</svg>
+			</div>
+
+			<!-- Content (initially visible) -->
+			<div id="credentialsContent" class="divide-y divide-gray-200">
+				<!-- Admin Credentials -->
+				<div class="p-4">
+					<h4 class="font-medium text-gray-800 text-sm mb-2 flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-600 mr-1" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+						</svg>
+						Admin Account
+					</h4>
+					<div class="space-y-1">
+						<div
+								class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200"
+								onclick="document.getElementById('userId').value = '23050311'; document.getElementById('password').value = 'ADM@1234'"
+						>
+							<span class="text-gray-600">Voter Id :</span>
+							<span class="font-mono text-primary-600">23050311</span>
+						</div>
+						<div
+								class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200"
+								onclick="document.getElementById('password').value = 'ADM@1234'"
+						>
+							<span class="text-gray-600">Password:</span>
+							<span class="font-mono text-primary-600">ADM@1234</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- User Credentials -->
+				<div class="p-4">
+					<h4 class="font-medium text-gray-800 text-sm mb-2 flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+						</svg>
+						Voter Account
+					</h4>
+					<div class="space-y-1">
+						<div
+								class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200"
+								onclick="document.getElementById('userId').value = '23050396'; document.getElementById('password').value = 'VTR@1234'"
+						>
+							<span class="text-gray-600">Voter Id :</span>
+							<span class="font-mono text-primary-600">23050396</span>
+						</div>
+						<div
+								class="flex items-center justify-between bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200"
+								onclick="document.getElementById('password').value = 'VTR@1234'"
+						>
+							<span class="text-gray-600">Password:</span>
+							<span class="font-mono text-primary-600">VTR@1234</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+
+<script>
+	setTimeout(() => {
+		const errorDiv = document.querySelector('.fixed.top-20');
+		if (errorDiv) {
+			errorDiv.style.opacity = '0';
+			errorDiv.style.transition = 'opacity 0.3s ease-in-out';
+			setTimeout(() => errorDiv.remove(), 300);
+		}
+	}, 3000);
+
+
+
+	// Toggle credentials visibility
+	document.getElementById('credentialsHeader').addEventListener('click', function() {
+		const content = document.getElementById('credentialsContent');
+		const icon = document.getElementById('toggleIcon');
+
+		content.classList.toggle('hidden');
+		icon.classList.toggle('rotate-180');
+	});
+
+	// Auto-hide after 30 seconds
+	setTimeout(() => {
+		const panel = document.querySelector('.fixed.bottom-4');
+		if (panel) {
+			panel.style.opacity = '0';
+			panel.style.transition = 'opacity 0.5s ease-in-out';
+			setTimeout(() => panel.remove(), 500);
+		}
+	}, 30000);
+</script>
+
 </html>
