@@ -32,13 +32,13 @@ public class AuthenticationFilter implements Filter {
 
     // Admin URLs
     private static final Set<String> ADMIN_URLS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            "/admin/candidate/",
-            "/admin/donation/",
-            "/admin/election/",
-            "/admin/party/",
-            "/admin/user-approval/",
-            "/admin/voter/",
-            "/election-results/",
+            "/admin/candidate",
+            "/admin/donation",
+            "/admin/election",
+            "/admin/party",
+            "/admin/user-approval",
+            "/admin/voter",
+            "/election-results",
             "/dashboard",
             "/voteChart"
     )));

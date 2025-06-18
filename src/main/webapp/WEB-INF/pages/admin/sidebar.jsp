@@ -38,7 +38,7 @@
             </svg> Account requests
 				</a></li>
 
-				<li class="mb-1"><a href="/admin/voter/"
+				<li class="mb-1"><a href="/admin/voter"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,7 +47,7 @@
 								d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg> Voters
 				</a></li>
-				<li class="mb-1"><a href="/admin/election/"
+				<li class="mb-1"><a href="/admin/election"
 									class="flex items-center px-4 py-3  text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,7 +56,7 @@
 								d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg> Elections
 				</a></li>
-				<li class="mb-1"><a href="/admin/party/"
+				<li class="mb-1"><a href="/admin/party"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50  hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,7 +65,7 @@
 								d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg> Parties
 				</a></li>
-				<li class="mb-1"><a href="/admin/candidate/"
+				<li class="mb-1"><a href="/admin/candidate"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,7 +75,7 @@
             </svg> Candidates
 				</a></li>
 
-				<li class="mb-1"><a href="/admin/donation/"
+				<li class="mb-1"><a href="/admin/donation"
 					class="flex items-center px-4 py-3 text-gray-600 hover:bg-primary-50 hover:text-gray-900 transition-colors duration-200">
 						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3"
 							fill="none" viewBox="0 0 24 24" stroke="currentColor">
