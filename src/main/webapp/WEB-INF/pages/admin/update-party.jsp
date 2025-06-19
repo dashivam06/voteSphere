@@ -60,7 +60,7 @@
       <div class="p-8 overflow-y-auto">
         <div class="bg-white rounded-lg shadow-md p-6">
           <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Update Party</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Update ${party.name} Party</h1>
             <a
               href="/admin/party"
               class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
@@ -125,46 +125,83 @@
                             >${party.description}</textarea>
                           </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Symbol Image</label>
+              <!-- SYMBOL IMAGE -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Symbol Image</label>
 
-              <c:choose>
-                <c:when test="${not empty party.symbolImage}">
-                  <img src="${party.symbolImage}" alt="Symbol Image" class="w-32 h-32 object-cover border mb-2" />
-                </c:when>
-                <c:otherwise>
-                  <img src="https://placehold.co/600x400" alt="Placeholder Symbol" class="w-32 h-32 object-cover border mb-2" />
-                </c:otherwise>
-              </c:choose>
+                <!-- Existing or Placeholder -->
+                <c:choose>
+                  <c:when test="${not empty party.symbolImage}">
+                    <img id="symbolExistingPreview" src="${party.symbolImage}" alt="Current Symbol Image"
+                         class="w-32 h-32 object-cover border mb-2" />
+                  </c:when>
+                  <c:otherwise>
+                    <img id="symbolExistingPreview" src="https://placehold.co/200x200" alt="Placeholder Symbol"
+                         class="w-32 h-32 object-cover border mb-2" />
+                  </c:otherwise>
+                </c:choose>
 
-              <input
-                type="file"
-                accept="image/*"
-                name="symbol_image"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
-              />
+                <!-- New Preview (hidden initially) -->
+                <img id="symbolLivePreview" class="hidden w-32 h-32 object-cover border mb-2" />
+
+                <!-- Upload Input -->
+                <input
+                        type="file"
+                        accept="image/*"
+                        name="symbol_image"
+                        onchange="previewImage(this, 'symbolLivePreview', 'symbolExistingPreview')"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                />
+              </div>
+
+              <!-- COVER IMAGE -->
+              <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-700">Cover Image</label>
+
+                <c:choose>
+                  <c:when test="${not empty party.coverImage}">
+                    <img id="coverExistingPreview" src="${party.coverImage}" alt="Current Cover Image"
+                         class="w-32 h-32 object-cover border mb-2" />
+                  </c:when>
+                  <c:otherwise>
+                    <img id="coverExistingPreview" src="https://placehold.co/200x200" alt="Placeholder Cover"
+                         class="w-32 h-32 object-cover border mb-2" />
+                  </c:otherwise>
+                </c:choose>
+
+                <!-- New Preview (hidden initially) -->
+                <img id="coverLivePreview" class="hidden w-32 h-32 object-cover border mb-2" />
+
+                <!-- Upload Input -->
+                <input
+                        type="file"
+                        accept="image/*"
+                        name="cover_image"
+                        onchange="previewImage(this, 'coverLivePreview', 'coverExistingPreview')"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                />
+              </div>
+
+              <!-- Shared Preview Script -->
+              <script>
+                function previewImage(input, newPreviewId, oldPreviewId) {
+                  const file = input.files[0];
+                  if (!file) return;
+
+                  const reader = new FileReader();
+                  reader.onload = function (e) {
+                    const newPreview = document.getElementById(newPreviewId);
+                    const oldPreview = document.getElementById(oldPreviewId);
+
+                    newPreview.src = e.target.result;
+                    newPreview.classList.remove('hidden');
+                    if (oldPreview) oldPreview.classList.add('hidden');
+                  };
+                  reader.readAsDataURL(file);
+                }
+              </script>
+
             </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700">Cover Image</label>
-
-              <c:choose>
-                <c:when test="${not empty party.coverImage}">
-                  <img src="${party.coverImage}" alt="Cover Image" class="w-32 h-32 object-cover border mb-2" />
-                </c:when>
-                <c:otherwise>
-                  <img src="https://placehold.co/600x400" alt="Placeholder Cover" class="w-32 h-32 object-cover border mb-2" />
-                </c:otherwise>
-              </c:choose>
-
-              <input
-                type="file"
-                accept="image/*"
-                name="cover_image"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
-              />
-            </div>
-</div>
 
 
             <div class="flex justify-end space-x-3">

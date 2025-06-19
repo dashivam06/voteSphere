@@ -1,5 +1,6 @@
 <%@ include file="../loader-animation.jsp" %>
-
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -57,7 +58,7 @@
           <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Add New Party</h1>
             <a
-              href="../../../../../../../../Downloads/Frontend%2010/admin/parties.html"
+              href="/admin/party"
               class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
             >
               Back to List
@@ -92,41 +93,64 @@
                 />
               </div>
 
+
+
+              <!-- Symbol Image Upload -->
               <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >Founder Name</label
-                >
+                <label class="block text-sm font-medium text-gray-700">Symbol Image</label>
                 <input
-                  type="text"
-                  name="founder_name"
-                  placeholder="Enter Founder Name"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                        type="file"
+                        accept="image/*"
+                        name="symbol_image"
+                        id="symbolImage"
+                        onchange="previewImage(this, 'symbolPreview')"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
+                <img id="symbolPreview" class="hidden w-48 h-48 object-cover mt-2 rounded-lg shadow-md" />
+              </div>
+
+              <!-- Cover Image Upload -->
+              <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-700">Cover Image</label>
+                <input
+                        type="file"
+                        accept="image/*"
+                        name="cover_image"
+                        id="coverImage"
+                        onchange="previewImage(this, 'coverPreview')"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                />
+                <img id="coverPreview" class="hidden w-full max-w-md h-48 object-cover mt-2 rounded-lg shadow-md" />
               </div>
 
               <div>
                 <label class="block text-sm font-medium text-gray-700"
-                  >Symbol Image</label
+                >Founder Name</label
                 >
                 <input
-                  type="file"
-                  accept="image/*"
-                  name="symbol_image"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                        type="text"
+                        name="founder_name"
+                        placeholder="Enter Founder Name"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >Cover Image</label
-                >
-                <input
-                  type="file"
-                  accept="image/*"
-                  name="cover_image"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
-                />
-              </div>
+              <script>
+                function previewImage(input, previewId) {
+                  const preview = document.getElementById(previewId);
+
+                  if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                      preview.src = e.target.result;
+                      preview.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                  }
+                }
+              </script>
+
+
             </div>
 
             <div>
@@ -143,7 +167,7 @@
 
             <div class="flex justify-end space-x-3">
               <a
-                href="../../../../../../../../Downloads/Frontend%2010/admin/parties.html"
+                href="/admin/party"
                 class="bg-gray-100 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
               >
                 Cancel

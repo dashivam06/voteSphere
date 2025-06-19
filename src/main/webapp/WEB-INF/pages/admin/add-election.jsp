@@ -1,3 +1,5 @@
+<%@ page isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../loader-animation.jsp" %>
 
 <!DOCTYPE html>
@@ -91,18 +93,69 @@
                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
                 />
               </div>
-
               <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >Cover Image</label
-                >
+                <label class="block text-sm font-medium text-gray-700">Symbol Image</label>
+
+                <c:if test="${not empty party.symbolImage}">
+                  <img src="${party.symbolImage}" alt="${party.name} Symbol Image"
+                       id="symbolPreview" class="w-full max-w-md h-60 object-cover border mb-2 rounded-lg shadow-md" />
+                </c:if>
+
                 <input
-                  type="file"
-                  accept="image/*"
-                  name="cover_image"
-                  required
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 placeholder:text-gray-400 p-2"
+                        type="file"
+                        accept="image/*"
+                        name="symbol_image"
+                        id="symbolImageInput"
+                        onchange="previewImage(this, 'symbolPreview', 'symbolWarning')"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2"
                 />
+                <p id="symbolWarning" class="hidden text-sm text-red-600 mt-1">File too large (max 2MB)</p>
+              </div>
+
+              <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-700">Cover Image</label>
+
+                <c:if test="${not empty party.coverImage}">
+                  <img src="${party.coverImage}" alt="${party.name} Cover Image"
+                       id="coverPreview" class="w-full max-w-md h-60 object-cover border mb-2 rounded-lg shadow-md" />
+                </c:if>
+
+                <input
+                        type="file"
+                        accept="image/*"
+                        name="cover_image"
+                        id="coverImageInput"
+                        onchange="previewImage(this, 'coverPreview', 'coverWarning')"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2"
+                />
+                <p id="coverWarning" class="hidden text-sm text-red-600 mt-1">File too large (max 2MB)</p>
+              </div>
+              <script>
+                function previewImage(input, previewId, warningId) {
+                  const preview = document.getElementById(previewId);
+                  const warning = document.getElementById(warningId);
+
+                  if (input.files && input.files[0]) {
+                    const fileSizeMB = input.files[0].size / 1024 / 1024;
+
+                    if (fileSizeMB > 2) {
+                      warning.classList.remove('hidden');
+                      preview.classList.add('hidden');
+                      input.value = ""; // Clear file input
+                      return;
+                    }
+
+                    warning.classList.add('hidden');
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                      preview.src = e.target.result;
+                      preview.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                  }
+                }
+              </script>
+
               </div>
 
               <div>

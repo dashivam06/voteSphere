@@ -58,7 +58,7 @@
       <div class="p-8 overflow-y-auto">
         <div class="bg-white rounded-lg shadow-md p-6 mx-auto">
           <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Party Details</h1>
+            <h1 class="text-2xl font-bold text-gray-800"> Party Details</h1>
             <a
               href="/admin/party/"
               class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
@@ -228,7 +228,7 @@
 
           <!-- Actions Section -->
           <div class="flex justify-end space-x-3">
-                    <a href="/admin/party/update/${party.partyId}"
+                    <a href="/admin/party/update/${party.partyId}">
 
             <button
               class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"

@@ -161,24 +161,56 @@
              <!-- Left: Current Picture -->
              <div class="text-left">
                <label class="block text-sm font-medium text-gray-700 mb-1">Current Picture</label>
+                 <div class="text-center mb-4">
+                     <label class="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
 
-              <c:choose>
-                <c:when test="${not empty candidate.profileImage}">
-                  <img src="${candidate.profileImage}"
-                       id="profileImagePreview"
-                       alt="Image Preview"
-                       class="w-32 h-32 object-cover rounded-md border border-gray-300 mx-auto"
-                       style="display: inline;" />
-                </c:when>
-                <c:otherwise>
-                  <img src="https://placehold.co/600x400"
-                       id="profileImagePreview"
-                       alt="Placeholder Image"
-                       class="w-32 h-32 object-cover rounded-md border border-gray-300 mx-auto"
-                       style="display: inline;" />
-                </c:otherwise>
-              </c:choose>
+                     <!-- Existing Image or Placeholder -->
+                     <c:choose>
+                         <c:when test="${not empty candidate.profileImage}">
+                             <img src="${candidate.profileImage}"
+                                  id="profileImagePreview"
+                                  alt="${candidate.fname} ${candidate.lname}'s Profile Image"
+                                  class="w-48 h-48 object-cover rounded-md border border-gray-300 mx-auto mb-2" />
+                         </c:when>
+                         <c:otherwise>
+                             <img src="https://placehold.co/300x300?text=${candidate.fname}+${candidate.lname}"
+                                  id="profileImagePreview"
+                                  alt="Placeholder Image"
+                                  class="w-48 h-48 object-cover rounded-md border border-gray-300 mx-auto mb-2" />
+                         </c:otherwise>
+                     </c:choose>
 
+                     <script>
+                         function previewImage(input, previewId, warningId) {
+                             const preview = document.getElementById(previewId);
+                             const warning = document.getElementById(warningId);
+
+                             if (input.files && input.files[0]) {
+                                 const file = input.files[0];
+                                 const sizeInMB = file.size / 1024 / 1024;
+
+                                 if (sizeInMB > 2) {
+                                     warning.classList.remove('hidden');
+                                     preview.style.display = 'none';
+                                     input.value = ''; // Clear the file
+                                 } else {
+                                     warning.classList.add('hidden');
+                                     preview.style.display = 'inline';
+
+                                     const reader = new FileReader();
+                                     reader.onload = function (e) {
+                                         preview.src = e.target.result;
+                                     };
+                                     reader.readAsDataURL(file);
+                                 }
+                             }
+                         }
+                     </script>
+
+
+                     <!-- Warning -->
+                     <p id="profileImageWarning" class="hidden text-sm text-red-600 mt-1">File too large (max 2MB)</p>
+                 </div>
 
 
              </div>

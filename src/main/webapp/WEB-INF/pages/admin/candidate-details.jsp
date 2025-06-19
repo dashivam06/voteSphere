@@ -194,7 +194,7 @@
 
           <!-- Actions Section -->
           <div class="flex justify-end space-x-3">
-          <a href="/admin/candidate/update/${candidate.candidateId}"
+          <a href="/admin/candidate/update/${candidate.candidateId}">
             <button
               class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors duration-200"
             >
@@ -209,10 +209,11 @@
             <button
               class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
             >
-                                                                                                              </form>
 
               Delete
             </button>
+             </form>
+
           </div>
         </div>
       </div>

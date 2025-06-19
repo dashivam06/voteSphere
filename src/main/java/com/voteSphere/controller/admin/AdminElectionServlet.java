@@ -113,7 +113,7 @@ public class AdminElectionServlet extends HttpServlet {
             if (pathInfo == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid path");
             }
-            else if (pathInfo.equalsIgnoreCase("/add/")) {
+            else if (pathInfo.equalsIgnoreCase("/add")) {
                 handleAddElection(request, response);
             }
             else if (pathInfo.startsWith("/update/")) {
