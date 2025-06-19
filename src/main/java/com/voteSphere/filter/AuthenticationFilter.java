@@ -142,7 +142,7 @@ public class AuthenticationFilter implements Filter {
 
         path = path.toLowerCase();
         // Exact matches for root and some paths
-        if ("/".equals(path) || "/login".equals(path) || "/register".equals(path) || "/logout".equals(path) || "/style".equals(path) || "/style/".equals(path) || "/style/global.css".equals(path) || "/favicon.ico".equals(path)){
+        if ("/".equals(path) || "/login".equals(path) || "/register".equals(path) || "/logout".equals(path) || "/style".equals(path) || "/style/".equals(path) || "/style/global.css".equals(path) || "/favicon.ico".equals(path) || path.startsWith("/resources/")){
             return true;
         }
         // Prefix matches for directories

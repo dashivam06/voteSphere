@@ -13,10 +13,10 @@ import jakarta.servlet.http.HttpSession;
 public class SessionUtil {
 
 	// Configuration constants
-	private static final long INITIAL_SESSION_TIMEOUT_MINUTES = 5;
+	private static final long INITIAL_SESSION_TIMEOUT_MINUTES = 30;
 	private static final long MAX_SESSION_EXTENSION_MINUTES = 30;
-	private static final long SESSION_EXTENSION_WINDOW_MINUTES = 4;
-	private static final long SESSION_EXTENSION_INCREMENT_MINUTES = 5;
+	private static final long SESSION_EXTENSION_WINDOW_MINUTES = 20;
+	private static final long SESSION_EXTENSION_INCREMENT_MINUTES = 15;
 
 	public static void createAndUpdateSession(HttpServletRequest request, User user) {
 		HttpSession session = request.getSession(true);
