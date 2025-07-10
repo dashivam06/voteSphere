@@ -216,7 +216,7 @@
                                                        class="text-primary-600 hover:text-primary-900">
                                                         View
                                                     </a>
-                                                    <a href="${pageContext.request.contextPath}/admin/election/edit/${election.electionId}"
+                                                    <a href="${pageContext.request.contextPath}/admin/election/update/${election.electionId}"
                                                        class="text-yellow-600 hover:text-yellow-900">
                                                         Edit
                                                     </a>

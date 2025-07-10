@@ -66,7 +66,7 @@
 			</div>
 
 			<div class="flex justify-center">
-				<a href="/voteSphere"
+				<a href="/"
 					class="inline-flex items-center justify-center px-6 py-3 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors">
 					<i class="fas fa-home mr-2"></i> Back to Home
 				</a>

@@ -339,10 +339,10 @@
 
           <!-- Actions Section -->
           <div class="flex justify-end space-x-3">
-            <a href="/admin/election/edit?id=${election.electionId}" class="bg-blue-500 text-white px-8 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200">
+            <a href="/admin/election/update/${election.electionId}" class="bg-blue-500 text-white px-8 py-2 rounded-lg hover:bg-yellow-600 transition-colors duration-200">
               Edit Election
             </a>
-            <a href="/admin/election/delete?id=${election.electionId}" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200" onclick="return confirm('Are you sure you want to delete this election?')">
+            <a href="/admin/election/delete/${election.electionId}" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200" onclick="return confirm('Are you sure you want to delete this election?')">
               Delete
             </a>
 

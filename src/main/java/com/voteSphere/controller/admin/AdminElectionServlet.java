@@ -51,10 +51,9 @@ public class AdminElectionServlet extends HttpServlet {
             }
             else if (pathInfo.startsWith("/add/")) {
                 handleAddElectionForm(request, response);
-           } else if (pathInfo.startsWith("/edit/")) {
+           } else if (pathInfo.startsWith("/update/")) {
                     // More robust way to extract ID
                     String electionId = pathInfo.substring(pathInfo.lastIndexOf('/') + 1);
-                    System.out.println("Path Info: " + pathInfo + " | Extracted ID: " + electionId);
 
                     // Validate the ID is not empty
                     if (electionId != null && !electionId.isEmpty()) {

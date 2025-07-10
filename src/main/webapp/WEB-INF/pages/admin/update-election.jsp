@@ -68,7 +68,7 @@
           </div>
 
           <!-- Update Election Form -->
-          <form id="addElectionForm" action="/admin/election/update/" method="post" enctype="multipart/form-data" class="space-y-6" >
+          <form id="addElectionForm" action="/admin/election/update/${election.electionId}" method="post" enctype="multipart/form-data" class="space-y-6" >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700"
